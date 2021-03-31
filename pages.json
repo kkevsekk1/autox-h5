@@ -32,5 +32,25 @@
 		"app-plus": {
 			"background": "#efeff4"
 		}
-	}
+	},
+	"tabBar": {
+				"color": "#7A7E83",
+				"selectedColor": "#f9436b",
+				"borderStyle": "white",
+				"backgroundColor": "#ffffff",
+				"list": [
+					{
+						"pagePath": "pages/index/index",
+						"text": "首页"
+					},
+					{
+						"pagePath": "pages/codeRecords/codeRecords",
+						"text": "扫码记录"
+					}, 
+					{
+						"pagePath": "pages/login/login",
+						"text": "我的"
+					}
+				]
+			}
 }

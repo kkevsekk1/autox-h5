@@ -247,6 +247,7 @@
 </script>
 
 <style>
+	page{background-color: #f8f8f8;}
 	.container {
 		position: relative;
 		padding: 40rpx 20rpx;

@@ -32,6 +32,9 @@
 					}
 			}
 		},
+		created(){
+			uni.removeStorageSync('token')
+		},
 		methods: {
 			submitForm(form) {
 				this.$refs.form.submit().then((res)=>{
