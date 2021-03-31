@@ -3,14 +3,14 @@
 		<text style="font-size: 26rpx;font-weight: bold;text-align: left;" @click="$emit('showList',code.id)">{{code.shopName}}</text>
 		<view class="code-content">
 			<view class="code-id">
-				<text style="flex:1">二维码code:{{code.id}}</text>
+				<text style="flex:1">code:{{code.newqrCode}}</text>
 				<view>
 					<button @click="$emit('previewImg',code.id)" type="primary" class="preview-button" size="mini">预览</button>
 					<button @click="$emit('identifyCode',{type:2,id:code.id})" type="primary" class="bind-code-button" size="mini" plain>绑定新码</button>
 				</view>
 			</view>
 			<view class="code-url">
-				<text style="flex:1">{{code.imgURL}}</text>
+				<text class="url">{{code.url}}</text>
 				<button @click="$emit('identifyCode',{type:1,id:code.id})" class="identify-code-button" size="mini">识别商家二维码</button>
 			</view>
 		</view>
@@ -57,6 +57,13 @@
 		border-radius: 8rpx;
 	}
 	.code-id,.code-url{display: flex;justify-content: space-between;align-items: center;}
+	.code-url .url {
+		flex: auto;
+		max-width: 60%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
 	.code-id {padding: 20rpx 0;}
 	.preview-button {width: 140rpx;}
 	.bind-code-button{width: 180rpx;margin-left:10rpx;}

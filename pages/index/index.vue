@@ -47,7 +47,21 @@
 				shopData:[],
 				codeList:[],
 				shopList:[],
+				bindInfo:{url:'',id:'',type:''},
+				codeUrl:'',
 				pages:{index:1,size:5,count:0}
+			}
+		},
+		watch:{
+			bindInfo: {
+				handler(newInfo,old) {
+					if (newInfo.type === 1) {
+						this.addshopqrcode(newInfo.url,newInfo.id)
+					} else if (newInfo.type === 2) {
+						this.updateshopqrcode(newInfo.url,newInfo.id)
+					}
+				},
+				deep: true
 			}
 		},
 		onReachBottom() {
@@ -162,7 +176,7 @@
 						if (code === 200) {
 							this.pages = {count: data.count,index: data.index,size: data.size}
 							data.list.forEach(code => {
-								code.imgURL = code.imgURL?code.imgURL:'暂未绑定商家二维码'
+								code.url = code.url?code.url:'暂未绑定商家二维码'
 								code.shopName = code.shopName?code.shopName:'点击绑定商户'
 								this.codeList.push(code)
 							})
@@ -193,11 +207,7 @@
 					scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
 					success: function (res) {
 						var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-						if (data.type === 1) {
-							_this.addshopqrcode(restul,data.id)
-						}else if (data.type === 2) {
-							_this.updateshopqrcode(result,data.id)
-						}
+						_this.bindInfo = {url:result,type:data.type,id:data.id}
 					},
 					fail:function(error) {
 						uni.showToast({title:error,icon:'none'})
@@ -212,16 +222,24 @@
 				})
 				.then((loadresult) => {
 					uni.showToast({title:loadresult.data.message,icon:'none'})
+					if (loadresult.data.code === 200) {
+						this.initialData()
+					}
 				})
 			},
 			updateshopqrcode(result,id) {
+				result = result.split('?code=')[1]
+				alert(result,'rsult')
 				request({
 					url: '/qrcode/update',
 					method:'post',
-					data: {id:id,url:result,newqrCode:result}
+					data: {id:id,newqrCode:result}
 				})
 				.then((loadresult) => {
 					uni.showToast({title:loadresult.data.message,icon:'none'})
+					if (loadresult.data.code === 200) {
+						this.initialData()
+					}
 				})
 			}
 		}
