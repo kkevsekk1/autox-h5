@@ -6,7 +6,11 @@
 		<view class="code-box">
 			<view class="code-list" v-if="codeList.length>0">
 				<view v-for="item in codeList" :key="item.id">
-					<code-item :code="item" @previewImg="previewImg"></code-item>
+					<code-item
+					:code="item"
+					@previewImg="previewImg"
+					@showList="showList"
+					@identifyCode="identifyCode"></code-item>
 				</view>
 			</view>
 			<view v-else>暂无二维码记录</view>
@@ -14,6 +18,12 @@
 		<view class="img-box" v-if="src">
 			<img :src="src" alt="">
 		</view>
+		<uni-popup ref="popup" type="center">
+			<view class="shop-list">
+				<uni-indexed-list :options="shopList" :showSelect="false" @click="selectShop"></uni-indexed-list>
+			</view>
+		</uni-popup>
+		
 	</view>
 </template>
 
@@ -25,6 +35,7 @@
 		created(){
 			// this.getSign()
 			this.initialData()
+			this.getShopList()
 		},
 		mounted() {
 			console.log(window,jssdk,'ssdk11122')
@@ -32,7 +43,10 @@
 		data() {
 			return {
 				src:'',
+				currentCodeId:undefined,
+				shopData:[],
 				codeList:[],
+				shopList:[],
 				pages:{index:1,size:5,count:0}
 			}
 		},
@@ -53,6 +67,48 @@
 			}, 1000)
 		},
 		methods: {
+			showList(id) {
+				this.$refs.popup.open()
+				this.currentCodeId = id
+			},
+			getShopList() {
+				this.shopList = []
+				this.shopData = []
+				request({
+					url: '/auth/getShopPage',
+					method:'post',
+					data: {index:'1',size:'1000',search:'',orderby:'id desc'}
+				})
+				.then((loadresult) => {
+					let {code,message,data} = loadresult.data
+					if (code === 200) {
+						let tmplist = []
+						data.list.forEach(shop => {
+							tmplist.push(shop.name)
+							this.shopData.push({shopName:shop.name,shopId:shop.id})
+						})
+						this.shopList.push({letter:'商家',data:tmplist})
+					} else {
+						uni.showToast({title:message,icon:'none'})
+					}
+				})
+			},
+			selectShop(data) {
+				let index = data.item.itemIndex
+				let shopInfo = this.shopData[index]
+				request({
+					url: '/qrcode/bindingshop',
+					method:'get',
+					data: {shopId:shopInfo.shopId,qrcodeId:this.currentCodeId}
+				}).then(result => {
+					let {code,message} = result.data
+					uni.showToast({title:message,icon:'none'})
+					if (code === 200) {
+						this.$refs.popup.close()
+						this.initialData()
+					}
+				})
+			},
 			getSign() {
 				axios.get('http://xcx.ar01.cn/tx/gzh/wx3f4bf3f856017bd4/jssdkSignature?url=' + encodeURIComponent(location.href.split('#')[0]))
 				  .then(res => {
@@ -77,7 +133,7 @@
 			},
 			previewImg(id) {
 				let urls = []
-				urls.push(this.baseUrl+'/qrcode/geturlqrcode?id=' +id)
+				urls.push(this.baseUrl+'/qrcode/geturlqrcode?id=' +id+'.png')
 				jssdk.previewImage({
 				  current: 0, // 当前显示图片的http链接
 				  urls: urls // 需要预览的图片http链接列表
@@ -107,6 +163,7 @@
 							this.pages = {count: data.count,index: data.index,size: data.size}
 							data.list.forEach(code => {
 								code.imgURL = code.imgURL?code.imgURL:'暂未绑定商家二维码'
+								code.shopName = code.shopName?code.shopName:'点击绑定商户'
 								this.codeList.push(code)
 							})
 						}
@@ -121,13 +178,51 @@
 			},
 			addCode() {
 				request({
-						url: '/qrcode/precreate',
-						method:'post',
-						data: {number:1,status:0}
-					})
-					.then((loadresult) => {
-						console.log(loadresult)
-					})
+					url: '/qrcode/precreate',
+					method:'post',
+					data: {number:1,status:0}
+				})
+				.then((loadresult) => {
+					console.log(loadresult)
+				})
+			},
+			identifyCode(data) {
+				let _this = this
+				jssdk.scanQRCode({
+					needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+					scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+					success: function (res) {
+						var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+						if (data.type === 1) {
+							_this.addshopqrcode(restul,data.id)
+						}else if (data.type === 2) {
+							_this.updateshopqrcode(result,data.id)
+						}
+					},
+					fail:function(error) {
+						uni.showToast({title:error,icon:'none'})
+					}
+				})
+			},
+			addshopqrcode(result,id) {
+				request({
+					url: '/qrcode/addshopqrcode',
+					method:'post',
+					data: {id:id,url:result}
+				})
+				.then((loadresult) => {
+					uni.showToast({title:loadresult.data.message,icon:'none'})
+				})
+			},
+			updateshopqrcode(result,id) {
+				request({
+					url: '/qrcode/update',
+					method:'post',
+					data: {id:id,url:result,newqrCode:result}
+				})
+				.then((loadresult) => {
+					uni.showToast({title:loadresult.data.message,icon:'none'})
+				})
 			}
 		}
 	}
@@ -138,6 +233,14 @@
 		position: relative;
 		padding: 40rpx 20rpx;
 		font-size: 14px;
+	}
+	.shop-list {
+		box-sizing: border-box;
+		font-size: 24rpx;
+		padding: 30rpx 25rpx;
+		width: 750rpx;
+		height: 450rpx;
+		background-color: #fff;
 	}
 	.img-box {
 		position: absolute;
