@@ -26,6 +26,13 @@
 			"enablePullDownRefresh": true
 		}
 
+	}, {
+		"path": "pages/mine/mine",
+		"style": {
+			"navigationBarTitleText": "个人中心",
+			"enablePullDownRefresh": true
+		}
+
 	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -54,7 +61,7 @@
 				"text": "扫码记录"
 			},
 			{
-				"pagePath": "pages/login/login",
+				"pagePath": "pages/mine/mine",
 				"text": "我的"
 			}
 		]
