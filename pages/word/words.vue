@@ -1,12 +1,13 @@
 <template>
 	<view class="container">
 		<view class="record-box">
+			
 			<view class="record-list" v-if="datas.length>0">
 				<view v-for="item in datas" :key="item.id">
 					<view class="record-info">
 						<view class="record-header">
 							<text>口令类型：{{item.type}}</text>
-							<text @click="bindWord" >口令内容：{{item.content}} --(绑定口令)</text>
+							<text @click="bindWord(item)" >口令内容：{{item.content}} --(绑定口令)</text>
 						</view>
 						<view class="record-content">
 							<view style="margin-top:20rpx;">创建时间：{{item.createTime}}</view>
@@ -81,8 +82,32 @@
 						}
 				})
 			},
-			bindWord(){
-				console.log("绑定口令");
+			bindWord(word){
+				uni.showLoading({title: '领取中'});
+				request({
+					url: '/word/release?id='+word.id,
+					method:'get',
+					})
+					.then((loadresult) => {
+						uni.hideLoading()
+						let {message,code,data} = loadresult.data
+						if (code === 200) {
+							uni.showToast({title:message,icon:'none'});
+							this.pages = {count: data.count,index: data.index,size: data.size}
+							data.list.forEach(record => {
+								record.createTime = formatTime(record.createTime)
+								this.datas.push(record)
+							})
+						}
+						if (code === -1) {
+							uni.showToast({title:message,icon:'none'})
+							setTimeout(()=>{
+								uni.reLaunch({url:'/pages/login/login'})
+							},2000)
+						}
+				})
+				
+				
 			}
 		}
 	}
