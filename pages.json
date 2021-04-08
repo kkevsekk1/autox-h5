@@ -3,27 +3,30 @@
 		"path": "pages/index/index",
 		"style": {
 			"navigationBarTitleText": "二维码记录",
-			"enablePullDownRefresh":true
+			"enablePullDownRefresh": true
 		}
-	}    ,{
-            "path" : "pages/login/login",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "登陆",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/codeRecords/codeRecords",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "扫码记录",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-    ],
+	}, {
+		"path": "pages/login/login",
+		"style": {
+			"navigationBarTitleText": "登陆",
+			"enablePullDownRefresh": false
+		}
+
+	}, {
+		"path": "pages/codeRecords/codeRecords",
+		"style": {
+			"navigationBarTitleText": "扫码记录",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/word/words",
+		"style": {
+			"navigationBarTitleText": "查看口令",
+			"enablePullDownRefresh": true
+		}
+
+	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
@@ -34,23 +37,26 @@
 		}
 	},
 	"tabBar": {
-				"color": "#7A7E83",
-				"selectedColor": "#f9436b",
-				"borderStyle": "white",
-				"backgroundColor": "#ffffff",
-				"list": [
-					{
-						"pagePath": "pages/index/index",
-						"text": "首页"
-					},
-					{
-						"pagePath": "pages/codeRecords/codeRecords",
-						"text": "扫码记录"
-					}, 
-					{
-						"pagePath": "pages/login/login",
-						"text": "我的"
-					}
-				]
+		"color": "#7A7E83",
+		"selectedColor": "#f9436b",
+		"borderStyle": "white",
+		"backgroundColor": "#ffffff",
+		"list": [{
+				"pagePath": "pages/word/words",
+				"text": "查看口令"
+			},
+			{
+				"pagePath": "pages/index/index",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/codeRecords/codeRecords",
+				"text": "扫码记录"
+			},
+			{
+				"pagePath": "pages/login/login",
+				"text": "我的"
 			}
+		]
+	}
 }
