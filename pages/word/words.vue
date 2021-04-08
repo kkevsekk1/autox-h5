@@ -2,7 +2,6 @@
 	<view class="container">
 		<view class="record-box">
 			
-			
 			<view class="record-list" v-if="datas.length>0">
 				<view v-for="item in datas" :key="item.id">
 					<view class="record-info">
