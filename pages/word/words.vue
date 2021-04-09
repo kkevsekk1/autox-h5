@@ -12,7 +12,7 @@
               <button @click="bindWord(item)"
                       type="primary"
                       size="mini"
-					  v-if="item.btnShow">绑定口令</button>
+                      v-if="item.btnShow">绑定口令</button>
             </view>
             <view class="record-content">
               <view style="margin-top:20rpx;">创建时间：{{item.createTime}}</view>
@@ -79,7 +79,7 @@ export default {
               this.datas.push(record)
             })
           }
-		  this.selecteWords()
+          this.selecteWords()
           if (code === -1) {
             uni.showToast({ title: message, icon: 'none' })
             setTimeout(() => {
@@ -88,29 +88,29 @@ export default {
           }
         })
     },
-	selecteWords () { 
-		const wordsId = {}
-		wordsId.ids = []
-		this.datas.forEach((item => {
-			wordsId.ids.push(item.id)
-		}))
-		request({
-			url: '/word/check',
-			method: 'post',
-			data: wordsId
-		}).then((res) => {
-			this.buttonShow(res.data.data)
-		})
-	},
-	buttonShow(data){
-		for(var i = 0; i <this.datas.length; i++){
-			if(this.datas[i].id == data[i].wordId){
-				this.datas[i].btnShow = false;
-			}else{
-				this.datas[i].btnShow = true;
-			}
-		}
-	},
+    selecteWords () {
+      const wordsId = {}
+      wordsId.ids = []
+      this.datas.forEach((item => {
+        wordsId.ids.push(item.id)
+      }))
+      request({
+        url: '/word/check',
+        method: 'post',
+        data: wordsId
+      }).then((res) => {
+        this.buttonShow(res.data.data)
+      })
+    },
+    buttonShow (data) {
+      for (var i = 0; i < this.datas.length; i++) {
+        if (this.datas[i].id == data[i].wordId) {
+          this.datas[i].btnShow = false;
+        } else {
+          this.datas[i].btnShow = true;
+        }
+      }
+    },
     bindWord (word) {
       uni.showLoading({ title: '领取中' });
       request({
