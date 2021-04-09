@@ -147,10 +147,10 @@
 			},
 			previewImg(id) {
 				let urls = []
-				imgurl=this.baseUrl+'/qrcode/geturlqrcode?id=' +id+'.png';
+				let imgurl=this.baseUrl+'/qrcode/geturlqrcode?id=' +id+'.png';
 				urls.push(imgurl);
 				jssdk.previewImage({
-				  current: imgurl, // 当前显示图片的http链接
+				  current: '', // 当前显示图片的http链接
 				  urls:urls                                                                                      // 需要预览的图片http链接列表
 				});
 			},
