@@ -163,6 +163,7 @@
 							code,
 							data
 						} = loadresult.data
+						word.btnShow = false
 						if (code === 200) {
 							uni.showToast({
 								title: message,
@@ -191,7 +192,7 @@
 						}
 					})
 			}
-		}
+		},
 	}
 </script>
 
