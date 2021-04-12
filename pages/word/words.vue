@@ -7,7 +7,7 @@
 						<view class="record-header">
 							<text>口令类型：{{item.type}}</text>
 							<text>口令内容：{{item.content}}</text>
-							<button @click="bindWord(item)" type="primary" size="mini" >绑定口令</button>
+							<button @click="bindWord(item)" type="primary" size="mini" v-if = "item.btnShow">绑定口令</button>
 						</view>
 						<view class="record-content">
 							<view style="margin-top:20rpx;">创建时间：{{item.createTime}}</view>
@@ -96,6 +96,7 @@
 							}
 							data.list.forEach(record => {
 								record.createTime = formatTime(record.createTime)
+								record.btnShow = false
 								this.datas.push(record)
 							})
 						}
@@ -126,22 +127,23 @@
 					}
 				}).then((res) => {
 					this.buttonShow(res.data.data)
+					console.log(this.datas)
+					console.log(res.data.data)
 				})
 			},
 			buttonShow(data) {
 				for (var i = 0; i < this.datas.length; i++) {
 					if (this.idInIt(this.datas[i].id,data) ){
-						this.datas[i].btnShow = true;
+						this.datas[i].btnShow = false;
 					} else {
 						this.datas[i].btnShow = true;
 					}
 				}
 			},
 			idInIt(id, checkDatas) {
-				
 				for (var i = 0; i < checkDatas.length; i++) {
 					if (checkDatas[i].wordId == id) {
-						return ture;
+						return true;
 					}
 				}
 				return false;
