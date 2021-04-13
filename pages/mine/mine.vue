@@ -100,7 +100,7 @@
 	.login-box .button {
 		background-color: #007AFF;
 		color: white;
-		margin-top: 10px;
+		margin-top: 10rpx;
 	}
 	header {
 		background-color: #36d48f;
@@ -127,8 +127,8 @@
 		font-size: 20rpx;
 	}
 	.nav text:nth-child(2) {
-		border-left: 1rpx solid #fff;
-		border-right: 1rpx solid #fff;
+		border-left: 1px solid #fff;
+		border-right: 1px solid #fff;
 		box-sizing: border-box;
 		align-items: center;
 	}
