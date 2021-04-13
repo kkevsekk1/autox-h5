@@ -1,22 +1,22 @@
 <template>
   <view class="container">
     <view class="record-box">
-      <view class="record-list"
-            v-if="datas.length>0">
+      <view v-if="datas.length>0"
+            class="record-list">
         <view v-for="item in datas"
               :key="item.id">
           <view class="record-info">
             <view class="record-header">
-              <text>口令类型：{{item.type}}</text>
-              <text>口令内容：{{item.content}}</text>
-              <button @click="bindWord(item)"
+              <text>口令类型：{{ item.type }}</text>
+              <text>口令内容：{{ item.content }}</text>
+              <button v-if="item.btnShow"
                       type="primary"
                       size="mini"
-                      v-if="item.btnShow">绑定口令</button>
+                      @click="bindWord(item)">绑定口令</button>
             </view>
             <view class="record-content">
-              <view style="margin-top:20rpx;">创建时间：{{item.createTime}}</view>
-              <view style="line-height:80rpx;">商家名称：{{item.publisherName}}</view>
+              <view style="margin-top:20rpx;">创建时间：{{ item.createTime }}</view>
+              <view style="line-height:80rpx;">商家名称：{{ item.publisherName }}</view>
             </view>
           </view>
         </view>
@@ -29,14 +29,11 @@
 <script>
 import {
   request
-} from '../../server/request.js'
+} from '../../server/request.js';
 import {
   formatTime
-} from '../../utils/format.js'
+} from '../../utils/format.js';
 export default {
-  created () {
-    this.initialData()
-  },
   data () {
     return {
       datas: [],
@@ -45,7 +42,10 @@ export default {
         size: 5,
         count: 0
       }
-    }
+    };
+  },
+  created () {
+    this.initialData();
   },
   onReachBottom () {
     // 当前页大于等于总页数
@@ -53,18 +53,18 @@ export default {
       uni.showToast({
         title: '到底啦',
         icon: 'none'
-      })
+      });
     } else {
-      this.pages.index++
-      this.getDatas()
+      this.pages.index++;
+      this.getDatas();
     }
     // 进入下一页
   },
   onPullDownRefresh () {
-    this.initialData()
+    this.initialData();
     setTimeout(() => {
-      uni.stopPullDownRefresh()
-    }, 1000)
+      uni.stopPullDownRefresh();
+    }, 1000);
   },
   methods: {
     initialData () {
@@ -77,7 +77,7 @@ export default {
         index: this.pages.index + '',
         size: this.pages.size + '',
         orderby: 'id desc'
-      }
+      };
       uni.showLoading({
         title: '加载中'
       });
@@ -87,43 +87,43 @@ export default {
         data: data
       })
         .then((loadresult) => {
-          uni.hideLoading()
-          let {
+          uni.hideLoading();
+          const {
             message,
             code,
             data
-          } = loadresult.data
+          } = loadresult.data;
           if (code === 200) {
             this.pages = {
               count: data.count,
               index: data.index,
               size: data.size
-            }
+            };
             data.list.forEach(record => {
-              record.createTime = formatTime(record.createTime)
-              record.btnShow = false
-              this.datas.push(record)
-            })
+              record.createTime = formatTime(record.createTime);
+              record.btnShow = false;
+              this.datas.push(record);
+            });
           }
-          this.selecteWords()
+          this.selecteWords();
           if (code === -1) {
             uni.showToast({
               title: message,
               icon: 'none'
-            })
+            });
             setTimeout(() => {
               uni.reLaunch({
                 url: '/pages/login/login'
-              })
-            }, 2000)
+              });
+            }, 2000);
           }
-        })
+        });
     },
     selecteWords () {
       var ids = [-1];
-      this.datas.forEach((item => {
-        ids.push(item.id)
-      }))
+      this.datas.forEach(item => {
+        ids.push(item.id);
+      });
       request({
         url: '/word/check',
         method: 'post',
@@ -131,10 +131,8 @@ export default {
           ids: ids
         }
       }).then((res) => {
-        this.buttonShow(res.data.data)
-        console.log(this.datas)
-        console.log(res.data.data)
-      })
+        this.buttonShow(res.data.data);
+      });
     },
     buttonShow (data) {
       for (var i = 0; i < this.datas.length; i++) {
@@ -162,13 +160,13 @@ export default {
         method: 'get',
       })
         .then((loadresult) => {
-          uni.hideLoading()
-          let {
+          uni.hideLoading();
+          const {
             message,
             code,
             data
-          } = loadresult.data
-          word.btnShow = false
+          } = loadresult.data;
+          word.btnShow = false;
           if (code === 200) {
             uni.showToast({
               title: message,
@@ -178,27 +176,27 @@ export default {
               count: data.count,
               index: data.index,
               size: data.size
-            }
+            };
             data.list.forEach(record => {
-              record.createTime = formatTime(record.createTime)
-              this.datas.push(record)
-            })
+              record.createTime = formatTime(record.createTime);
+              this.datas.push(record);
+            });
           }
           if (code === -1) {
             uni.showToast({
               title: message,
               icon: 'none'
-            })
+            });
             setTimeout(() => {
               uni.reLaunch({
                 url: '/pages/login/login'
-              })
-            }, 2000)
+              });
+            }, 2000);
           }
-        })
+        });
     }
   },
-}
+};
 </script>
 
 <style>
@@ -218,10 +216,10 @@ page {
 }
 
 .record-info {
-  border: 1px solid #ccc;
-  padding: 5px;
-  margin-bottom: 10px;
-  border-radius: 5px;
+  border: 2rpx solid #ccc;
+  padding: 25rpx;
+  margin-bottom: 20rpx;
+  border-radius: 20rpx;
 }
 
 .record-header {
@@ -232,7 +230,7 @@ page {
 .record-header :nth-child(2) {
   /* color: red; */
   font-weight: normal;
-  margin: 10px 0 0 0;
+  margin: 20rpx 0 0 0;
   display: block;
   width: 70%;
   white-space: nowrap;
@@ -243,11 +241,11 @@ page {
 .record-header button {
   float: right;
   position: absolute;
-  right: 12px;
-  top: 16px;
+  right: 18rpx;
+  top: 24rpx;
 }
 
 .record-content :nth-child(2) {
-  margin-bottom: -5px;
+  margin-bottom: -10rpx;
 }
 </style>

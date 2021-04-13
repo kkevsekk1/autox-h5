@@ -33,7 +33,14 @@
 			"enablePullDownRefresh": true
 		}
 
-	}],
+	}, {
+		"path": "pages/addShop/addShop",
+		"style": {
+			"navigationBarTitleText": "添加商家",
+			"enablePullDownRefresh": true
+		}
+		
+  }],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
@@ -59,6 +66,10 @@
 			{
 				"pagePath": "pages/codeRecords/codeRecords",
 				"text": "扫码记录"
+			},
+      {
+				"pagePath": "pages/addShop/addShop",
+				"text": "添加商家"
 			},
 			{
 				"pagePath": "pages/mine/mine",
