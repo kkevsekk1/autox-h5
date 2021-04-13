@@ -3,8 +3,7 @@
 			<view > 
 				<header>
 					<text>
-						<img :src="dataMine.head" alt="">
-					</text>
+						<img :src="dataMine.head" alt=""></text>
 					<text>{{dataMine.name}}</text>
 					<text>{{dataMine.phone}}</text>
 					<view class='nav'>
@@ -44,7 +43,7 @@
 				return {
 					dataMine: {
 						head: "../../static/templateHL.png",
-						name: "金运",
+						name: "名字",
 						phone: '112233',
 						balance: "1.22",
 						performance: '333',
