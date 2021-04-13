@@ -44,7 +44,7 @@ export default {
     return {
       dataMine: {
         head: '../../static/templateHL.png',
-        name: '金运',
+        name: '金运22',
         phone: '112233',
         balance: '1.22',
         performance: '333',
