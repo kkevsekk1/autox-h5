@@ -43,7 +43,7 @@
 				return {
 					dataMine: {
 						head: "../../static/templateHL.png",
-						name: "名字",
+						name: "包子馆",
 						phone: '112233',
 						balance: "1.22",
 						performance: '333',
