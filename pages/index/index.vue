@@ -115,8 +115,6 @@ export default {
               this.shopData.push({ shopName: shop.name, shopId: shop.id })
             })
             this.shopList.push({ letter: '商家', data: tmplist })
-			console.log(this.shopData)
-			console.log(this.shopList)
           } else {
             uni.showToast({ title: message, icon: 'none' })
           }
