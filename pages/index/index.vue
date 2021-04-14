@@ -290,7 +290,7 @@ page {
   top: 0;
   z-index: 2;
   background: #007aff;
-  color: #ffe;
+  color: #fff;
   border-radius: 4px;
 }
 ::v-deep .uni-indexed-list__title {
