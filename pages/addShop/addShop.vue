@@ -120,7 +120,7 @@ export default {
         const { message, code, data } = loadresult.data;
         if (code === 200) {
           this.pages = {
-            count: data.count,
+            count: data.pages,
             index: data.index,
             size: data.size
           };
