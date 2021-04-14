@@ -106,17 +106,6 @@ export default {
             });
           }
           this.selecteWords();
-          if (code === -1) {
-            uni.showToast({
-              title: message,
-              icon: 'none'
-            });
-            setTimeout(() => {
-              uni.reLaunch({
-                url: '/pages/login/login'
-              });
-            }, 2000);
-          }
         });
     },
     selecteWords () {
@@ -182,17 +171,17 @@ export default {
               this.datas.push(record);
             });
           }
-          if (code === -1) {
-            uni.showToast({
-              title: message,
-              icon: 'none'
-            });
-            setTimeout(() => {
-              uni.reLaunch({
-                url: '/pages/login/login'
-              });
-            }, 2000);
-          }
+          // if (code === -1) {
+          //   uni.showToast({
+          //     title: message,
+          //     icon: 'none'
+          //   });
+          //   setTimeout(() => {
+          //     uni.reLaunch({
+          //       url: '/pages/login/login'
+          //     });
+          //   }, 2000);
+          // }
         });
     }
   },

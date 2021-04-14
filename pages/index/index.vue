@@ -28,6 +28,15 @@
       <img :src="src"
            alt="">
     </view>
+    <uni-popup ref="img"
+               type="center">
+      <view class="img-show">
+        <img :src="imgurl"
+             alt="">
+      </view>
+
+    </uni-popup>
+
     <uni-popup ref="popup"
                type="center">
       <view class="shop-list">
@@ -55,6 +64,7 @@ export default {
   },
   data () {
     return {
+      imgurl: '',
       src: '',
       currentCodeId: undefined,
       shopData: [],
@@ -159,20 +169,9 @@ export default {
       console.log(jssdk.config)
     },
     previewImg (id) {
-      let urls = []
+      this.$refs.img.open()
       let imgurl = this.baseUrl + '/qrcode/geturlqrcode?id=' + id + '.png';
-      urls.push(imgurl);
-      console.log(id)
-      this.codeList.forEach((item) => {
-        if (id == item.id) {
-          item.imgUrl = imgurl
-        }
-      })
-      console.log(this.codeList)
-      jssdk.previewImage({
-        current: '', // 当前显示图片的http链接
-        urls: urls       // 需要预览的图片http链接列表
-      });
+      this.imgurl = imgurl
     },
     showImg (shopId) {
       this.src = this.baseUrl + '/qrcode/geturlqrcode?id=' + shopId
@@ -202,13 +201,6 @@ export default {
               code.imgUrl = ''
               this.codeList.push(code)
             })
-          }
-          if (code === -1) {
-            console.log(message, 'message')
-            uni.showToast({ title: message, icon: 'none' })
-            setTimeout(() => {
-              uni.reLaunch({ url: '/pages/login/login' })
-            }, 2000)
           }
         })
     },
@@ -296,6 +288,13 @@ page {
 .img-box {
   width: 100px;
   height: 100px;
+}
+.img-show {
+  width: 700rpx;
+  background-color: white;
+  border: 2rpx #999999 solid;
+  border-radius: 15rpx;
+  text-align: center;
 }
 .code-box {
   margin-top: 20rpx;
