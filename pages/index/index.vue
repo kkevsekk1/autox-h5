@@ -1,42 +1,42 @@
 <template>
   <view class="container">
     <view class="add-code">
-      <button @click="getSign"
-              type="primary"
-              size="mini"
-              class="add-code-button">签名</button>
-      <button @click="addCode"
-              type="primary"
-              size="mini"
-              class="add-code-button">添加新码</button>
-
+      <button @click="getSign" type="primary" size="mini" style="width: 100px">
+        签名
+      </button>
+      <button
+        @click="addCode"
+        type="primary"
+        size="mini"
+        class="add-code-button"
+      >
+        添加新码
+      </button>
     </view>
     <view class="code-box">
-      <view class="code-list"
-            v-if="codeList.length > 0">
-        <view v-for="item in codeList"
-              :key="item.id">
-          <code-item :code="item"
-                     @previewImg="previewImg"
-                     @showList="showList"
-                     @identifyCode="identifyCode"></code-item>
+      <view class="code-list" v-if="codeList.length > 0">
+        <view v-for="item in codeList" :key="item.id">
+          <code-item
+            :code="item"
+            @previewImg="previewImg"
+            @showList="showList"
+            @identifyCode="identifyCode"
+          ></code-item>
         </view>
       </view>
       <view v-else>暂无二维码记录</view>
     </view>
-    <view class="img-box"
-          v-if="src">
-      <img :src="src"
-           alt="" />
+    <view class="img-box" v-if="src">
+      <img :src="src" alt="" />
     </view>
-    <uni-popup ref="popup"
-               type="center"
-               class="index-popup">
+    <uni-popup ref="popup" type="center" class="index-popup">
       <view class="shop-list">
-        <uni-indexed-list :options="shopList"
-                          :showSelect="false"
-                          @click="selectShop"
-                          class="indexed"></uni-indexed-list>
+        <uni-indexed-list
+          :options="shopList"
+          :showSelect="false"
+          @click="selectShop"
+          class="indexed"
+        ></uni-indexed-list>
       </view>
     </uni-popup>
   </view>
@@ -47,15 +47,15 @@ import { request } from '../../server/request.js'
 import codeItem from './code.vue'
 export default {
   components: { codeItem },
-  created () {
+  created() {
     // this.getSign()
     this.initialData()
     this.getShopList()
   },
-  mounted () {
+  mounted() {
     console.log(window, jssdk, 'ssdk11122')
   },
-  data () {
+  data() {
     return {
       src: '',
       currentCodeId: undefined,
@@ -69,7 +69,7 @@ export default {
   },
   watch: {
     bindInfo: {
-      handler (newInfo, old) {
+      handler(newInfo, old) {
         if (newInfo.type === 1) {
           this.addshopqrcode(newInfo.url, newInfo.id)
         } else if (newInfo.type === 2) {
@@ -79,7 +79,7 @@ export default {
       deep: true,
     },
   },
-  onReachBottom () {
+  onReachBottom() {
     // 当前页大于等于总页数
     if (this.pages.index >= this.pages.count) {
       uni.showToast({ title: '到底啦', icon: 'none' })
@@ -89,18 +89,18 @@ export default {
     }
     // 进入下一页
   },
-  onPullDownRefresh () {
+  onPullDownRefresh() {
     this.initialData()
     setTimeout(() => {
       uni.stopPullDownRefresh()
     }, 1000)
   },
   methods: {
-    showList (id) {
+    showList(id) {
       this.$refs.popup.open()
       this.currentCodeId = id
     },
-    getShopList () {
+    getShopList() {
       this.shopList = []
       this.shopData = []
       request({
@@ -123,7 +123,7 @@ export default {
         }
       })
     },
-    selectShop (data) {
+    selectShop(data) {
       let index = data.item.itemIndex
       let shopInfo = this.shopData[index]
       request({
@@ -139,11 +139,11 @@ export default {
         }
       })
     },
-    getSign () {
+    getSign() {
       axios
         .get(
           'http://xcx.ar01.cn/tx/gzh/wx3f4bf3f856017bd4/jssdkSignature?url=' +
-          encodeURIComponent(location.href.split('#')[0])
+            encodeURIComponent(location.href.split('#')[0])
         )
         .then((res) => {
           if (res.data.code === '0') {
@@ -151,7 +151,7 @@ export default {
           }
         })
     },
-    setConfig (data) {
+    setConfig(data) {
       jssdk.config({
         debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
         appId: data.appId, // 必填，公众号的唯一标识
@@ -165,7 +165,7 @@ export default {
       })
       console.log(jssdk.config)
     },
-    previewImg (id) {
+    previewImg(id) {
       let urls = []
       let imgurl = this.baseUrl + '/qrcode/geturlqrcode?id=' + id + '.png'
       urls.push(imgurl)
@@ -181,16 +181,16 @@ export default {
         urls: urls, // 需要预览的图片http链接列表
       })
     },
-    showImg (shopId) {
+    showImg(shopId) {
       this.src = this.baseUrl + '/qrcode/geturlqrcode?id=' + shopId
       // this.src  = img
     },
-    initialData () {
+    initialData() {
       this.pages.index = 1
       this.codeList = []
       this.getCode()
     },
-    getCode () {
+    getCode() {
       const data = {
         index: this.pages.index,
         size: this.pages.size,
@@ -213,18 +213,26 @@ export default {
             this.codeList.push(code)
           })
         }
+        if (code === -1) {
+          console.log(message, 'message')
+          uni.showToast({ title: message, icon: 'none' })
+          setTimeout(() => {
+            uni.reLaunch({ url: '/pages/login/login' })
+          }, 2000)
+        }
       })
     },
-    addCode () {
+    addCode() {
       request({
         url: '/qrcode/precreate',
         method: 'post',
         data: { number: 1, status: 0 },
       }).then((loadresult) => {
-        this.$router.go(0)
+        console.log(loadresult)
       })
+      this.$router.go(0)
     },
-    identifyCode (data) {
+    identifyCode(data) {
       let _this = this
       jssdk.scanQRCode({
         needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
@@ -238,7 +246,7 @@ export default {
         },
       })
     },
-    addshopqrcode (result, id) {
+    addshopqrcode(result, id) {
       request({
         url: '/qrcode/addshopqrcode',
         method: 'post',
@@ -250,7 +258,7 @@ export default {
         }
       })
     },
-    updateshopqrcode (result, id) {
+    updateshopqrcode(result, id) {
       result = result.split('?code=')[1]
       alert(result, 'result')
       request({
@@ -270,7 +278,7 @@ export default {
 
 <style scoped>
 page {
-  background-color: #f4f4f5;
+  background-color: #f8f8f8;
 }
 .container {
   position: relative;
@@ -331,17 +339,13 @@ page {
   height: 100px;
 }
 .code-box {
-  margin-top: 30rpx;
+  margin-top: 20rpx;
 }
 .add-code {
   height: 60rpx;
 }
 .add-code-button {
-  width: 170rpx;
-  height: 70rpx;
-  padding: 0;
-  font-size: 28rpx;
-  line-height: 70rpx;
-  margin-right: 20rpx;
+  width: 200rpx;
+  float: right;
 }
 </style>

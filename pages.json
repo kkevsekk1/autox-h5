@@ -8,7 +8,7 @@
 	}, {
 		"path": "pages/login/login",
 		"style": {
-			"navigationBarTitleText": "登陆",
+			"navigationBarTitleText": "登录",
 			"enablePullDownRefresh": false
 		}
 
@@ -51,11 +51,10 @@
 		}
 	},
 	"tabBar": {
-		"color": "#888e94",
-		"selectedColor": "#007aff",
+		"color": "#7A7E83",
+		"selectedColor": "#f9436b",
 		"borderStyle": "white",
 		"backgroundColor": "#ffffff",
-    "fontSize":"26rpx",
 		"list": [{
 				"pagePath": "pages/word/words",
 				"text": "查看口令"
