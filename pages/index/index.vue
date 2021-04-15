@@ -213,13 +213,6 @@ export default {
             this.codeList.push(code)
           })
         }
-        if (code === -1) {
-          console.log(message, 'message')
-          uni.showToast({ title: message, icon: 'none' })
-          setTimeout(() => {
-            uni.reLaunch({ url: '/pages/login/login' })
-          }, 2000)
-        }
       })
     },
     addCode () {
@@ -228,9 +221,8 @@ export default {
         method: 'post',
         data: { number: 1, status: 0 },
       }).then((loadresult) => {
-        console.log(loadresult)
+        this.$router.go(0)
       })
-      this.$router.go(0)
     },
     identifyCode (data) {
       let _this = this
