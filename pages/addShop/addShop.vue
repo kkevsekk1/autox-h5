@@ -26,19 +26,19 @@
                          v-model="user.name"
                          placeholder="请输入商铺名" />
         </uni-forms-item>
+        <uni-forms-item label="电话号码"
+                        name="account"
+                        required>
+          <uni-easyinput type="text"
+                         v-model="user.account"
+                         placeholder="电话号码即登陆账号" />
+        </uni-forms-item>
         <uni-forms-item label="密码"
                         name="password"
                         required>
           <uni-easyinput type="password"
                          v-model="user.password"
                          placeholder="请输入密码" />
-        </uni-forms-item>
-        <uni-forms-item label="电话号码"
-                        name="account"
-                        required>
-          <uni-easyinput type="text"
-                         v-model="user.account"
-                         placeholder="请输入电话号码" />
         </uni-forms-item>
         <button @click="submitForm"
                 type="primary">提交</button>
