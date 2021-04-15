@@ -76,12 +76,12 @@ export default {
 
 <style>
 page {
-  background-color: #f8f8f8;
+  background-color: #f4f4f5;
 }
 .container {
   position: relative;
   padding: 40rpx 20rpx;
-  font-size: 14px;
+  font-size: 24rpx;
 }
 .record-box {
   margin-top: 20rpx;

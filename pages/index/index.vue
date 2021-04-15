@@ -4,7 +4,7 @@
       <button @click="getSign"
               type="primary"
               size="mini"
-              style="width:100px;">签名</button>
+              class="add-code-button">签名</button>
       <button @click="addCode"
               type="primary"
               size="mini"
@@ -263,7 +263,7 @@ export default {
 
 <style>
 page {
-  background-color: #f8f8f8;
+  background-color: #f4f4f5;
 }
 .container {
   position: relative;
@@ -297,13 +297,17 @@ page {
   text-align: center;
 }
 .code-box {
-  margin-top: 20rpx;
+  margin-top: 30rpx;
 }
 .add-code {
   height: 60rpx;
 }
 .add-code-button {
-  width: 200rpx;
-  float: right;
+  width: 170rpx;
+  height: 70rpx;
+  padding: 0;
+  font-size: 28rpx;
+  line-height: 70rpx;
+  margin-right: 20rpx;
 }
 </style>

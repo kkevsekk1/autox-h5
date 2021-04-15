@@ -51,10 +51,11 @@
 		}
 	},
 	"tabBar": {
-		"color": "#7A7E83",
-		"selectedColor": "#f9436b",
+		"color": "#888e94",
+		"selectedColor": "#007aff",
 		"borderStyle": "white",
 		"backgroundColor": "#ffffff",
+    "fontSize":"26rpx",
 		"list": [{
 				"pagePath": "pages/word/words",
 				"text": "查看口令"
