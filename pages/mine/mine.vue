@@ -36,7 +36,7 @@
         </view>
         <navigator url="/pages/login/login">
           <button class="button"
-                  type="default">退出登陆</button>
+                  type="default">退出登录</button>
         </navigator>
       </article>
     </view>

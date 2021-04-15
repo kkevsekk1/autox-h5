@@ -31,7 +31,7 @@
                         required>
           <uni-easyinput type="text"
                          v-model="user.account"
-                         placeholder="电话号码即登陆账号" />
+                         placeholder="电话号码即登录账号" />
         </uni-forms-item>
         <uni-forms-item label="密码"
                         name="password"
