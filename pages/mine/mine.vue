@@ -55,7 +55,7 @@ export default {
     return {
       dataMine: {
         head: '../../static/uni.png',
-        phone: '112233',
+        phone: '1122323',
         balance: '1.22',
         performance: '333',
         pfBalance: '3334',
