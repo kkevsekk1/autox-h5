@@ -56,7 +56,7 @@ export default {
       shopList: [],
       pages: {
         index: 1,
-        size: 10,
+        size: 5,
         count: 0
       },
       user: { account: '', password: '', name: '' },
@@ -90,7 +90,6 @@ export default {
       })
     } else {
       this.pages.index++
-      this.getShopList()
     }
     // 进入下一页
   },
@@ -102,33 +101,25 @@ export default {
   },
   methods: {
     initialData () {
+      this.pages.index = 1
       this.getShopList()
     },
     getShopList () {
+      this.shopList = []
+      this.shopData = []
       request({
         url: '/auth/getShopPage',
         method: 'post',
         data: {
-          index: this.pages.index.toString(),
-          size: '10',
+          index: '1',
+          size: '1000',
           search: '',
           orderby: 'id desc'
         }
       }).then((loadresult) => {
-        console.log(loadresult.data)
-        uni.hideLoading();
-        const { message, code, data } = loadresult.data;
-        if (code === 200) {
-          this.pages = {
-            count: data.pages,
-            index: data.index,
-            size: data.size
-          };
-          console.log(this.pages)
-          loadresult.data.data.list.forEach((item) => {
-            this.shopList.push(item)
-          })
-        }
+        loadresult.data.data.list.forEach((item) => {
+          this.shopList.push(item)
+        })
       })
     },
     addShop () {
