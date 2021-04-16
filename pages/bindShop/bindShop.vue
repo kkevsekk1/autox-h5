@@ -32,7 +32,7 @@ export default {
       codeId: '',
       shopList: [],
       shopData: [],
-      shopName: "",
+      shopName: "1",
       pages: {
         index: 1,
         size: 10,
