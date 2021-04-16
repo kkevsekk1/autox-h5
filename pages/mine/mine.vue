@@ -3,7 +3,8 @@
     <view>
       <header>
         <text>
-          <img :src="dataMine.head" alt="" />
+          <img :src="dataMine.head"
+               alt="" />
         </text>
         <text>{{ dataMine.name }}</text>
         <text>{{ dataMine.phone }}</text>
@@ -28,19 +29,19 @@
         </view>
       </article>
       <navigator url="/pages/login/login">
-        <button class="button" type="default">退出登录</button>
+        <button class="button"
+                type="default">退出登录</button>
       </navigator>
     </view>
   </view>
 </template>
-
 <script>
 import { request } from '../../server/request.js'
 export default {
-  created() {
+  created () {
     this.getMine()
   },
-  data() {
+  data () {
     return {
       dataMine: {
         head: '../../static/templateHL.png',
@@ -57,16 +58,16 @@ export default {
     }
   },
   methods: {
-    onPullDownRefresh() {
+    onPullDownRefresh () {
       this.initialData()
       setTimeout(() => {
         uni.stopPullDownRefresh()
       }, 1000)
     },
-    initialData() {
+    initialData () {
       this.getMine()
     },
-    getMine() {
+    getMine () {
       request({
         url: '/auth/info',
         method: 'get',
@@ -108,7 +109,7 @@ header {
   padding: 5rpx 0 5rpx 0;
 }
 header::after {
-  content: '';
+  content: "";
   clear: both;
   display: block;
 }

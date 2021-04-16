@@ -1,16 +1,5 @@
 <template>
   <view class="container">
-    <view class="add-code">
-      <button @click="getSign"
-              type="primary"
-              size="mini"
-              class="add-code-button">签名</button>
-      <button @click="addCode"
-              type="primary"
-              size="mini"
-              class="add-code-button">添加新码</button>
-
-    </view>
     <view class="code-box">
       <view class="code-list"
             v-if="codeList.length > 0">
@@ -29,16 +18,6 @@
       <img :src="src"
            alt="" />
     </view>
-    <uni-popup ref="popup"
-               type="center"
-               class="index-popup">
-      <view class="shop-list">
-        <uni-indexed-list :options="shopList"
-                          :showSelect="false"
-                          @click="selectShop"
-                          class="indexed"></uni-indexed-list>
-      </view>
-    </uni-popup>
   </view>
 </template>
 
@@ -97,7 +76,14 @@ export default {
   },
   methods: {
     showList (id) {
-      this.$refs.popup.open()
+      console.log(11111)
+      // uni.navigateTo({
+      //   url: 'pages/bindShop/bindShop', success: res => { }, fail: () => { }, complete: () => { }
+      // // })
+      // uni.reLaunch({
+      //   url: 'pages/bindShop/bindShop'
+      // });
+      console.log(2222)
       this.currentCodeId = id
     },
     getShopList () {
@@ -108,6 +94,7 @@ export default {
         method: 'post',
         data: { index: '1', size: '1000', search: '', orderby: 'id desc' },
       }).then((loadresult) => {
+        console.log(loadresult)
         let { code, message, data } = loadresult.data
         if (code === 200) {
           let tmplist = []

@@ -1,10 +1,11 @@
 <template>
   <view class="code-info">
-    <text class="code-shopname"
-          @click="$emit('showList',code.id)">{{code.shopName}}</text>
+    <navigator :url="'/pages/bindShop/bindShop?codeId='+ encodeURIComponent(JSON.stringify(code.id))"
+               class="code-shopname"
+               @click="$emit('showList',code.id)">{{code.shopName}}</navigator>
     <view class="code-content">
       <view class="code-id">
-        <text>code:{{code.newqrCode}}</text>
+        <text>新码:{{code.newqrCode}}</text>
         <view>
           <button @click="$emit('previewImg',code.id)"
                   type="primary"
@@ -22,7 +23,7 @@
         <button @click="$emit('identifyCode',{type:1,id:code.id})"
                 class="identify-code-button"
                 type="primary"
-                size="mini">识别商家二维码</button>
+                size="mini">识别原码</button>
       </view>
     </view>
   </view>
@@ -79,6 +80,9 @@ export default {
   align-items: center;
   font-size: 26rpx;
 }
+.code-id text {
+  font-weight: bold;
+}
 .code-url {
   display: flex;
   justify-content: space-between;
@@ -111,7 +115,7 @@ export default {
   font-size: 26rpx;
 }
 .identify-code-button {
-  width: 220rpx;
+  width: 140rpx;
   height: 50rpx;
   color: #007aff;
   font-size: 26rpx;

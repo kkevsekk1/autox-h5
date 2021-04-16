@@ -12,6 +12,9 @@ export default {
   },
   onHide: function () {
   },
+  globalData: {
+    codeId: '',
+  },
   methods: {
 
   }

@@ -40,6 +40,13 @@
 			"enablePullDownRefresh": true
 		}
 		
+  }, {
+		"path": "pages/bindShop/bindShop",
+		"style": {
+			"navigationBarTitleText": "绑定商家",
+			"enablePullDownRefresh": true
+		}
+		
   }],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -55,26 +62,24 @@
 		"selectedColor": "#007aff",
 		"borderStyle": "white",
 		"backgroundColor": "#ffffff",
-    "fontSize":"26rpx",
+    "fontSize":"28rpx",
 		"list": [{
 				"pagePath": "pages/word/words",
-				"text": "查看口令"
+				"text": "口令",
+        "iconPath": "static/word.png",
+        "selectedIconPath": "static/slcWord.png"
 			},
 			{
 				"pagePath": "pages/index/index",
-				"text": "首页"
-			},
-			{
-				"pagePath": "pages/codeRecords/codeRecords",
-				"text": "扫码记录"
-			},
-      {
-				"pagePath": "pages/addShop/addShop",
-				"text": "添加商家"
+				"text": "绑码",
+        "iconPath": "static/code.png",
+        "selectedIconPath": "static/slcCode.png"
 			},
 			{
 				"pagePath": "pages/mine/mine",
-				"text": "我的"
+				"text": "我的",
+        "iconPath": "static/mine.png",
+        "selectedIconPath": "static/slcMine.png"
 			}
 		]
 	}
