@@ -15,7 +15,7 @@
         <view class="content">
           <view>
             <img class="shop-img"
-                 src="../../static/shop_img.png"
+                 src="../../static/logo.png"
                  alt="">
           </view>
           <view class="shop-name">{{ item.shopName }}</view>
@@ -32,7 +32,7 @@ export default {
       codeId: '',
       shopList: [],
       shopData: [],
-      shopName: "1",
+      shopName: "",
       pages: {
         index: 1,
         size: 10,

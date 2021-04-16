@@ -1,19 +1,11 @@
 <template>
   <view class="code-info">
-<<<<<<< HEAD
     <navigator :url="'/pages/bindShop/bindShop?codeId='+ encodeURIComponent(JSON.stringify(code.id))"
                class="code-shopname"
                @click="$emit('showList',code.id)">{{code.shopName}}</navigator>
     <view class="code-content">
       <view class="code-id">
         <text>新码:{{code.newqrCode}}</text>
-=======
-    <text style="font-size: 26rpx;font-weight: bold;text-align: left;"
-          @click="$emit('showList',code.id)">{{code.shopName}}</text>
-    <view class="code-content">
-      <view class="code-id">
-        <text style="flex:1">code:{{code.newqrCode}}</text>
->>>>>>> b739d0f3f506d441216f39388b58a3e302630f5a
         <view>
           <button @click="$emit('previewImg',code.id)"
                   type="primary"
@@ -30,12 +22,8 @@
         <text class="url">{{code.url}}</text>
         <button @click="$emit('identifyCode',{type:1,id:code.id})"
                 class="identify-code-button"
-<<<<<<< HEAD
                 type="primary"
                 size="mini">识别原码</button>
-=======
-                size="mini">识别商家二维码</button>
->>>>>>> b739d0f3f506d441216f39388b58a3e302630f5a
       </view>
     </view>
   </view>
@@ -77,20 +65,29 @@ export default {
   box-sizing: border-box;
   padding: 20rpx;
   background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 8rpx;
+  border: 1rpx solid white;
+  border-radius: 10rpx;
 }
-<<<<<<< HEAD
+.code-shopname {
+  color: #007aff;
+  font-size: 34rpx;
+  font-weight: bold;
+  text-align: left;
+}
+.code-id {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 26rpx;
+}
 .code-id text {
   font-weight: bold;
 }
-=======
-.code-id,
->>>>>>> b739d0f3f506d441216f39388b58a3e302630f5a
 .code-url {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 24rpx;
 }
 .code-url .url {
   flex: auto;
@@ -103,14 +100,21 @@ export default {
   padding: 20rpx 0;
 }
 .preview-button {
-  width: 140rpx;
+  width: 100rpx;
+  height: 50rpx;
+  padding: 0;
+  line-height: 50rpx;
+  font-size: 26rpx;
 }
 .bind-code-button {
-  width: 180rpx;
-  margin-left: 10rpx;
+  width: 150rpx;
+  height: 50rpx;
+  padding: 0;
+  line-height: 44rpx;
+  margin-left: 20rpx;
+  font-size: 26rpx;
 }
 .identify-code-button {
-<<<<<<< HEAD
   width: 140rpx;
   height: 50rpx;
   color: #007aff;
@@ -120,8 +124,5 @@ export default {
   padding: 0;
   margin-right: -2rpx;
   line-height: 44rpx;
-=======
-  width: 260rpx;
->>>>>>> b739d0f3f506d441216f39388b58a3e302630f5a
 }
 </style>
