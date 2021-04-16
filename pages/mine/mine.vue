@@ -1,5 +1,5 @@
 <template>
-  <view class="login-box">
+  <view class="mine-box">
     <view>
       <header>
         <view class="bead">
@@ -7,6 +7,7 @@
             <img :src="dataMine.head"
                  alt="" />
           </text>
+          <text> {{ dataMine.name }} </text>
           <text> ID: {{ dataMine.phone }}</text>
         </view>
         <view class="nav">
@@ -25,21 +26,50 @@
         </view>
       </header>
       <article>
-        <view>
-          会员号<text>{{ dataMine.member }}</text>
+        <navigator url="/pages/codeRecords/codeRecords">
+          <view>
+            扫码记录
+          </view>
+        </navigator>
+        <view @click="download">
+          下载码包
         </view>
-        <view>
-          code<text>{{ dataMine.code }}</text>
-        </view>
-        <view>
-          到期时间<text>{{ dataMine.time }}</text>
-        </view>
+        <navigator url="/pages/addShop/addShop">
+          <view>
+            管理商家
+          </view>
+        </navigator>
+        <navigator url="/pages/alterPassword/alterPassword">
+          <view>
+            修改密码
+          </view>
+        </navigator>
         <navigator url="/pages/login/login">
           <button class="button"
                   type="default">退出登录</button>
         </navigator>
       </article>
     </view>
+
+    <!-- 下载代码包弹窗 -->
+    <uni-popup ref="popup"
+               type='center'
+               class="mine_popup">
+      <text class="text">确定下载码包</text>
+      <uni-forms :valve="dataMine"
+                 ref="form">
+        <uni-forms-item label="下载个数"
+                        required>
+          <uni-easyinput type="text"
+                         v-model="dataMine.download"
+                         placeholder="请输入个数" />
+        </uni-forms-item>
+      </uni-forms>
+      <view class="btn">
+        <button>取消</button>
+        <button>下载</button>
+      </view>
+    </uni-popup>
   </view>
 </template>
 
@@ -54,8 +84,9 @@ export default {
   data () {
     return {
       dataMine: {
-        head: '../../static/uni.png',
-        phone: '1122323',
+        head: '../../static/portrait.png',
+        name: "粉红色的吹风机",
+        phone: '112233',
         balance: '1.22',
         performance: '333',
         pfBalance: '3334',
@@ -63,18 +94,13 @@ export default {
         code: '25',
         time: '2020-01-01',
         surplus: '88888',
+        download: '',
       },
     }
   },
   methods: {
-    onPullDownRefresh () {
-      this.initialData()
-      setTimeout(() => {
-        uni.stopPullDownRefresh()
-      }, 1000)
-    },
-    initialData () {
-      this.getMine()
+    download () {
+      this.$refs.popup.open()
     },
     getMine () {
       request({
@@ -106,7 +132,7 @@ export default {
 </script>
 
 <style scoped>
-.login-box {
+.mine-box {
   background-color: #f5f5f5;
   padding: 0 !important;
 }
@@ -124,18 +150,14 @@ header {
 
 .head-portrait {
   margin: 0 auto;
-  width: 147rpx;
-  height: 147rpx;
+  width: 124rpx;
+  height: 124rpx;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
 .head-portrait img {
   width: 100%;
-}
-
-header::after {
-  content: "";
-  clear: both;
-  display: block;
 }
 
 header text {
@@ -147,7 +169,6 @@ header text {
 .nav {
   display: flex;
   height: 160rpx;
-  margin: 56rpx 0 10rpx 0;
 }
 
 .nav text {
@@ -192,32 +213,95 @@ article {
 }
 
 article view {
+  position: relative;
   height: 100rpx;
   line-height: 100rpx;
   margin: 10rpx 0;
-  padding: 0 30rpx;
+  padding-left: 100rpx;
   background-color: #fff;
   font-size: 30rpx;
   color: #333333;
+  background: no-repeat;
+  background-position: 20rpx 24rpx;
+  background-size: 50rpx;
+}
+article view::after {
+  content: "";
+  background: url(../../static/arrows.png) no-repeat;
+  background-size: 16rpx 27rpx;
+  position: absolute;
+  top: 40rpx;
+  right: 30rpx;
+  width: 16rpx;
+  height: 27rpx;
+  z-index: 1;
+}
+article view:nth-child(1) {
+  background-image: url(../../static/scan.png);
+}
+article view:nth-child(2) {
+  background-image: url(../../static/download.png);
+}
+article view:nth-child(3) {
+  background-image: url(../../static/management.png);
+}
+article view:nth-child(4) {
+  background-image: url(../../static/password.png);
 }
 
-article text {
-  float: right;
-  color: #bbb;
-}
-
-.login-box {
+.mine-box {
   padding: 40rpx;
   font-size: 28rpx;
   padding-top: 5rpx;
 }
 
-.login-box .button {
+.mine-box .button {
   background-color: #007aff;
   color: white;
   margin-top: 44rpx;
   font-size: 32rpx;
   height: 100rpx;
   line-height: 100rpx;
+}
+
+/* 弹窗 */
+::v-deep .uni-popup__wrapper-box {
+  background: aliceblue;
+  border-radius: 10rpx;
+  width: 650rpx;
+  height: 410rpx;
+  text-align: center;
+}
+.mine_popup .text {
+  font-size: 34rpx;
+  color: #1183ff;
+  font-weight: 600;
+  margin: 50rpx 0;
+  display: block;
+}
+::v-deep .is-direction-left {
+  padding-left: 80rpx;
+}
+::v-deep .is-input-border {
+  width: 350rpx;
+}
+.mine_popup .btn {
+  display: flex;
+  justify-content: space-around;
+}
+::v-deep .uni-popup__wrapper-box uni-button {
+  width: 120px;
+  height: 40px;
+  line-height: 40px;
+  font-weight: 530;
+}
+::v-deep .uni-popup__wrapper-box uni-button:nth-child(1) {
+  background-color: #ffffff;
+  border: 1px solid #999999;
+  color: #999999;
+}
+::v-deep .uni-popup__wrapper-box uni-button:nth-child(2) {
+  background-color: #007aff;
+  color: #fff;
 }
 </style>
