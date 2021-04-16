@@ -15,7 +15,7 @@
         <view class="content">
           <view>
             <img class="shop-img"
-                 src="../../static/logo.png"
+                 src="../../static/shop_img.png"
                  alt="">
           </view>
           <view class="shop-name">{{ item.shopName }}</view>
