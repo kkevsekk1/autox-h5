@@ -85,7 +85,7 @@ export default {
     return {
       dataMine: {
         head: '../../static/portrait.png',
-        name: "粉红色的吹风机",
+        name: "粉红色的大吹风机",
         phone: '112233',
         balance: '1.22',
         performance: '333',
