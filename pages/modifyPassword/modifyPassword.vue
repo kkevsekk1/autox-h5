@@ -1,5 +1,5 @@
 <template>
-  <view class="alterpassword_box">
+  <view class="modifypassword_box">
     <uni-forms :value="Password"
                :rules="rules"
                ref="form">
@@ -75,11 +75,11 @@ export default {
 </script>
 
 <style  scoped>
-.alterPassword_box {
+.modifyPassword_box {
   margin: 0 auto;
   background-color: #f5f5f5;
 }
-.alterpassword_box {
+.modifypassword_box {
   margin: 20px;
   padding: 0 25rpx;
 }

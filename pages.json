@@ -41,7 +41,7 @@
 		}
 		
   }, {
-    "path":"pages/alterPassword/alterPassword",
+    "path":"pages/modifyPassword/modifyPassword",
     "style": {
       "navigationBarTitleText": "修改密码",
       "enablePullDownRefresh": false

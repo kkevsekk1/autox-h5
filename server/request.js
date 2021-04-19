@@ -1,4 +1,4 @@
-import Vue from 'vue'
+const baseUrl = process.env.NODE_ENV === 'development' ? 'http://192.168.1.24:9317' : 'http://112.74.161.35:9317';
 
 function request(options){
 	let cookie = uni.getStorageSync('token')
@@ -6,7 +6,7 @@ function request(options){
 	data = data || {}
 	return new Promise((resolve)=>{
 		uni.request({
-		    url:  Vue.prototype.baseUrl+url, 
+		    url:  baseUrl+url, 
 		    data,
 			method:method||"GET",
 			header:{authorization:cookie || '',cookie:''},
