@@ -26,24 +26,24 @@
         </view>
       </header>
       <article>
-        <navigator url="/pages/codeRecords/codeRecords">
-          <view>
+        <view>
+          <navigator url="/pages/codeRecords/codeRecords">
             扫码记录
-          </view>
-        </navigator>
+          </navigator>
+        </view>
         <view @click="openPopup">
           下载码包
         </view>
-        <navigator url="/pages/addShop/addShop">
-          <view>
+        <view>
+          <navigator url="/pages/addShop/addShop">
             管理商家
-          </view>
-        </navigator>
-        <navigator url="/pages/modifyPassword/modifyPassword">
-          <view>
+          </navigator>
+        </view>
+        <view>
+          <navigator url="/pages/modifyPassword/modifyPassword">
             修改密码
-          </view>
-        </navigator>
+          </navigator>
+        </view>
         <navigator url="/pages/login/login">
           <button class="btn-logout"
                   type="default">退出登录</button>
@@ -184,7 +184,6 @@ header text {
 
 .nav {
   display: flex;
-  height: 160rpx;
 }
 
 .nav text {
