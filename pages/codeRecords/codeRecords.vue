@@ -82,7 +82,7 @@ export default {
 
 <style>
 page {
-  background-color: #f4f4f5;
+  background-color: #f8f8f8;
 }
 .container {
   position: relative;

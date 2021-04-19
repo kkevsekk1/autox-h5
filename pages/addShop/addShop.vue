@@ -115,16 +115,20 @@ export default {
           orderby: 'id desc'
         }
       }).then((loadresult) => {
-        console.log(loadresult.data)
-        uni.hideLoading();
-        const { message, code, data } = loadresult.data;
+        // console.log(loadresult.data)
+        uni.hideLoading()
+        const {
+          message,
+          code,
+          data
+        } = loadresult.data
         if (code === 200) {
           this.pages = {
             count: data.pages,
             index: data.index,
-            size: data.size
-          };
-          console.log(this.pages)
+            size: data.size,
+          }
+          // console.log(this.pages)
           loadresult.data.data.list.forEach((item) => {
             this.shopList.push(item)
           })
@@ -151,7 +155,13 @@ export default {
         request({
           url: '/auth/addShop',
           method: 'post',
-          data: res
+          data: res,
+        }).then((loadresult) => {
+          let {
+            code,
+            message,
+            data
+          } = loadresult.data
         })
           .then((loadresult) => {
             let { code, message, data } = loadresult.data

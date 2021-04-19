@@ -18,7 +18,7 @@
                        v-model="user.verifyCode"
                        placeholder="密码" />
       </uni-forms-item>
-      <button @click="submitForm"
+      <button @click="logout"
               type="primary">登陆</button>
     </uni-forms>
   </view>
@@ -49,12 +49,14 @@ export default {
   methods: {
     submitForm (form) {
       this.$refs.form.submit().then((res) => {
+        console.log(res)
         request({
           url: '/sms/verification',
           method: 'post',
           data: res
         })
           .then((loadresult) => {
+            console.log(loadresult)
             let { code, message, data } = loadresult.data
             uni.showToast({ title: message, icon: 'none' })
             if (code === 200) {
