@@ -3,7 +3,7 @@
     <uni-forms :value="user"
                ref="form"
                :rules="rules">
-      <h2 class="login-header">账号登录</h2>
+      <h2 class="login-header">账号登陆</h2>
       <uni-forms-item label="用户名"
                       name="phone"
                       required>
@@ -19,7 +19,7 @@
                        placeholder="密码" />
       </uni-forms-item>
       <button @click="submitForm"
-              type="primary">登录</button>
+              type="primary">登陆</button>
     </uni-forms>
   </view>
 </template>

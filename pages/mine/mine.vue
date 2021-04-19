@@ -11,18 +11,9 @@
           <text> ID: {{ dataMine.phone }}</text>
         </view>
         <view class="nav">
-          <text>
-            <p>{{ dataMine.balance }}</p>
-            金额
-          </text>
-          <text>
-            <p>{{ dataMine.performance }}</p>
-            总提成
-          </text>
-          <text>
-            <p>{{ dataMine.pfBalance }}</p>
-            提成金额
-          </text>
+          <text>金额<br />{{ dataMine.balance }}</text>
+          <text>总提成<br />{{ dataMine.performance }}</text>
+          <text>提成金额<br />{{ dataMine.pfBalance }}</text>
         </view>
       </header>
       <article>
@@ -49,6 +40,10 @@
                   type="default">退出登录</button>
         </navigator>
       </article>
+      <navigator url="/pages/login/login">
+        <button class="button"
+                type="default">退出登录</button>
+      </navigator>
     </view>
 
     <!-- 下载代码包弹窗 -->
@@ -72,11 +67,8 @@
     </uni-popup>
   </view>
 </template>
-
 <script>
-import {
-  request
-} from '../../server/request.js'
+import { request } from '../../server/request.js'
 export default {
   created () {
     this.getMine()
@@ -108,11 +100,7 @@ export default {
         method: 'get',
         data: '',
       }).then((loadresult) => {
-        let {
-          message,
-          code,
-          data
-        } = loadresult.data
+        let { message, code, data } = loadresult.data
         console.log(loadresult.data)
         if (code === 200) {
           let dataMines = this.dataMine
@@ -136,9 +124,7 @@ export default {
   background-color: #f5f5f5;
   padding: 0 !important;
 }
-
-header {
-  height: 430rpx;
+.login-box .button {
   background-color: #007aff;
   color: #fff;
   padding: 20rpx;
@@ -155,63 +141,37 @@ header {
   border-radius: 50%;
   overflow: hidden;
 }
-
-.head-portrait img {
-  width: 100%;
+header {
+  background-color: #36d48f;
+  color: #fff;
+  padding: 5rpx 0 5rpx 0;
 }
 
+header::after {
+  content: "";
+  clear: both;
+  display: block;
+}
 header text {
   display: block;
-  margin-top: 26rpx;
+  margin-top: 14rpx;
   text-align: center;
 }
-
 .nav {
   display: flex;
   height: 160rpx;
 }
-
 .nav text {
   flex: 1;
   width: 33%;
-  font-size: 26rpx;
-  box-sizing: border-box;
-  font-weight: 200;
+  font-size: 20rpx;
 }
-
-.nav text p {
-  height: 50rpx;
-  margin-bottom: 10rpx;
-  font-size: 36rpx;
-  font-weight: 900;
-}
-
 .nav text:nth-child(2) {
-  position: relative;
+  border-left: 1px solid #fff;
+  border-right: 1px solid #fff;
+  box-sizing: border-box;
+  align-items: center;
 }
-
-.nav text:nth-child(2)::before,
-.nav text:nth-child(2)::after {
-  content: "";
-  width: 1px;
-  height: 40rpx;
-  position: absolute;
-  top: 32rpx;
-  background-color: #6ab1ff;
-}
-
-.nav text:nth-child(2)::before {
-  left: 0;
-}
-
-.nav text:nth-child(2)::after {
-  right: 0;
-}
-
-article {
-  margin: 22rpx;
-}
-
 article view {
   position: relative;
   height: 100rpx;

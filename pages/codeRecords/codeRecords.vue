@@ -82,12 +82,20 @@ export default {
 
 <style>
 page {
+<<<<<<< HEAD
   background-color: #f8f8f8;
+=======
+  background-color: #f4f4f5;
+>>>>>>> 813fbc92411894bd0c5ca2bc127ea724d94023bd
 }
 .container {
   position: relative;
   padding: 40rpx 20rpx;
+<<<<<<< HEAD
   font-size: 14px;
+=======
+  font-size: 24rpx;
+>>>>>>> 813fbc92411894bd0c5ca2bc127ea724d94023bd
 }
 .record-box {
   margin-top: 20rpx;

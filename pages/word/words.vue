@@ -1,24 +1,47 @@
 <template>
   <view class="container">
+    <input type="text"
+           v-model="searchContent"
+           class="search-content"
+           placeholder="请输入口令搜索内容">
+    <button class="search-btn"
+            @click="searchWord"
+            size='mini'>搜索</button>
     <view class="record-box">
       <view v-if="datas.length>0"
             class="record-list">
         <view v-for="item in datas"
               :key="item.id">
-          <view class="record-info">
+          <view class="record-info"
+                v-if="item.isGet">
             <view class="record-header">
               <text>口令类型：{{ item.type }}</text>
               <text>口令内容：{{ item.content }}</text>
-              <button v-if="item.btnShow"
-                      type="primary"
+              <button type="primary"
                       size="mini"
-                      @click="bindWord(item)">绑定口令</button>
+                      @click="bindWord(item)">领取</button>
             </view>
             <view class="record-content">
               <view style="margin-top:20rpx;">创建时间：{{ item.createTime }}</view>
               <view style="line-height:80rpx;">商家名称：{{ item.publisherName }}</view>
             </view>
           </view>
+
+          <view class="record-info-change"
+                v-else>
+            <view class="record-header">
+              <text>口令类型：{{ item.type }}</text>
+              <text>口令内容：{{ item.content }}</text>
+              <button type="primary"
+                      size="mini"
+                      class="record-change">已领取</button>
+            </view>
+            <view class="record-content">
+              <view style="margin-top:20rpx;">创建时间：{{ item.createTime }}</view>
+              <view style="line-height:80rpx;">商家名称：{{ item.publisherName }}</view>
+            </view>
+          </view>
+
         </view>
       </view>
       <view v-else>暂无扫码记录</view>
@@ -36,6 +59,7 @@ import {
 export default {
   data () {
     return {
+      searchContent: '',
       datas: [],
       pages: {
         index: 1,
@@ -87,6 +111,7 @@ export default {
         data: data
       })
         .then((loadresult) => {
+          // console.log(loadresult)
           uni.hideLoading();
           const {
             message,
@@ -101,7 +126,7 @@ export default {
             };
             data.list.forEach(record => {
               record.createTime = formatTime(record.createTime);
-              record.btnShow = false;
+              record.isGet = false;
               this.datas.push(record);
             });
           }
@@ -131,15 +156,15 @@ export default {
           ids: ids
         }
       }).then((res) => {
-        this.buttonShow(res.data.data);
+        this.isGetCode(res.data.data);
       });
     },
-    buttonShow (data) {
+    isGetCode (data) {
       for (var i = 0; i < this.datas.length; i++) {
         if (this.idInIt(this.datas[i].id, data)) {
-          this.datas[i].btnShow = false;
+          this.datas[i].isGet = false;
         } else {
-          this.datas[i].btnShow = true;
+          this.datas[i].isGet = true;
         }
       }
     },
@@ -166,7 +191,8 @@ export default {
             code,
             data
           } = loadresult.data;
-          word.btnShow = false;
+          word.isGet = false;
+          this.$router.go(0)
           if (code === 200) {
             uni.showToast({
               title: message,
@@ -194,6 +220,25 @@ export default {
             }, 2000);
           }
         });
+    },
+    searchWord () {
+      console.log(this.datas)
+      request({
+        url: '/word/page',
+        method: 'post',
+        data: {
+          search: this.searchContent,
+          index: "1",
+          size: "10",
+          type: "",
+          orderby: "createTime"
+        }
+      }).then((res) => {
+        this.datas = [];
+        res.data.data.list.forEach((item) => {
+          this.datas.push(item)
+        })
+      })
     }
   },
 };
@@ -201,7 +246,7 @@ export default {
 
 <style>
 page {
-  background-color: #f8f8f8;
+  background-color: #f4f4f5;
 }
 
 .container {
@@ -209,19 +254,41 @@ page {
   padding: 40rpx 20rpx;
   font-size: 14px;
 }
-
+.search-content {
+  width: 560rpx;
+  display: inline-block;
+  height: 80rpx;
+  padding-left: 5px;
+  line-height: 80rpx;
+  font-size: 24rpx;
+}
+.search-btn {
+  background-color: #007aff;
+  color: white;
+  height: 80rpx;
+  line-height: 80rpx;
+  font-size: 26rpx;
+  border-radius: 0 40rpx 40rpx 0;
+}
 .record-box {
   margin-top: 20rpx;
   overflow: hidden;
 }
 
 .record-info {
-  border: 2rpx solid #ccc;
+  background-color: white;
   padding: 25rpx;
   margin-bottom: 20rpx;
   border-radius: 20rpx;
+  color: #333333;
 }
-
+.record-info-change {
+  background-color: white;
+  padding: 25rpx;
+  margin-bottom: 20rpx;
+  border-radius: 20rpx;
+  color: #999999;
+}
 .record-header {
   font-weight: bold;
   position: relative;
@@ -240,11 +307,20 @@ page {
 
 .record-header button {
   float: right;
+  background-color: #df0024;
   position: absolute;
-  right: 18rpx;
-  top: 24rpx;
+  right: 0rpx;
+  top: 0rpx;
+  border-radius: 0 20rpx 0 20rpx;
 }
-
+.record-info-change .record-change {
+  float: right;
+  background-color: #cccccc;
+  position: absolute;
+  right: 0rpx;
+  top: 0rpx;
+  border-radius: 0 20rpx 0 20rpx;
+}
 .record-content :nth-child(2) {
   margin-bottom: -10rpx;
 }

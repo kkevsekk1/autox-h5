@@ -8,7 +8,7 @@
 	}, {
 		"path": "pages/login/login",
 		"style": {
-			"navigationBarTitleText": "登录",
+			"navigationBarTitleText": "登陆",
 			"enablePullDownRefresh": false
 		}
 
@@ -46,6 +46,12 @@
       "navigationBarTitleText": "修改密码",
       "enablePullDownRefresh": false
     }
+  }, {
+		"path": "pages/bindShop/bindShop",
+		"style": {
+			"navigationBarTitleText": "绑定商家",
+			"enablePullDownRefresh": true
+		}
   }],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -57,21 +63,28 @@
 		}
 	},
 	"tabBar": {
-		"color": "#7A7E83",
-		"selectedColor": "#f9436b",
+		"color": "#888e94",
+		"selectedColor": "#007aff",
 		"borderStyle": "white",
 		"backgroundColor": "#ffffff",
+    "fontSize":"28rpx",
 		"list": [{
 				"pagePath": "pages/word/words",
-				"text": "查看口令"
+				"text": "口令",
+        "iconPath": "static/word.png",
+        "selectedIconPath": "static/slcWord.png"
 			},
 			{
 				"pagePath": "pages/index/index",
-				"text": "首页"
+				"text": "绑码",
+        "iconPath": "static/code.png",
+        "selectedIconPath": "static/slcCode.png"
 			},
 			{
 				"pagePath": "pages/mine/mine",
-				"text": "我的"
+				"text": "我的",
+        "iconPath": "static/mine.png",
+        "selectedIconPath": "static/slcMine.png"
 			}
 		]
 	}
