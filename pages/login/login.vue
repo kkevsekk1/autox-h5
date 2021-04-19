@@ -18,7 +18,7 @@
                        v-model="user.verifyCode"
                        placeholder="密码" />
       </uni-forms-item>
-      <button @click="submitForm"
+      <button @click="logout"
               type="primary">登陆</button>
     </uni-forms>
   </view>
