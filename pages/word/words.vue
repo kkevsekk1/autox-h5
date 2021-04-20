@@ -100,7 +100,7 @@ export default {
       const data = {
         index: this.pages.index + '',
         size: this.pages.size + '',
-        orderby: 'id desc'
+        orderby: 'createTime'
       };
       uni.showLoading({
         title: '加载中'
@@ -127,6 +127,7 @@ export default {
             data.list.forEach(record => {
               record.createTime = formatTime(record.createTime);
               record.isGet = false;
+              this.changeCodeType(record);
               this.datas.push(record);
             });
           }
@@ -166,6 +167,17 @@ export default {
         } else {
           this.datas[i].isGet = true;
         }
+      }
+    },
+    changeCodeType (item) {
+      if (item.type == 1) {
+        item.type = '支付宝'
+      }
+      if (item.type == 2) {
+        item.type = '抖音'
+      }
+      if (item.type == 3) {
+        item.type = '淘宝'
       }
     },
     idInIt (id, checkDatas) {
@@ -236,6 +248,7 @@ export default {
       }).then((res) => {
         this.datas = [];
         res.data.data.list.forEach((item) => {
+          this.changeCodeType(item);
           this.datas.push(item)
         })
       })
