@@ -262,41 +262,7 @@ page {
 .container {
   position: relative;
   padding: 40rpx 20rpx;
-  font-size: 14px;
-}
-::v-deep .uni-indexed-list__title-wrapper {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  background: #007aff;
-  color: #fff;
-  border-radius: 4px;
-}
-::v-deep .uni-indexed-list__title {
-  line-height: 24px;
-  font-size: 18px;
-  margin: 0 auto;
-}
-::v-deep .uni-indexed-list__menu {
-  display: none;
-}
-::v-deep .uni-indexed-list__item-content {
-  text-align: center;
-  color: #444;
-}
-::v-deep .uni-indexed-list__item-container {
-  padding: 0;
-}
-::v-deep .uni-indexed-list__item-border {
-  padding: 15px;
-}
-::v-deep .uni-indexed-list__item-border:hover {
-  background: #ccc;
-  color: #fff;
-}
-::v-deep .uni-indexed-list__item-content {
-  text-align: center;
-  color: #444;
+  font-size: 28rpx;
 }
 .shop-list {
   box-sizing: border-box;

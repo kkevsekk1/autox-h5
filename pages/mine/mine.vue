@@ -1,71 +1,109 @@
 <template>
-  <view class="login-box">
+  <view class="mine-box">
     <view>
       <header>
-        <text>
-          <img :src="dataMine.head"
-               alt="" />
-        </text>
-        <text>{{ dataMine.name }}</text>
-        <text>{{ dataMine.phone }}</text>
+        <view class="bead">
+          <text class="head-portrait">
+            <img :src="dataMine.head"
+                 alt="" />
+          </text>
+          <text> {{ dataMine.name }} </text>
+          <text> ID: {{ dataMine.phone }}</text>
+        </view>
         <view class="nav">
-          <text>金额<br />{{ dataMine.balance }}</text>
-          <text>总提成<br />{{ dataMine.performance }}</text>
-          <text>提成金额<br />{{ dataMine.pfBalance }}</text>
+          <text>
+            <p>{{ dataMine.balance }}</p>
+            金额
+          </text>
+          <text>
+            <p>{{ dataMine.performance }}</p>
+            总提成
+          </text>
+          <text>
+            <p>{{ dataMine.pfBalance }}</p>
+            提成金额
+          </text>
         </view>
       </header>
       <article>
         <view>
-          会员号<text>{{ dataMine.member }}</text>
+          <navigator url="/pages/codeRecords/codeRecords">
+            扫码记录
+          </navigator>
+        </view>
+        <view @click="openPopup">
+          下载码包
         </view>
         <view>
-          code<text>{{ dataMine.code }}</text>
+          <navigator url="/pages/addShop/addShop">
+            管理商家
+          </navigator>
         </view>
         <view>
-          到期时间<text>{{ dataMine.time }}</text>
+          <navigator url="/pages/modifyPassword/modifyPassword">
+            修改密码
+          </navigator>
         </view>
-        <view>
-          剩余扫码次数<text>{{ dataMine.surplus }}</text>
-        </view>
+        <navigator url="/pages/login/login">
+          <button class="btn-logout"
+                  type="default">退出登录</button>
+        </navigator>
       </article>
-      <navigator url="/pages/login/login">
-        <button class="button"
-                type="default">退出登录</button>
-      </navigator>
     </view>
+
+    <!-- 下载代码包弹窗 -->
+    <uni-popup ref="popup"
+               type='center'>
+      <uni-forms :valve="dataMine"
+                 ref="form"
+                 class="mine-popup">
+        <text>确定下载码包</text>
+        <uni-forms-item label="下载个数"
+                        name="download"
+                        required>
+          <uni-easyinput type="number"
+                         v-model="dataMine.downloadTotal"
+                         placeholder="请输入个数" />
+        </uni-forms-item>
+        <view class="popup-btn">
+          <button type="button"
+                  @click="closePopup">取消</button>
+          <button tyoe="submit"
+                  @click="submitForm">下载</button>
+        </view>
+      </uni-forms>
+    </uni-popup>
   </view>
 </template>
 <script>
-import { request } from '../../server/request.js'
+import Vue from 'vue'
+import { request } from '../../server/request.js';
 export default {
-  created () {
-    this.getMine()
-  },
   data () {
     return {
       dataMine: {
-        head: '../../static/templateHL.png',
-        name: '金运1122',
-        phone: '112233',
-        balance: '1.22',
-        performance: '333',
-        pfBalance: '3334',
+        head: '../../static/portrait.png',
+        name: "粉红色的吹风机",
+        phone: '',
+        balance: '0',
+        performance: '0',
+        pfBalance: '0',
         member: '24',
         code: '25',
         time: '2020-01-01',
-        surplus: '88888',
+        downloadTotal: '',
       },
-    }
+    };
+  },
+  created () {
+    this.getMine();
   },
   methods: {
-    onPullDownRefresh () {
-      this.initialData()
-      setTimeout(() => {
-        uni.stopPullDownRefresh()
-      }, 1000)
+    openPopup () {
+      this.$refs.popup.open();
     },
-    initialData () {
-      this.getMine()
+    closePopup () {
+      this.$refs.popup.close()
     },
     getMine () {
       request({
@@ -74,12 +112,12 @@ export default {
         data: '',
       }).then((loadresult) => {
         let { message, code, data } = loadresult.data
-        console.log(loadresult.data)
+        // console.log(loadresult.data)
         if (code === 200) {
           let dataMines = this.dataMine
           dataMines.phone = data.account
-          dataMines.balance = data.balance
-          dataMines.performance = data.commissionBalance
+          dataMines.balance = data.balance === null ? 0 : data.balance;
+          dataMines.performance = data.commissionBalance === null ? 0 : data.commissionBalance;
           dataMines.pfBalance = data.commissionBalance + data.balance
           dataMines.member = data.id
           dataMines.code = data.code
@@ -88,60 +126,188 @@ export default {
         }
       })
     },
+    submitForm () {
+      if (this.dataMine.downloadTotal > 99) {
+        uni.showToast({
+          title: '图片超出最大范围值',
+          icon: 'none',
+        });
+        this.dataMine.downloadTotal = "";
+      } else {
+        let token = uni.getStorageSync("token");
+        let host = Vue.prototype.baseUrl;
+        let url = host + '/qrcode/download?number=' + this.dataMine.downloadTotal + "&token=" + token;
+        document.cookie = `authorization=${token}; path=/; domain=${host}; expires=${new Date().getTime() + (1000 * 60)};`;
+        window.location.href = url;
+        this.dataMine.downloadTotal = 0;
+        this.$refs.popup.close();
+      }
+    }
   },
 }
 </script>
 
 <style scoped>
-.login-box {
+.mine-box {
+  background-color: #f5f5f5;
+  padding: 0 !important;
+}
+
+header {
+  height: 430rpx;
+  background-color: #007aff;
+  color: #fff;
+  padding: 10px;
+}
+
+.bead {
+  margin: 10px 0;
+}
+
+.head-portrait {
+  margin: 0 auto;
+  width: 124rpx;
+  height: 124rpx;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.head-portrait img {
+  width: 100%;
+}
+
+header text {
+  display: block;
+  margin-top: 13px;
+  text-align: center;
+}
+
+.nav {
+  display: flex;
+}
+
+.nav text {
+  flex: 1;
+  width: 33%;
+  font-size: 26rpx;
+  box-sizing: border-box;
+  font-weight: 200;
+}
+
+.nav text p {
+  height: 50rpx;
+  margin-bottom: 10rpx;
+  font-size: 36rpx;
+  font-weight: 900;
+}
+
+.nav text:nth-child(2) {
+  position: relative;
+}
+
+.nav text:nth-child(2)::before,
+.nav text:nth-child(2)::after {
+  content: "";
+  width: 1px;
+  height: 40rpx;
+  position: absolute;
+  top: 32rpx;
+  background-color: #6ab1ff;
+}
+
+.nav text:nth-child(2)::before {
+  left: 0;
+}
+
+.nav text:nth-child(2)::after {
+  right: 0;
+}
+
+article {
+  margin: 11px;
+}
+
+article view {
+  position: relative;
+  height: 100rpx;
+  line-height: 100rpx;
+  margin: 5px 0;
+  padding-left: 100rpx;
+  background-color: #fff;
+  font-size: 30rpx;
+  color: #333333;
+  background: no-repeat;
+  background-position: 20rpx 24rpx;
+  background-size: 50rpx;
+}
+article view::after {
+  content: "";
+  background: url(../../static/arrows.png) no-repeat;
+  background-size: 16rpx 27rpx;
+  position: absolute;
+  top: 40rpx;
+  right: 30rpx;
+  width: 16rpx;
+  height: 27rpx;
+  z-index: 1;
+}
+article view:nth-child(1) {
+  background-image: url(../../static/scan.png);
+}
+article view:nth-child(2) {
+  background-image: url(../../static/download.png);
+}
+article view:nth-child(3) {
+  background-image: url(../../static/management.png);
+}
+article view:nth-child(4) {
+  background-image: url(../../static/password.png);
+}
+
+.mine-box {
   padding: 40rpx;
   font-size: 28rpx;
   padding-top: 5rpx;
 }
-.login-box .button {
+
+.mine-box .btn-logout {
   background-color: #007aff;
   color: white;
-  margin-top: 10rpx;
+  margin-top: 44rpx;
+  font-size: 32rpx;
+  height: 100rpx;
+  line-height: 100rpx;
 }
-header {
-  background-color: #36d48f;
-  color: #fff;
-  padding: 5rpx 0 5rpx 0;
-}
-header::after {
-  content: "";
-  clear: both;
-  display: block;
-}
-header text {
-  display: block;
-  margin-top: 14rpx;
+
+/* 弹窗 */
+.mine-box .mine-popup {
+  background-color: #fff;
+  border-radius: 10rpx;
+  padding: 50rpx 70rpx;
   text-align: center;
 }
-.nav {
+.mine-popup text {
+  font-size: 34rpx;
+  color: #1183ff;
+  font-weight: 600;
+  margin-bottom: 50rpx;
+  display: block;
+}
+.mine-popup .popup-btn {
   display: flex;
-  margin: 10rpx 0 10rpx 0;
 }
-.nav text {
+.mine-popup button {
   flex: 1;
-  width: 33%;
-  font-size: 20rpx;
+  width: 240rpx;
+  font-weight: 530;
 }
-.nav text:nth-child(2) {
-  border-left: 1px solid #fff;
-  border-right: 1px solid #fff;
-  box-sizing: border-box;
-  align-items: center;
+.mine-popup button:nth-child(1) {
+  margin-right: 30rpx;
+  border: 1px solid #ddd;
+  color: #999;
 }
-article view {
-  height: 70rpx;
-  line-height: 70rpx;
-  font-weight: 800;
-  border-bottom: 1px solid #ccc;
-}
-article text {
-  float: right;
-  font-weight: 500;
-  color: #bbb;
+.mine-popup button:nth-child(2) {
+  background-color: #007aff;
+  color: #fff;
 }
 </style>

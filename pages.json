@@ -41,12 +41,17 @@
 		}
 		
   }, {
+    "path":"pages/modifyPassword/modifyPassword",
+    "style": {
+      "navigationBarTitleText": "修改密码",
+      "enablePullDownRefresh": false
+    }
+  }, {
 		"path": "pages/bindShop/bindShop",
 		"style": {
 			"navigationBarTitleText": "绑定商家",
 			"enablePullDownRefresh": true
 		}
-		
   }],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

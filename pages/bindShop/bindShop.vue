@@ -3,6 +3,8 @@
     <view class="search-content">
       <input type="text"
              v-model="shopName"
+             ref="search"
+             v-on:keydown.13="searchShop"
              placeholder="请搜索商家名称">
     </view>
     <view class="search">
@@ -10,12 +12,13 @@
            alt="">
     </view>
     <view v-for="item in shopData"
-          :key="item.id">
-      <view class="shop-list">
+          :key="item.shopId">
+      <view class="shop-list"
+            @click="bindCode(item.shopId)">
         <view class="content">
           <view>
             <img class="shop-img"
-                 src="../../static/logo.png"
+                 src="../../static/shopLogo.png"
                  alt="">
           </view>
           <view class="shop-name">{{ item.shopName }}</view>
@@ -46,6 +49,7 @@ export default {
   onLoad: function (option) {
     console.log(option)
     const item = JSON.parse(decodeURIComponent(option.codeId));
+    this.codeId = item
   },
   onReachBottom () {
     // 当前页大于等于总页数
@@ -67,6 +71,46 @@ export default {
     initialData () {
       this.getShopList()
     },
+    searchShop () {
+      console.log(this.shopData)
+      request({
+        url: '/auth/getShopPage',
+        method: 'post',
+        data: { index: this.pages.index.toString(), size: '15', search: this.shopName, orderby: 'id desc' }
+      }).then((res) => {
+        console.log(res);
+        if (res.data.data.count != 0) {
+          this.shopData = []
+          let tmplist = []
+          res.data.data.list.forEach((shop) => {
+            tmplist.push(shop.name)
+            this.shopData.push({ shopName: shop.name, shopId: shop.id })
+          })
+        } else {
+          uni.showToast({
+            title: '暂无该商家',
+            icon: 'none'
+          });
+        }
+      })
+    },
+    bindCode (id) {
+      request({
+        url: '/qrcode/bindingshop',
+        method: 'get',
+        data: { shopId: id, qrcodeId: this.codeId },
+      }).then((res) => {
+        uni.showToast({
+          title: res.data.message,
+          icon: 'none'
+        });
+        setTimeout(() => {
+          uni.reLaunch({
+            url: '/pages/index/index'
+          });
+        }, 2000);
+      })
+    },
     getShopList () {
       request({
         url: '/auth/getShopPage',
@@ -87,7 +131,6 @@ export default {
           })
           this.shopList.push({ letter: '商家', data: tmplist })
           console.log(this.shopData)
-          console.log(this.shopList)
         } else {
           uni.showToast({ title: message, icon: 'none' })
         }
