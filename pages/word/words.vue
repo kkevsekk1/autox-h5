@@ -37,7 +37,7 @@
                       class="record-change">已领取</button>
             </view>
             <view class="record-content">
-              <view style="margin-top:20rpx;">创建时间：{{ item.createTime }}</view>
+              <view style="margin-top:20rpx;">创建时间：{{ item.createTime |time  }}</view>
               <view style="line-height:80rpx;">商家名称：{{ item.publisherName }}</view>
             </view>
           </view>
@@ -100,6 +100,7 @@ export default {
       const data = {
         index: this.pages.index + '',
         size: this.pages.size + '',
+        search: '',
         orderby: 'createTime'
       };
       uni.showLoading({
@@ -234,24 +235,43 @@ export default {
         });
     },
     searchWord () {
-      console.log(this.datas)
+
+      const data = {
+        index: this.pages.index + '',
+        size: this.pages.size + '',
+        search: this.searchContent,
+        orderby: 'createTime'
+      };
+      uni.showLoading({
+        title: '加载中'
+      });
       request({
-        url: '/word/page',
+        url: '/word/pagetoshop',
         method: 'post',
-        data: {
-          search: this.searchContent,
-          index: "1",
-          size: "10",
-          type: "",
-          orderby: "createTime"
-        }
-      }).then((res) => {
-        this.datas = [];
-        res.data.data.list.forEach((item) => {
-          this.changeCodeType(item);
-          this.datas.push(item)
-        })
+        data: data
       })
+        .then((loadresult) => {
+          uni.hideLoading();
+          const {
+            message,
+            code,
+            data
+          } = loadresult.data;
+          if (code === 200) {
+            this.datas = []
+            this.pages = {
+              count: data.count,
+              index: data.index,
+              size: data.size
+            };
+            data.list.forEach(record => {
+              record.createTime = formatTime(record.createTime);
+              record.isGet = false;
+              this.changeCodeType(record);
+              this.datas.push(record);
+            });
+          }
+        });
     }
   },
 };
