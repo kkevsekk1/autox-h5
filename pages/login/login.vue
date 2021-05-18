@@ -18,7 +18,7 @@
                        v-model="user.verifyCode"
                        placeholder="密码" />
       </uni-forms-item>
-      <button @click="logout"
+      <button @click="submitForm"
               type="primary">登陆</button>
     </uni-forms>
   </view>
@@ -29,6 +29,7 @@ import { request } from '../../server/request.js'
 export default {
   data () {
     return {
+      path: "",
       user: { phone: '', verifyCode: '' },
       rules: {
         phone: {
@@ -45,11 +46,18 @@ export default {
   },
   created () {
     uni.removeStorageSync('token')
+    this.getUser()
+  },
+  onLoad (option) {
+    this.path = option.path
   },
   methods: {
-    submitForm (form) {
+    getUser () {
+      let userList = JSON.parse(localStorage.getItem("user"))
+      this.user = userList
+    },
+    submitForm () {
       this.$refs.form.submit().then((res) => {
-        console.log(res)
         request({
           url: '/sms/verification',
           method: 'post',
@@ -60,9 +68,18 @@ export default {
             let { code, message, data } = loadresult.data
             uni.showToast({ title: message, icon: 'none' })
             if (code === 200) {
+              let user = JSON.stringify(res)
+              localStorage.setItem("user", user)
               uni.setStorageSync('token', data.token)
               setTimeout(() => {
-                uni.reLaunch({ url: '/pages/index/index' })
+                let path = this.path
+                if (path) {
+                  uni.reLaunch({
+                    url: '/pages/' + path + '/' + path + ''
+                  })
+                } else {
+                  uni.reLaunch({ url: '/pages/index/index' })
+                }
               }, 2000)
             }
           })
