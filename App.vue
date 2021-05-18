@@ -1,12 +1,12 @@
 <script>
 export default {
   onLaunch: function () {
-    if (!(uni.getStorageSync('token'))) {
-      uni.showToast({ title: '未登录', icon: 'none' })
-      setTimeout(() => {
-        uni.reLaunch({ url: '/pages/login/login' })
-      }, 2000)
-    }
+    // if (!(uni.getStorageSync('token'))) {
+    //   uni.showToast({ title: '未登录', icon: 'none' })
+    //   setTimeout(() => {
+    //     uni.reLaunch({ url: '/pages/login/login' })
+    //   }, 2000)
+    // }
   },
   onShow: function () {
   },

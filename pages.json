@@ -1,91 +1,108 @@
 {
-	"pages": [{
-		"path": "pages/index/index",
-		"style": {
-			"navigationBarTitleText": "二维码记录",
-			"enablePullDownRefresh": true
-		}
-	}, {
-		"path": "pages/login/login",
-		"style": {
-			"navigationBarTitleText": "登陆",
-			"enablePullDownRefresh": false
-		}
-
-	}, {
-		"path": "pages/codeRecords/codeRecords",
-		"style": {
-			"navigationBarTitleText": "扫码记录",
-			"enablePullDownRefresh": true
-		}
-
-	}, {
-		"path": "pages/word/words",
-		"style": {
-			"navigationBarTitleText": "查看口令",
-			"enablePullDownRefresh": true
-		}
-
-	}, {
-		"path": "pages/mine/mine",
-		"style": {
-			"navigationBarTitleText": "个人中心",
-			"enablePullDownRefresh": true
-		}
-
-	}, {
-		"path": "pages/addShop/addShop",
-		"style": {
-			"navigationBarTitleText": "添加商家",
-			"enablePullDownRefresh": true
-		}
-		
+  "pages": [{
+    "path": "pages/index/index",
+    "style": {
+      "navigationBarTitleText": "二维码记录",
+      "enablePullDownRefresh": true
+    }
   }, {
-    "path":"pages/modifyPassword/modifyPassword",
+    "path": "pages/login/login",
+    "style": {
+      "navigationBarTitleText": "登陆",
+      "enablePullDownRefresh": false
+    }
+  }, {
+    "path": "pages/codeRecords/codeRecords",
+    "style": {
+      "navigationBarTitleText": "扫码记录",
+      "enablePullDownRefresh": true
+    }
+
+  }, {
+    "path": "pages/word/words",
+    "style": {
+      "navigationBarTitleText": "查看口令",
+      "enablePullDownRefresh": true
+    }
+
+  }, {
+    "path": "pages/mine/mine",
+    "style": {
+      "navigationBarTitleText": "个人中心",
+      "enablePullDownRefresh": true
+    }
+
+  }, {
+    "path": "pages/addShop/addShop",
+    "style": {
+      "navigationBarTitleText": "添加商家",
+      "enablePullDownRefresh": true
+    }
+
+  }, {
+    "path": "pages/modifyPassword/modifyPassword",
     "style": {
       "navigationBarTitleText": "修改密码",
       "enablePullDownRefresh": false
     }
   }, {
-		"path": "pages/bindShop/bindShop",
-		"style": {
-			"navigationBarTitleText": "绑定商家",
-			"enablePullDownRefresh": true
-		}
+    "path": "pages/bindShop/bindShop",
+    "style": {
+      "navigationBarTitleText": "绑定商家",
+      "enablePullDownRefresh": true
+    }
+  }, {
+    "path": "pages/selectType/selectType",
+    "style": {
+      "navigationBarTitleText": "功能选择",
+      "enablePullDownRefresh": true
+    }
+  }, {
+    "path": "pages/isErvice/isErvice",
+    "style": {
+      "navigationBarTitleText": "准备运行",
+      "enablePullDownRefresh": true
+    }
   }],
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8",
-		"app-plus": {
-			"background": "#efeff4"
-		}
-	},
-	"tabBar": {
-		"color": "#888e94",
-		"selectedColor": "#007aff",
-		"borderStyle": "white",
-		"backgroundColor": "#ffffff",
-    "fontSize":"28rpx",
-		"list": [{
-				"pagePath": "pages/word/words",
-				"text": "口令",
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8",
+    "app-plus": {
+      "background": "#efeff4"
+    }
+  },
+  "tabBar": {
+    "color": "#888e94",
+    "selectedColor": "#007aff",
+    "borderStyle": "white",
+    "backgroundColor": "#ffffff",
+    "fontSize": "28rpx",
+    "list": [{
+        "pagePath": "pages/word/words",
+        "text": "口令",
         "iconPath": "static/word.png",
         "selectedIconPath": "static/slcWord.png"
-			},
-			{
-				"pagePath": "pages/index/index",
-				"text": "绑码",
+      },
+      {
+        "pagePath": "pages/index/index",
+        "text": "绑码",
         "iconPath": "static/code.png",
         "selectedIconPath": "static/slcCode.png"
-			},
-			{
-				"pagePath": "pages/mine/mine",
-				"text": "我的",
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
         "iconPath": "static/mine.png",
         "selectedIconPath": "static/slcMine.png"
-			}
-		]
-	}
+      },
+      {
+        "pagePath": "pages/selectType/selectType",
+        "text": "准备运行",
+        "iconPath": "static/mine.png",
+        "selectedIconPath": "static/slcMine.png"
+      }
+    ]
+  }
 }
