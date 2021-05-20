@@ -15,7 +15,7 @@
             :key="index"
             class="script-nav">
         <navigator :url="
-            '/pages/setParameter/setParameter?id=' +
+            '/pages/ykapp/running?id=' +
             script.id +
             '&appName=' +
             script.appName
@@ -94,7 +94,6 @@ export default {
       })
     },
     async searchScrpit () {
-      this.scriptList = []
       // 获取脚本列表
       uni.showLoading({ title: '加载中' })
       let data = {
@@ -106,6 +105,7 @@ export default {
       }
       let rsData = await this.loadScript(data);
       uni.hideLoading();
+      this.scriptList = []
       rsData.list.forEach((scriptInfo) => {
         let { id, appName, script } = scriptInfo
         this.scriptList.push({
@@ -119,7 +119,6 @@ export default {
   },
 }
 </script>
-
 <style>
 .header {
   display: flex;
