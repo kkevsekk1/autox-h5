@@ -90,9 +90,11 @@
               :class="scriptIs.isRotate ? 'scriptRotate': ''">&#xe636;</view>
       </view>
       <view class="script-main">
-        <!-- <view class="script-input">
-          <input type="text">
-        </view> -->
+        <view class="script-input">
+          <input type="text"
+                 placeholder="请输入">
+          <view class="iconfont"> &#xe617; </view>
+        </view>
         <uni-table emptyText="暂无数据"
                    type="selection">
           <uni-tr>
@@ -316,9 +318,7 @@ export default {
 <style>
 @font-face {
   font-family: "iconfont";
-  src: url("../../iconfont/iconfont.woff2?t=1621390063695") format("woff2"),
-    url("../../iconfont/iconfont.woff?t=1621390063695") format("woff"),
-    url("../../iconfont/iconfont.ttf?t=1621390063695") format("truetype");
+  src: url("../../iconfont/iconfont.ttf?t=1621477806456") format("truetype");
 }
 .iconfont {
   font-family: "iconfont" !important;
@@ -481,5 +481,25 @@ export default {
 }
 .deviceIsRed {
   color: red;
+}
+.script-input {
+  padding: 10px 15px;
+  position: relative;
+}
+.script-input view {
+  position: absolute;
+  top: 18px;
+  left: 23px;
+  font-size: 15px;
+  color: #d6d5d5;
+}
+.script-input input {
+  width: 70%;
+  height: 20px;
+  line-height: 20px;
+  padding: 3px 0;
+  padding-left: 30px;
+  border: 1px solid #e5e5e9;
+  font-size: 12px;
 }
 </style>
