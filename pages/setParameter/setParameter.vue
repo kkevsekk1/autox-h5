@@ -165,7 +165,6 @@ export default {
       })
         .then(res => {
           let { data, code } = res.data
-          console.log(optionId)
           if (code === 200) {
             uni.hideLoading()
             data.list.forEach(element => {

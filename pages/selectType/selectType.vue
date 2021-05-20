@@ -4,14 +4,14 @@
             display-multiple-items=4>
       <swiper-item v-for="appNameList in  scriptGroupList"
                    :key='appNameList'
-                   @click="searchScrpit(appNameList)"
+                   @click="clickScrpit(appNameList)"
                    class="appName"
                    :class="appNameList===clickAppName ? 'selectAppName':'' ">
         <view>{{ appNameList }}</view>
       </swiper-item>
     </swiper>
     <view class="nav">
-      <view v-for="(script,index) in scriptList"
+      <view v-for="(script,index) in clickScrpitLise"
             :key="index"
             class="script-nav">
         <navigator :url="'/pages/setParameter/setParameter?id=' + script.id + '&appName=' + script.appName">
@@ -29,12 +29,14 @@ export default {
     return {
       scriptGroupList: [],
       scriptList: [],
+      clickScrpitLise: [],
       clickAppName: "",
       path: "",
     }
   },
   created () {
     this.getDeviceGroups()
+    this.searchScrpit()
     this.path = this.$route.path
   },
   methods: {
@@ -51,8 +53,6 @@ export default {
           data.forEach(element => {
             this.scriptGroupList.push(element.appName)
           });
-          this.clickAppName = this.scriptGroupList[0]
-          this.searchScrpit(this.clickAppName)
         }
         if (code === -1) {
           uni.showToast({ title: message, icon: "none" })
@@ -64,16 +64,14 @@ export default {
         }
       });
     },
-    searchScrpit (appName) {
-      this.clickAppName = appName
+    searchScrpit () {
       // 获取脚本列表
       uni.showLoading({ title: '加载中' });
       let res = {
         index: 1,
         size: 10000,
-        // commonlyUsed: '',
         scriptSearch: '',
-        appName: appName + "",
+        appName: "",
         orderby: "id desc"
       }
       request({
@@ -85,14 +83,24 @@ export default {
           uni.hideLoading()
           let { data, code } = res.data
           if (code === 200) {
-            this.scriptList = []
             data.list.forEach(scriptInfo => {
               let { id, appName, script } = scriptInfo
               this.scriptList.push({ id: script.id, name: script.name, appId: id, appName: appName })
             })
+            this.clickAppName = this.scriptGroupList[0]
+            this.clickScrpit(this.clickAppName)
           }
         })
     },
+    clickScrpit (appName) {
+      this.clickAppName = appName
+      this.clickScrpitLise = []
+      this.scriptList.forEach(res => {
+        if (res.appName == appName) {
+          this.clickScrpitLise.push(res)
+        }
+      })
+    }
   }
 }
 </script>
