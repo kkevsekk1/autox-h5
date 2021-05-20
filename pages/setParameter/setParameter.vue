@@ -20,7 +20,7 @@
               <view class="title-input">{{parameter.name}}</view>
               <input class="uni-input"
                      name="input"
-                     :placeholder="parameter.defaultValue" />
+                     v-model="parameter.defaultValue" />
             </view>
             <!-- 下拉菜单 -->
             <view class="uni-title-picker"
@@ -57,10 +57,12 @@
               </view>
             </view>
           </view>
-          <view class="uni-btn-v">
-            <button form-type="submit">下一步</button>
+          <view class="uni-btn">
+            <button form-type="submit"
+                    class="uni-btn-submit">下一步</button>
             <button type="default"
-                    form-type="reset"></button>
+                    form-type="reset"
+                    class="uni-btn-default">返回</button>
           </view>
         </form>
       </view>
@@ -94,7 +96,6 @@ export default {
     let { optionId, optionAppName } = this.optionList
     this.searchScrpit(optionId, optionAppName)
     this.getMaterialList()
-    this.getDeviceGroups()
   },
   onLoad (option) {
     this.optionList = {
@@ -148,6 +149,7 @@ export default {
       });
     },
     searchScrpit (optionId, appName) {
+      uni.showLoading({ title: '加载中' });
       // 获取脚本列表
       let res = {
         index: 1,
@@ -163,8 +165,9 @@ export default {
       })
         .then(res => {
           let { data, code } = res.data
-          let { optionId } = this.optionList
+          console.log(optionId)
           if (code === 200) {
+            uni.hideLoading()
             data.list.forEach(element => {
               if (element.script.id == optionId) {
                 let { name, id } = element.script
@@ -185,55 +188,6 @@ export default {
           item.materialIndex = 0;
         }
       })
-    },
-    getDeviceGroups () {
-      // 获取设备分组
-      this.deviceGroupList = [];
-      const data = {};
-      request({
-        url: "/device/findcategory",
-        method: "post",
-        data
-      })
-        .then(res => {
-          let { code, data } = res.data
-          if (code === 200) {
-            this.deviceGroupList = []
-            if (data) {
-              data.forEach(device => {
-                this.deviceGroupList.push({ name: device.category, check: false });
-              });
-              this.getDeviceList()
-            }
-          }
-        });
-    },
-    getDeviceList () {
-      // 查询设备列表
-      this.listLoading = true;
-      const data = {
-        index: 1,
-        size: 10000,
-        search: '',
-        category: '',
-      };
-      this.listLoading = true;
-      request({
-        url: "/device/findpage",
-        method: "post",
-        data
-      }).then(res => {
-        let { data, code } = res.data
-        if (code === 200) {
-          this.deviceList = [];
-          data.list.forEach(element => {
-            let { status, name, id, category } = element
-            let showStatus = status === 1 ? '在线' : '离线';
-            this.deviceList.push({ name: name, category: category, showStatus: showStatus, status: status, id: id })
-          })
-          console.log(this.deviceList)
-        }
-      });
     },
     scriptForList (listSelection, name) {
       this.scriptHaed = false
@@ -310,14 +264,14 @@ export default {
   content: "";
   display: none;
 }
-.setparameter .nav {
-  padding: 10px 20px;
+.setParameter .nav {
+  padding: 10px 10px;
   font-size: 28rpx;
   color: #606266;
 }
-.setparameter .nav .title {
+.setParameter .nav .title {
   text-align: center;
-  font-size: 40rpx;
+  font-size: 20px;
   font-weight: 300;
 }
 .uni-form-input,
@@ -327,8 +281,8 @@ export default {
 }
 /* input框 */
 .uni-form-input {
-  height: 30px;
-  line-height: 30px;
+  height: 40px;
+  line-height: 40px;
   overflow: hidden;
   display: flex;
   justify-content: space-between;
@@ -340,8 +294,8 @@ export default {
 .uni-form-input .uni-input {
   float: left;
   box-sizing: border-box;
-  height: 30px;
-  width: 70%;
+  height: 40px;
+  width: 80%;
   border: 1px solid #d7dae2;
   border-radius: 5px;
   font-size: 28rpx;
@@ -350,8 +304,8 @@ export default {
 /* 下拉菜单 */
 .uni-title-picker {
   overflow: hidden;
-  height: 30px;
-  line-height: 30px;
+  height: 40px;
+  line-height: 40px;
   display: flex;
   justify-content: space-between;
 }
@@ -360,8 +314,8 @@ export default {
   float: left;
 }
 .uni-title-picker .uni-list-cell-db {
-  height: 30px;
-  width: 70%;
+  height: 40px;
+  width: 80%;
   margin-left: 10px;
   border: 1px solid #d7dae2;
   border-radius: 5px;
@@ -386,10 +340,30 @@ export default {
 }
 .uni-form--much .much {
   float: right;
-  width: 70%;
+  width: 80%;
 }
 .uni-form--much .label-much {
   width: 30%;
   margin-bottom: 10px;
+}
+.uni-btn {
+  margin-top: 40px;
+  overflow: hidden;
+  height: 40px;
+  line-height: 40px;
+}
+.uni-btn-default {
+  float: right;
+  width: 70px;
+  font-size: 14px;
+  color: #606266;
+}
+.uni-btn-submit {
+  float: right;
+  width: 100px;
+  margin-left: 10px;
+  background-color: #409eff;
+  color: #fff;
+  font-size: 14px;
 }
 </style>
