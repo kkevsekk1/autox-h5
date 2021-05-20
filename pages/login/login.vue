@@ -45,16 +45,20 @@ export default {
     }
   },
   created () {
-    uni.removeStorageSync('token')
+    uni.removeStorageSync('tokenData')
     this.getUser()
   },
   onLoad (option) {
     this.path = option.path
+    console.log(this.path)
   },
   methods: {
     getUser () {
-      let userList = JSON.parse(localStorage.getItem("user"))
-      this.user = userList
+      localStorage.clear()
+      if (localStorage.getItem("userData")) {
+        let userList = JSON.parse(localStorage.getItem("userData"))
+        this.user = userList
+      }
     },
     submitForm () {
       this.$refs.form.submit().then((res) => {
@@ -64,22 +68,16 @@ export default {
           data: res
         })
           .then((loadresult) => {
-            console.log(loadresult)
             let { code, message, data } = loadresult.data
             uni.showToast({ title: message, icon: 'none' })
             if (code === 200) {
               let user = JSON.stringify(res)
-              localStorage.setItem("user", user)
+              localStorage.setItem("userData", user)
               uni.setStorageSync('token', data.token)
               setTimeout(() => {
-                let path = this.path
-                if (path) {
-                  uni.reLaunch({
-                    url: '/pages/' + path + '/' + path + ''
-                  })
-                } else {
-                  uni.reLaunch({ url: '/pages/index/index' })
-                }
+                console.log(this.path)
+                uni.reLaunch({ url: this.path })
+
               }, 2000)
             }
           })

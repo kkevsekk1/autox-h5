@@ -29,11 +29,12 @@ export default {
       scriptGroupList: [],
       scriptList: [],
       clickAppName: "",
-
+      path: "",
     }
   },
   created () {
     this.getDeviceGroups()
+    this.path = this.$route.path
   },
   methods: {
     getDeviceGroups () {
@@ -56,7 +57,7 @@ export default {
           uni.showToast({ title: message, icon: "none" })
           setTimeout(() => {
             uni.reLaunch({
-              url: '/pages/login/login?path=selectType'
+              url: '/pages/login/login?path=' + this.path
             })
           }, 2000)
         }
