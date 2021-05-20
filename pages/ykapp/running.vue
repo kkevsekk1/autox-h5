@@ -3,8 +3,8 @@
     <view class="header">
       <text v-for="(step,index) in steps" :key="index"  :class="{classGreen:index<stepIndex}">{{step}}</text>
     </view>
-    <set-params v-if="stepIndex==1"></set-params>
-    <choice-device v-if="stepIndex==2"></choice-device>
+    <set-params v-if="stepIndex==1" :scriptId="104" ></set-params>
+    <choice-device v-if="stepIndex==2" ></choice-device>
   </view>
 </template>
 <script>
@@ -22,7 +22,6 @@ export default {
   },
 }
 </script>
-
 <style>
 @font-face {
   font-family: 'iconfont';
