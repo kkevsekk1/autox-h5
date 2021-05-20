@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     getUser () {
-      localStorage.clear()
+      // localStorage.clear()
       if (localStorage.getItem("userData")) {
         let userList = JSON.parse(localStorage.getItem("userData"))
         this.user = userList
