@@ -13,7 +13,7 @@
       </uni-forms-item>
       <button class="button-modify "
               @click="getPassword"
-              type="primary">确认修改</button>
+              type="primary">确认修改 {{Password.firstPassword}}</button>
     </uni-forms>
   </view>
 </template>
@@ -38,19 +38,17 @@ export default {
   },
   methods: {
     getPassword (form) {
-      this.$refs.form.submit().then((res) => {
-        request({
-          url: '/auth/password',
-          method: 'post',
-          data: { password: this.Password.againPassword },
-        })
-          .then((loadresult) => {
-            uni.showToast({
-              title: "密码修改成功",
-              icon: "none"
-            })
-          })
+      request({
+        url: '/auth/password',
+        method: 'post',
+        data: { password: this.Password.firstPassword },
       })
+        .then((loadresult) => {
+          uni.showToast({
+            title: "密码修改成功",
+            icon: "none"
+          })
+        })
     },
   }
 }

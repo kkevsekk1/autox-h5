@@ -139,7 +139,7 @@ export default {
             icon: 'none'
           });
           setTimeout(() => {
-            uni.reLaunch({
+            uni.navigateTo({
               url: '/pages/login/login'
             });
           }, 2000);

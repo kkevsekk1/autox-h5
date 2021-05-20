@@ -69,17 +69,46 @@
     <view class="choiceDevice"
           v-if="ShowHidden == 1">
       <view class="script-header">
-        <view class="script-haed">全部</view>
-        <view class="list-name ">
-          <view class="for-list-name">
-            <view v-for="( listSelection, scriptIndex) in deviceGroupList"
-                  :key="scriptIndex"
-                  class="for-list">
+        <view class="script-haed "
+              :class="scriptHaed?'pitchOn':''"
+              @click="scriptAll">全部</view>
+        <view class="list-name "
+              v-show="scriptIs.isHidden">
+          <swiper class="swiper"
+                  display-multiple-items=3>
+            <swiper-item v-for="( listSelection, scriptIndex) in deviceGroupList"
+                         :key="scriptIndex"
+                         class="for-list"
+                         @click="scriptForList(listSelection,listSelection.name)"
+                         :class="listSelection.isShow ? 'pitchOn':''">
               <view>{{listSelection.name}}</view>
-            </view>
-          </view>
+            </swiper-item>
+          </swiper>
         </view>
-        <view class="refresh">+</view>
+        <view class="refresh iconfont"
+              @click="reLoadDevice"
+              :class="scriptIs.isRotate ? 'scriptRotate': ''">&#xe636;</view>
+      </view>
+      <view class="script-main">
+        <!-- <view class="script-input">
+          <input type="text">
+        </view> -->
+        <uni-table emptyText="暂无数据"
+                   type="selection">
+          <uni-tr>
+            <uni-th width='60%'
+                    :sortable="true">名称</uni-th>
+            <uni-th width='10%'
+                    :sortable="true">分组</uni-th>
+            <uni-th width='30%'>状态</uni-th>
+          </uni-tr>
+          <uni-tr v-for="(deviceItem) in deviceList"
+                  :key="deviceItem.id">
+            <uni-td>{{deviceItem.name}}</uni-td>
+            <uni-td>{{deviceItem.category}}</uni-td>
+            <uni-td :class="deviceItem.status==0? 'deviceIsRed':'deviceIsGreen'">{{deviceItem.showStatus}}</uni-td>
+          </uni-tr>
+        </uni-table>
       </view>
     </view>
   </view>
@@ -100,6 +129,12 @@ export default {
         optionAppName: "",
       },
       deviceGroupList: [],
+      deviceList: [],
+      scriptHaed: true,
+      scriptIs: {
+        isHidden: true,
+        isRotate: false,
+      }
     }
   },
   created () {
@@ -172,6 +207,7 @@ export default {
       })
         .then(res => {
           let { data, code } = res.data
+          let { optionId } = this.optionList
           if (code === 200) {
             data.list.forEach(element => {
               if (element.script.id == optionId) {
@@ -202,19 +238,95 @@ export default {
         url: "/device/findcategory",
         method: "post",
         data
+      })
+        .then(res => {
+          let { code, data } = res.data
+          if (code === 200) {
+            this.deviceGroupList = []
+            if (data) {
+              data.forEach(device => {
+                this.deviceGroupList.push({ name: device.category, check: false });
+              });
+              this.getDeviceList()
+            }
+          }
+        });
+    },
+    getDeviceList () {
+      // 查询设备列表
+      this.listLoading = true;
+      const data = {
+        index: 1,
+        size: 10000,
+        search: '',
+        category: '',
+      };
+      this.listLoading = true;
+      request({
+        url: "/device/findpage",
+        method: "post",
+        data
       }).then(res => {
-        if (res.data) {
-          res.data.data.forEach(device => {
-            this.deviceGroupList.push({ name: device.category, check: false });
-          });
+        let { data, code } = res.data
+        if (code === 200) {
+          this.deviceList = [];
+          data.list.forEach(element => {
+            let { status, name, id, category } = element
+            let showStatus = status === 1 ? '在线' : '离线';
+            this.deviceList.push({ name: name, category: category, showStatus: showStatus, status: status, id: id })
+          })
+          console.log(this.deviceList)
         }
       });
     },
+    scriptForList (listSelection, name) {
+      this.scriptHaed = false
+      if (!listSelection.isShow) {
+        this.$set(listSelection, "isShow", false)
+        listSelection.isShow = !listSelection.isShow
+      } else {
+        listSelection.isShow = !listSelection.isShow
+      }
+      this.deviceList.forEach(dataList => {
+        if (dataList.category == name) {
+
+        }
+      })
+    },
+    scriptAll () {
+      this.scriptHaed = true
+      this.deviceGroupList.forEach(res => {
+        res.isShow = false
+      })
+    },
+    reLoadDevice () {
+      this.scriptHaed = true
+      this.scriptIs.isHidden = false
+      this.scriptIs.isRotate = true
+      setTimeout(() => {
+        this.scriptIs.isHidden = true;
+        this.scriptIs.isRotate = false;
+      }, 500);
+      this.getDeviceGroups();
+    }
   }
 }
 </script>
 
 <style>
+@font-face {
+  font-family: "iconfont";
+  src: url("../../iconfont/iconfont.woff2?t=1621390063695") format("woff2"),
+    url("../../iconfont/iconfont.woff?t=1621390063695") format("woff"),
+    url("../../iconfont/iconfont.ttf?t=1621390063695") format("truetype");
+}
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 .header {
   background-color: #f5f7fa;
   height: 50px;
@@ -323,17 +435,17 @@ export default {
   width: 30%;
   margin-bottom: 10px;
 }
-.choiceDevice {
-  padding: 10px 20px;
-}
 /* 选择设备 */
+.choiceDevice {
+  margin: 10px 20px;
+  border: 1px solid #e5e5e9;
+  border-radius: 5px;
+}
 .script-header {
   height: 35px;
   line-height: 35px;
   display: flex;
-  justify-content: space-between;
   background-color: #e5e5e9;
-  border-radius: 5px;
 }
 .script-haed {
   width: 60px;
@@ -346,15 +458,28 @@ export default {
 .list-name {
   position: relative;
   width: 480rpx;
-  /* overflow: hidden; */
-  border: 1px solid #d6d6d8;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 .for-list-name {
   position: absolute;
   display: flex;
 }
 .for-list {
-  width: 160rpx;
+  width: 155rpx;
   text-align: center;
+}
+.pitchOn {
+  background-color: #fff;
+}
+.scriptRotate {
+  transform: rotate(360deg);
+  transition: all 0.5s;
+}
+.deviceIsGreen {
+  color: green;
+}
+.deviceIsRed {
+  color: red;
 }
 </style>

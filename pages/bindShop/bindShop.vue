@@ -105,7 +105,7 @@ export default {
           icon: 'none'
         });
         setTimeout(() => {
-          uni.reLaunch({
+          uni.navigateTo({
             url: '/pages/index/index'
           });
         }, 2000);
@@ -140,7 +140,7 @@ export default {
             icon: 'none'
           });
           setTimeout(() => {
-            uni.reLaunch({
+            uni.navigateTo({
               url: '/pages/login/login'
             });
           }, 2000);

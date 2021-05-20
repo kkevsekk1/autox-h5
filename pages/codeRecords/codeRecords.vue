@@ -71,7 +71,7 @@ export default {
           if (code === -1) {
             uni.showToast({ title: message, icon: 'none' })
             setTimeout(() => {
-              uni.reLaunch({ url: '/pages/login/login' })
+              uni.navigateTo({ url: '/pages/login/login' })
             }, 2000)
           }
         })

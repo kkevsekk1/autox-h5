@@ -140,7 +140,7 @@ export default {
             });
             setTimeout(() => {
               uni.reLaunch({
-                url: '/pages/login/login'
+                url: '/pages/login/login?path=' + this.$route.path
               });
             }, 2000);
           }
