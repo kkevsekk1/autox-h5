@@ -501,5 +501,6 @@ export default {
   padding-left: 30px;
   border: 1px solid #e5e5e9;
   font-size: 12px;
+  border-radius: 3px;
 }
 </style>
