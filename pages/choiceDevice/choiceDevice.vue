@@ -52,6 +52,12 @@
         </uni-table>
       </view>
     </view>
+    <view class="uni-btn">
+      <button type="submit"
+              class="uni-btn-submit">运行</button>
+      <button type="default"
+              class="uni-btn-default">返回</button>
+    </view>
   </view>
 </template>
 
@@ -71,16 +77,7 @@ export default {
     }
   },
   created () {
-    let { optionId, optionAppName } = this.optionList
-    this.searchScrpit(optionId, optionAppName)
-    this.getMaterialList()
     this.getDeviceGroups()
-  },
-  onLoad (option) {
-    this.optionList = {
-      optionId: option.id,
-      optionAppName: option.appName
-    }
   },
   methods: {
     bindPickerChange (e, parameter) {
@@ -215,12 +212,10 @@ export default {
   width: 10px;
   height: 10px;
   position: absolute;
-  top: 5px;
+  top: 2px;
   right: -23px;
-  transform: translateX(-5px);
   border-right: 1px solid #a6abb8;
   border-top: 1px solid #a6abb8;
-  -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
 }
 .header text:last-of-type::after {
@@ -228,7 +223,7 @@ export default {
   display: none;
 }
 .choiceDevice {
-  margin: 10px 20px;
+  margin: 10px 10px;
   border: 1px solid #e5e5e9;
   border-radius: 5px;
 }
@@ -251,6 +246,9 @@ export default {
   width: 480rpx;
   overflow: hidden;
   box-sizing: border-box;
+}
+.swiper {
+  height: 35px;
 }
 .for-list-name {
   position: absolute;
@@ -293,5 +291,29 @@ export default {
   border: 1px solid #e5e5e9;
   font-size: 12px;
   border-radius: 3px;
+}
+.uni-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 0;
+  margin-top: 40px;
+  overflow: hidden;
+  margin-right: 10px;
+  height: 40px;
+  line-height: 40px;
+}
+.uni-btn-default {
+  float: right;
+  width: 70px;
+  font-size: 14px;
+  color: #606266;
+}
+.uni-btn-submit {
+  float: right;
+  width: 100px;
+  margin-left: 10px;
+  background-color: #409eff;
+  color: #fff;
+  font-size: 14px;
 }
 </style>

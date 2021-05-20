@@ -66,7 +66,6 @@ export default {
     },
     searchScrpit (appName) {
       this.clickAppName = appName
-      this.scriptList = []
       // 获取脚本列表
       uni.showLoading({ title: '加载中' });
       let res = {
@@ -86,8 +85,8 @@ export default {
           uni.hideLoading()
           let { data, code } = res.data
           if (code === 200) {
+            this.scriptList = []
             data.list.forEach(scriptInfo => {
-              console.log(scriptInfo)
               let { id, appName, script } = scriptInfo
               this.scriptList.push({ id: script.id, name: script.name, appId: id, appName: appName })
             })
