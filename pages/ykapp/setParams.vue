@@ -1,87 +1,83 @@
 <template>
-  <view class="setParameter-box">
-    <view class="header">
-      <text class="classGreen">选择功能</text>
-      <text>设置参数 </text>
-      <text>选择设备</text>
-      <text>运行</text>
-    </view>
-    <view class="setParameter">
-      <view class="nav">
-        <view class="title">
-          <text>{{title.name}}（{{ title.id }}）</text>
-        </view>
-        <form @submit="formSubmit">
-          <view v-for="(parameter,index) in taskParameter"
-                :key="index">
-            <!-- 输入框 -->
-            <view class="uni-form-input"
-                  v-if="parameter.type==1">
-              <view class="title-input">{{parameter.name}}</view>
-              <input class="uni-input"
-                     name="input"
-                     v-model="parameter.defaultValue" />
-            </view>
-            <!-- 下拉菜单 -->
-            <view class="uni-title-picker"
-                  v-if="parameter.type==2">
-              <view class="title-picker">{{parameter.name}}</view>
-              <view class="uni-list-cell-db">
-                <picker @change="bindPickerChange($event,parameter)"
-                        :value="parameter.checkIndex"
-                        :range="parameter.checkValue">
-                  <view class="uni-input">{{parameter.checkValue[parameter.checkIndex]}}</view>
-                </picker>
-              </view>
-            </view>
-            <!-- 多选框 -->
-            <view class="uni-form--much"
-                  v-if="parameter.type==3">
-              <checkbox-group name="checkbox"
-                              class="much">
-                <label class="label-much">
-                  <checkbox value="checkbox1" /><text>{{parameter.name}}</text>
-                </label>
-              </checkbox-group>
-            </view>
-            <!-- 素材库 -->
-            <view class="uni-title-picker"
-                  v-if="parameter.type==4">
-              <view class="title-picker">{{parameter.name}}</view>
-              <view class="uni-list-cell-db">
-                <picker @change="materialChange($event,parameter)"
-                        :value="parameter.materialIndex"
-                        :range="materialData.materialValue">
-                  <view class="uni-input">{{materialData.materialValue[parameter.materialIndex]}}</view>
-                </picker>
-              </view>
-            </view>
-          </view>
-          <view class="uni-btn">
-            <button form-type="submit"
-                    class="uni-btn-submit">下一步</button>
-            <button type="default"
-                    form-type="reset"
-                    class="uni-btn-default">返回</button>
-          </view>
-        </form>
+  <view class="setParameter">
+    <view class="nav">
+      <view class="title">
+        <text>{{ title.name }}（{{ title.id }}）</text>
       </view>
+      <form @submit="formSubmit">
+        <view v-for="(parameter, index) in taskParameter"
+              :key="index">
+          <!-- 输入框 -->
+          <view class="uni-form-input"
+                v-if="parameter.type == 1">
+            <view class="title-input">{{ parameter.name }}</view>
+            <input class="uni-input"
+                   name="input"
+                   v-model="parameter.defaultValue" />
+          </view>
+          <!-- 下拉菜单 -->
+          <view class="uni-title-picker"
+                v-if="parameter.type == 2">
+            <view class="title-picker">{{ parameter.name }}</view>
+            <view class="uni-list-cell-db">
+              <picker @change="bindPickerChange($event, parameter)"
+                      :value="parameter.checkIndex"
+                      :range="parameter.checkValue">
+                <view class="uni-input">{{
+                  parameter.checkValue[parameter.checkIndex]
+                }}</view>
+              </picker>
+            </view>
+          </view>
+          <!-- 多选框 -->
+          <view class="uni-form--much"
+                v-if="parameter.type == 3">
+            <checkbox-group name="checkbox"
+                            class="much">
+              <label class="label-much">
+                <checkbox value="checkbox1" /><text>{{ parameter.name }}</text>
+              </label>
+            </checkbox-group>
+          </view>
+          <!-- 素材库 -->
+          <view class="uni-title-picker"
+                v-if="parameter.type == 4">
+            <view class="title-picker">{{ parameter.name }}</view>
+            <view class="uni-list-cell-db">
+              <picker @change="materialChange($event, parameter)"
+                      :value="parameter.materialIndex"
+                      :range="materialData.materialValue">
+                <view class="uni-input">{{
+                  materialData.materialValue[parameter.materialIndex]
+                }}</view>
+              </picker>
+            </view>
+          </view>
+        </view>
+        <view class="uni-btn">
+          <button form-type="submit"
+                  class="uni-btn-submit">下一步</button>
+          <button type="default"
+                  form-type="reset"
+                  class="uni-btn-default">返回</button>
+        </view>
+      </form>
     </view>
   </view>
 </template>
 
 <script>
-import { request } from '../../server/request.js';
+import { request } from '../../server/request.js'
 export default {
   data () {
     return {
       indexValue: 0,
-      taskParameter: "",
+      taskParameter: '',
       materialData: {},
-      title: "",
+      title: '',
       optionList: {
-        optionId: "",
-        optionAppName: "",
+        optionId: '',
+        optionAppName: '',
       },
       deviceGroupList: [],
       deviceList: [],
@@ -89,7 +85,7 @@ export default {
       scriptIs: {
         isHidden: true,
         isRotate: false,
-      }
+      },
     }
   },
   created () {
@@ -100,112 +96,112 @@ export default {
   onLoad (option) {
     this.optionList = {
       optionId: option.id,
-      optionAppName: option.appName
+      optionAppName: option.appName,
     }
   },
   methods: {
     formSubmit: function (e) {
-      console.log('form发生了submit事件，携带数据为：' + JSON.stringify(e.detail.value))
+      console.log(
+        'form发生了submit事件，携带数据为：' + JSON.stringify(e.detail.value)
+      )
       setTimeout(() => {
-        uni.navigateTo({ url: "/pages/choiceDevice/choiceDevice" })
+        uni.navigateTo({ url: '/pages/choiceDevice/choiceDevice' })
       }, 2000)
     },
     bindPickerChange (e, parameter) {
       let value = e.target.value
-      this.taskParameter.forEach(item => {
+      this.taskParameter.forEach((item) => {
         if (item.key == parameter.key) {
-          item.checkIndex = value;
+          item.checkIndex = value
         }
       })
-      this.$forceUpdate();
+      this.$forceUpdate()
     },
     materialChange (e, material) {
       let value = e.target.value
-      this.taskParameter.forEach(res => {
+      this.taskParameter.forEach((res) => {
         if (res.key == material.key) {
-          res.materialIndex = value;
+          res.materialIndex = value
         }
       })
-      this.$forceUpdate();
+      this.$forceUpdate()
     },
     getMaterialList () {
       // 素材库
-      this.materialValue = [];
+      this.materialValue = []
       const data = {
         index: 1,
-        size: 10000
-      };
+        size: 10000,
+      }
       return request({
-        url: "/material/getTextPage",
-        method: "post",
-        data
-      }).then(res => {
+        url: '/material/getTextPage',
+        method: 'post',
+        data,
+      }).then((res) => {
         let { data } = res.data
         let materialValue = []
-        data.list.forEach(material => {
-          materialValue.push(material.materialName);
-        });
+        data.list.forEach((material) => {
+          materialValue.push(material.materialName)
+        })
         this.materialData = { materialValue: materialValue }
-      });
+      })
     },
     searchScrpit (optionId, appName) {
-      uni.showLoading({ title: '加载中' });
+      uni.showLoading({ title: '加载中' })
       // 获取脚本列表
       let res = {
         index: 1,
         size: 10000,
         scriptSearch: '',
         appName: appName,
-        orderby: "id desc"
+        orderby: 'id desc',
       }
       request({
-        url: "/userscript/searchScrpit",
-        method: "post",
-        data: res
+        url: '/userscript/searchScrpit',
+        method: 'post',
+        data: res,
+      }).then((res) => {
+        let { data, code } = res.data
+        console.log(optionId)
+        if (code === 200) {
+          uni.hideLoading()
+          data.list.forEach((element) => {
+            if (element.script.id == optionId) {
+              let { name, id } = element.script
+              this.title = { name: name, id: id }
+              this.taskParameter = JSON.parse(element.script.taskParameter)
+            }
+          })
+          this.dealParameter(this.taskParameter)
+        }
       })
-        .then(res => {
-          let { data, code } = res.data
-          console.log(optionId)
-          if (code === 200) {
-            uni.hideLoading()
-            data.list.forEach(element => {
-              if (element.script.id == optionId) {
-                let { name, id } = element.script
-                this.title = { name: name, id: id }
-                this.taskParameter = JSON.parse(element.script.taskParameter)
-              }
-            });
-            this.dealParameter(this.taskParameter)
-          }
-        })
     },
     dealParameter (list) {
-      list.forEach(item => {
+      list.forEach((item) => {
         if (item.type == 2) {
-          item.checkIndex = 0;
+          item.checkIndex = 0
         }
         if (item.type == 4) {
-          item.materialIndex = 0;
+          item.materialIndex = 0
         }
       })
     },
     scriptForList (listSelection, name) {
       this.scriptHaed = false
       if (!listSelection.isShow) {
-        this.$set(listSelection, "isShow", false)
+        this.$set(listSelection, 'isShow', false)
         listSelection.isShow = !listSelection.isShow
       } else {
         listSelection.isShow = !listSelection.isShow
       }
-      this.deviceList.forEach(dataList => {
+      this.deviceList.forEach((dataList) => {
         if (dataList.category == name) {
-
         }
       })
     },
     scriptAll () {
       this.scriptHaed = true
-      this.deviceGroupList.forEach(res => {
+      this.deviceGroupList.forEach((res) => {
         res.isShow = false
       })
     },
@@ -214,12 +210,12 @@ export default {
       this.scriptIs.isHidden = false
       this.scriptIs.isRotate = true
       setTimeout(() => {
-        this.scriptIs.isHidden = true;
-        this.scriptIs.isRotate = false;
-      }, 500);
-      this.getDeviceGroups();
-    }
-  }
+        this.scriptIs.isHidden = true
+        this.scriptIs.isRotate = false
+      }, 500)
+      this.getDeviceGroups()
+    },
+  },
 }
 </script>
 
