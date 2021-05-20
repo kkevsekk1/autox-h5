@@ -45,18 +45,19 @@ export default {
     }
   },
   created () {
-    uni.removeStorageSync('tokenData')
+    uni.removeStorageSync('token')
     this.getUser()
   },
   onLoad (option) {
-    this.path = option.path
-    console.log(this.path)
+    this.path = option.path;
+    if(!option.path||option.path=="pages/login/login"){
+       this.path ="/pages/index/index"
+    }
   },
   methods: {
     getUser () {
-      localStorage.clear()
-      if (localStorage.getItem("userData")) {
-        let userList = JSON.parse(localStorage.getItem("userData"))
+      if (uni.getStorageSync("userData")) {
+        let userList = JSON.parse(uni.getStorageSync("userData"))
         this.user = userList
       }
     },
@@ -72,12 +73,11 @@ export default {
             uni.showToast({ title: message, icon: 'none' })
             if (code === 200) {
               let user = JSON.stringify(res)
-              localStorage.setItem("userData", user)
+              uni.setStorageSync("userData", user)
               uni.setStorageSync('token', data.token)
               setTimeout(() => {
-                console.log(this.path)
-                uni.reLaunch({ url: this.path })
-
+                console.log("来源页",this.path)
+                uni.reLaunch({ url: this.path})
               }, 2000)
             }
           })
