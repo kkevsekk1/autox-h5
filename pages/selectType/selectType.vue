@@ -1,19 +1,20 @@
 <template>
   <view class="selectType-box">
-    <view class="header">
-      <view v-for="appNameList in  scriptGroupList"
-            :key='appNameList'
-            @click="searchScrpit(appNameList)"
-            class="appName"
-            :class="appNameList===clickAppName ? 'selectAppName':'' ">
-        {{ appNameList }}
-      </view>
-    </view>
+    <swiper class="header"
+            display-multiple-items=4>
+      <swiper-item v-for="appNameList in  scriptGroupList"
+                   :key='appNameList'
+                   @click="searchScrpit(appNameList)"
+                   class="appName"
+                   :class="appNameList===clickAppName ? 'selectAppName':'' ">
+        <view>{{ appNameList }}</view>
+      </swiper-item>
+    </swiper>
     <view class="nav">
       <view v-for="(script,index) in scriptList"
             :key="index"
             class="script-nav">
-        <navigator :url="'/pages/isErvice/isErvice?id=' + script.id + '&appName=' + script.appName">
+        <navigator :url="'/pages/setParameter/setParameter?id=' + script.id + '&appName=' + script.appName">
           {{script.name}}
         </navigator>
       </view>
@@ -65,9 +66,9 @@ export default {
     },
     searchScrpit (appName) {
       this.clickAppName = appName
+      this.scriptList = []
       // 获取脚本列表
       uni.showLoading({ title: '加载中' });
-      this.scriptList = []
       let res = {
         index: 1,
         size: 10000,
@@ -100,10 +101,11 @@ export default {
 <style>
 .header {
   display: flex;
-  height: 30px;
-  line-height: 30px;
+  height: 40px;
+  line-height: 40px;
 }
 .appName {
+  height: 38px !important;
   flex: 1;
   text-align: center;
   color: #707070;
@@ -114,7 +116,7 @@ export default {
   border-bottom: 2px solid #409eff;
 }
 .nav {
-  padding: 15px 20px;
+  padding: 20px 20px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
