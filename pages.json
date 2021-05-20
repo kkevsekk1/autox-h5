@@ -58,9 +58,15 @@
       "enablePullDownRefresh": true
     }
   }, {
-    "path": "pages/isErvice/isErvice",
+    "path": "pages/setParameter/setParameter",
     "style": {
-      "navigationBarTitleText": "准备运行",
+      "navigationBarTitleText": "设置参数",
+      "enablePullDownRefresh": true
+    }
+  }, {
+    "path": "pages/choiceDevice/choiceDevice",
+    "style": {
+      "navigationBarTitleText": "选择设备",
       "enablePullDownRefresh": true
     }
   }],
