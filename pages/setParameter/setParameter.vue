@@ -323,7 +323,7 @@ export default {
 .uni-form-input,
 .uni-form--much,
 .uni-title-picker {
-  margin-top: 30px;
+  margin-top: 20px;
 }
 /* input框 */
 .uni-form-input {
