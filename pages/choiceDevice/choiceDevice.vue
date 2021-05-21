@@ -1,10 +1,12 @@
 <template>
   <view class="choiceDevice-box">
-    <view class="header">
-      <text class="classGreen">选择功能</text>
-      <text class='classGreen'>设置参数 </text>
-      <text>选择设备</text>
-      <text>运行</text>
+    <view class="setParameter-header">
+      <view class="header">
+        <text class="classGreen">选择功能</text>
+        <text class="classGreen">设置参数 </text>
+        <text>选择设备</text>
+        <text>运行</text>
+      </view>
     </view>
     <view class="choiceDevice">
       <view class="script-header">
@@ -193,6 +195,13 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.setParameter-header {
+  width: 100%;
+  position: fixed;
+  top: 45px;
+  background-color: #f5f7fa;
+  z-index: 999;
+}
 .header {
   background-color: #f5f7fa;
   height: 50px;
@@ -223,7 +232,9 @@ export default {
   display: none;
 }
 .choiceDevice {
-  margin: 10px 10px;
+  position: relative;
+  top: 60px;
+  margin: 0 10px;
   border: 1px solid #e5e5e9;
   border-radius: 5px;
 }
@@ -293,12 +304,13 @@ export default {
   border-radius: 3px;
 }
 .uni-btn {
-  position: absolute;
-  bottom: 10px;
-  right: 0;
-  margin-top: 40px;
+  position: fixed;
+  bottom: 0;
+  right: 10px;
+  width: 100%;
+  padding: 10px 0;
+  background-color: #fff;
   overflow: hidden;
-  margin-right: 10px;
   height: 40px;
   line-height: 40px;
 }

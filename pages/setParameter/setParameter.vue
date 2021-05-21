@@ -1,10 +1,12 @@
 <template>
   <view class="setParameter-box">
-    <view class="header">
-      <text class="classGreen">选择功能</text>
-      <text>设置参数 </text>
-      <text>选择设备</text>
-      <text>运行</text>
+    <view class="setParameter-header">
+      <view class="header">
+        <text class="classGreen">选择功能</text>
+        <text>设置参数 </text>
+        <text>选择设备</text>
+        <text>运行</text>
+      </view>
     </view>
     <view class="setParameter">
       <view class="nav">
@@ -165,7 +167,6 @@ export default {
       })
         .then(res => {
           let { data, code } = res.data
-          console.log(optionId)
           if (code === 200) {
             uni.hideLoading()
             data.list.forEach(element => {
@@ -234,6 +235,12 @@ export default {
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+.setParameter-header {
+  width: 100%;
+  position: fixed;
+  background-color: #f5f7fa;
+  z-index: 999;
 }
 .header {
   background-color: #f5f7fa;
@@ -347,7 +354,12 @@ export default {
   margin-bottom: 10px;
 }
 .uni-btn {
-  margin-top: 40px;
+  position: fixed;
+  bottom: 0;
+  right: 10px;
+  width: 100%;
+  padding: 10px 0;
+  background-color: #fff;
   overflow: hidden;
   height: 40px;
   line-height: 40px;
