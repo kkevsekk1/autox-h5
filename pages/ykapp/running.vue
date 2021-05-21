@@ -3,8 +3,8 @@
     <view class="header">
       <text v-for="(step,index) in steps" :key="index"  :class="{classGreen:index<stepIndex}">{{step}}</text>
     </view>
-    <set-params v-if="stepIndex==1" :scriptId="scriptId" ref="setParams" ></set-params>
-    <choice-device v-if="stepIndex==2" ref ="choiceDevice" ></choice-device>
+    <set-params v-show="stepIndex==1" :scriptId="scriptId" ref="setParams" ></set-params>
+    <choice-device v-show="stepIndex==2" ref ="choiceDevice" ></choice-device>
     <button @click="next()" >下一步</button>
   </view>
 </template>

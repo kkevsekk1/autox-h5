@@ -20,8 +20,7 @@
           <uni-col
             style="text-align: right"
             :span="6"
-            v-if="param.type == 2 || param.type == 4"
-          >
+            v-if="param.type == 2 || param.type == 4">
             <view>{{ param.name }}</view>
           </uni-col>
           <uni-col :span="18" v-if="param.type == 2 || param.type == 4">

@@ -2,186 +2,211 @@
   <view class="choiceDevice-box">
     <view class="choiceDevice">
       <view class="script-header">
-        <view class="script-haed "
-              :class="scriptHaed?'pitchOn':''"
-              @click="scriptAll">全部</view>
-        <view class="list-name "
-              v-show="scriptIs.isHidden">
-          <swiper class="swiper"
-                  display-multiple-items=3>
-            <swiper-item v-for="( listSelection, scriptIndex) in deviceGroupList"
-                         :key="scriptIndex"
-                         class="for-list"
-                         @click="scriptForList(listSelection,listSelection.name)"
-                         :class="listSelection.isShow ? 'pitchOn':''">
-              <view>{{listSelection.name}}</view>
+        <view
+          class="script-haed"
+          :class="groupAll ? 'pitchOn' : ''"
+          @click="clickGroupAll"
+          >全部</view
+        >
+        <view class="list-name" v-show="deviceGroup.show">
+          <swiper class="swiper" display-multiple-items="3">
+            <swiper-item
+              v-for="(group, index) in deviceGroups"
+              :key="index"
+              class="for-list"
+              @click="clickGroup(group)"
+              :class="group.isShow ? 'pitchOn' : ''">
+              <view>{{ group.name }}</view>
             </swiper-item>
           </swiper>
         </view>
-        <view class="refresh iconfont"
-              @click="reLoadDevice"
-              :class="scriptIs.isRotate ? 'scriptRotate': ''">&#xe636;</view>
+        <view
+          class="refresh iconfont"
+          @click="reLoadDevices"
+          :class="deviceGroup.rotate ? 'scriptRotate' : ''"
+          >&#xe636;</view
+        >
       </view>
       <view class="script-main">
         <view class="script-input">
-          <input type="text"
-                 placeholder="请输入">
+          <input type="text" v-model="searchStr" placeholder="请输入" />
           <view class="iconfont"> &#xe617; </view>
         </view>
-        <uni-table emptyText="暂无数据"
-                   type="selection">
+        <uni-table emptyText="暂无数据" type="selection" @selection-change="selectChange()">
           <uni-tr>
-            <uni-th width='60%'
-                    :sortable="true">名称</uni-th>
-            <uni-th width='10%'
-                    :sortable="true">分组</uni-th>
-            <uni-th width='30%'>状态</uni-th>
+            <uni-th width="60%" :sortable="true" @sort-change="sortDevice('name')" >名称</uni-th>
+            <uni-th width="10%" :sortable="true" @sort-change="sortDevice('group')" >分组</uni-th>
+            <uni-th width="30%">状态</uni-th>
           </uni-tr>
-          <uni-tr v-for="(deviceItem) in deviceList"
-                  :key="deviceItem.id">
-            <uni-td>{{deviceItem.name}}</uni-td>
-            <uni-td>{{deviceItem.category}}</uni-td>
-            <uni-td :class="deviceItem.status==0? 'deviceIsRed':'deviceIsGreen'">{{deviceItem.showStatus}}</uni-td>
+          <uni-tr v-for="device in showDevices" :key="device.id">
+            <uni-td>{{ device.name }}</uni-td>
+            <uni-td>{{ device.category }}</uni-td>
+            <uni-td
+              :class="device.status == 0 ? 'deviceIsRed' : 'deviceIsGreen'"
+              >{{ device.showStatus }}</uni-td
+            >
           </uni-tr>
         </uni-table>
       </view>
-    </view>
-    <view class="uni-btn">
-      <button type="submit"
-              class="uni-btn-submit">运行</button>
-      <button type="default"
-              class="uni-btn-default">返回</button>
     </view>
   </view>
 </template>
 
 <script>
-
-import { request } from '../../server/request.js';
+import { request } from '../../server/request.js'
 export default {
-  data () {
+  data() {
     return {
-      deviceGroupList: [],
-      deviceList: [],
-      scriptHaed: true,
-      scriptIs: {
-        isHidden: true,
-        isRotate: false,
-      }
+      deviceGroups: [],
+      devices: [],
+      checkedGroupName:[],
+      groupAll: true,
+      searchStr:"",
+      deviceGroup: {
+        show: true,
+        rotate: false,
+      },
     }
   },
-  created () {
+  computed: {
+       showDevices: {
+      get () {
+        const searchStr = this.searchStr;
+        const checkedGroupName = this.checkedGroupName;
+        if (searchStr) {
+          var reg = new RegExp(searchStr, 'ig')
+          return this.filterDeviceByGroupNames(checkedGroupName).filter(function (e) {
+            return e.name.match(reg);
+          })
+        };
+        return this.filterDeviceByGroupNames(checkedGroupName);
+      },
+      set () { }
+    },
+  },
+  created() {
     this.getDeviceGroups()
   },
   methods: {
-    bindPickerChange (e, parameter) {
-      let value = e.target.value
-      this.taskParameter.forEach(item => {
-        if (item.key == parameter.key) {
-          item.checkIndex = value;
-        }
-      })
-      this.$forceUpdate();
+    toggleRowSelection(){
+    console.log("toggleRowSelection"); 
     },
-    materialChange (e, material) {
-      let value = e.target.value
-      this.taskParameter.forEach(res => {
-        if (res.key == material.key) {
-          res.materialIndex = value;
-        }
-      })
-      this.$forceUpdate();
+    selectChange(){
+      console.log("select change");
     },
-    getDeviceGroups () {
-      // 获取设备分组
-      this.deviceGroupList = [];
-      const data = {};
-      request({
-        url: "/device/findcategory",
-        method: "post",
-        data
-      })
-        .then(res => {
-          let { code, data } = res.data
-          if (code === 200) {
-            this.deviceGroupList = []
-            if (data) {
-              data.forEach(device => {
-                this.deviceGroupList.push({ name: device.category, check: false });
-              });
-              this.getDeviceList()
-            }
-          }
+    sortDevice(type){
+      console.log(type,"排序");
+    },
+    filterDeviceByGroupNames (checkedGroupName) {
+      var rsDevices = [];
+      if (checkedGroupName.length === 0) {
+        rsDevices = this.devices;
+      } else {
+        checkedGroupName.forEach(name => {
+          let devices = [];
+          devices = this.devices.filter(device => { return device.category === name; });
+          rsDevices = rsDevices.concat(devices);
         });
+      }
+      return rsDevices;
     },
-    getDeviceList () {
+    getDeviceGroups() {
+      // 获取设备分组
+      this.deviceGroups = []
+      const data = {}
+      request({
+        url: '/device/findcategory',
+        method: 'post',
+        data,
+      }).then((res) => {
+        let { code, data } = res.data
+        if (code === 200) {
+          this.deviceGroups = []
+          if (data) {
+            data.forEach((device) => {
+              this.deviceGroups.push({ name: device.category, check: false })
+            })
+            this.getdevices()
+          }
+        }
+      })
+    },
+    getdevices() {
       // 查询设备列表
-      this.listLoading = true;
+      this.listLoading = true
       const data = {
         index: 1,
         size: 10000,
         search: '',
         category: '',
-      };
-      this.listLoading = true;
+      }
+      this.listLoading = true
       request({
-        url: "/device/findpage",
-        method: "post",
-        data
-      }).then(res => {
+        url: '/device/findpage',
+        method: 'post',
+        data,
+      }).then((res) => {
         let { data, code } = res.data
         if (code === 200) {
-          this.deviceList = [];
-          data.list.forEach(element => {
+          this.devices = []
+          data.list.forEach((element) => {
             let { status, name, id, category } = element
-            let showStatus = status === 1 ? '在线' : '离线';
-            this.deviceList.push({ name: name, category: category, showStatus: showStatus, status: status, id: id })
+            let showStatus = status === 1 ? '在线' : '离线'
+            this.devices.push({
+              name: name,
+              category: category,
+              showStatus: showStatus,
+              status: status,
+              id: id,
+            })
           })
-          console.log(this.deviceList)
+          console.log(this.devices)
         }
-      });
+      })
     },
-    scriptForList (listSelection, name) {
-      this.scriptHaed = false
-      if (!listSelection.isShow) {
-        this.$set(listSelection, "isShow", false)
-        listSelection.isShow = !listSelection.isShow
-      } else {
-        listSelection.isShow = !listSelection.isShow
+    clickGroup(group) {
+       this.groupAll = false;
+      if (!group.isShow) {
+        this.$set(group, 'isShow', false)
       }
-      this.deviceList.forEach(dataList => {
-        if (dataList.category == name) {
-
-        }
-      })
+       group.isShow = !group.isShow
+      console.log(group.name);
+      if(group.isShow){
+        this.checkedGroupName.push(group.name)
+      }else{
+         this.checkedGroupName = this.checkedGroupName.filter(groupName=>{
+           if(group.name ==groupName){
+             return false;
+           }
+           return true;
+         })
+      } 
     },
-    scriptAll () {
-      this.scriptHaed = true
-      this.deviceGroupList.forEach(res => {
-        res.isShow = false
-      })
+    clickGroupAll() {
+      this.groupAll = true
+      this.checkedGroupName=[];
     },
-    reLoadDevice () {
-      this.scriptHaed = true
-      this.scriptIs.isHidden = false
-      this.scriptIs.isRotate = true
+    reLoadDevices() {
+      this.groupAll = true
+      this.deviceGroup.show = false
+      this.deviceGroup.rotate = true
       setTimeout(() => {
-        this.scriptIs.isHidden = true;
-        this.scriptIs.isRotate = false;
-      }, 500);
-      this.getDeviceGroups();
-    }
-  }
+        this.deviceGroup.show = true
+        this.deviceGroup.rotate = false
+      }, 500)
+      this.getDeviceGroups()
+    },
+  },
 }
 </script>
 
 <style>
 @font-face {
-  font-family: "iconfont";
-  src: url("../../iconfont/iconfont.ttf?t=1621477806456") format("truetype");
+  font-family: 'iconfont';
+  src: url('../../iconfont/iconfont.ttf?t=1621477806456') format('truetype');
 }
 .iconfont {
-  font-family: "iconfont" !important;
+  font-family: 'iconfont' !important;
   font-size: 16px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
@@ -202,7 +227,7 @@ export default {
   color: #67c239;
 }
 .header text::after {
-  content: "";
+  content: '';
   width: 10px;
   height: 10px;
   position: absolute;
@@ -213,7 +238,7 @@ export default {
   transform: rotate(45deg);
 }
 .header text:last-of-type::after {
-  content: "";
+  content: '';
   display: none;
 }
 .choiceDevice {
