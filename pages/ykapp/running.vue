@@ -3,8 +3,9 @@
     <view class="header">
       <text v-for="(step,index) in steps" :key="index"  :class="{classGreen:index<stepIndex}">{{step}}</text>
     </view>
-    <set-params v-if="stepIndex==1" :scriptId="104" ></set-params>
-    <choice-device v-if="stepIndex==2" ></choice-device>
+    <set-params v-if="stepIndex==1" :scriptId="scriptId" ref="setParams" ></set-params>
+    <choice-device v-if="stepIndex==2" ref ="choiceDevice" ></choice-device>
+    <button @click="next()" >下一步</button>
   </view>
 </template>
 <script>
@@ -17,9 +18,20 @@ export default {
   data() {
     return {
       steps: ['选择功能', '设置参数', '选择设备', '运行'],
-      stepIndex: 1
+      stepIndex: 1,
+      scriptId:104
     }
   },
+  onLoad (option) {
+    this.scriptId = option.id;
+  },
+   methods: {
+     next(){
+      this.stepIndex++;
+       console.log(this.$refs.setParams.scriptParams);
+       console.log(this.$refs.choiceDevice);
+     }
+   }
 }
 </script>
 <style>
