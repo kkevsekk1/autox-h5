@@ -184,17 +184,6 @@ export default {
 </script>
 
 <style>
-@font-face {
-  font-family: "iconfont";
-  src: url("../../iconfont/iconfont.ttf?t=1621477806456") format("truetype");
-}
-.iconfont {
-  font-family: "iconfont" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
 .setParameter-header {
   width: 100%;
   position: fixed;
