@@ -32,10 +32,10 @@
           <input type="text" v-model="searchStr" placeholder="请输入" />
           <view class="iconfont"> &#xe617; </view>
         </view>
-        <uni-table emptyText="暂无数据" type="selection" @selection-change="selectChange()">
+        <uni-table emptyText="暂无数据" type="selection"  @selection-change="selectionChange" >
           <uni-tr>
-            <uni-th width="60%" :sortable="true" @sort-change="sortDevice('name')" >名称</uni-th>
-            <uni-th width="10%" :sortable="true" @sort-change="sortDevice('group')" >分组</uni-th>
+            <uni-th width="60%" :sortable=true @sort-change="sortDevice('name')" >名称</uni-th>
+            <uni-th width="10%" :sortable=true @sort-change="sortDevice('group')" >分组</uni-th>
             <uni-th width="30%">状态</uni-th>
           </uni-tr>
           <uni-tr v-for="device in showDevices" :key="device.id">
@@ -43,8 +43,7 @@
             <uni-td>{{ device.category }}</uni-td>
             <uni-td
               :class="device.status == 0 ? 'deviceIsRed' : 'deviceIsGreen'"
-              >{{ device.showStatus }}</uni-td
-            >
+              >{{ device.showStatus }}</uni-td>
           </uni-tr>
         </uni-table>
       </view>
@@ -62,6 +61,7 @@ export default {
       checkedGroupName:[],
       groupAll: true,
       searchStr:"",
+      selectedIndexs:[],
       deviceGroup: {
         show: true,
         rotate: false,
@@ -88,12 +88,11 @@ export default {
     this.getDeviceGroups()
   },
   methods: {
-    toggleRowSelection(){
-    console.log("toggleRowSelection"); 
-    },
-    selectChange(){
-      console.log("select change");
-    },
+		// 选择发送改变
+		selectionChange(e) {
+			console.log(e.detail.index,"所有选中的index")
+			this.selectedIndexs = e.detail.index
+		},
     sortDevice(type){
       console.log(type,"排序");
     },
