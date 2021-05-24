@@ -29,7 +29,7 @@
       </view>
       <view class="script-main">
         <view class="script-input">
-          <input type="text" v-model="searchStr" placeholder="请输入" />
+          <input type="text" v-model="searchStr" placeholder="名称，可用空格分隔" />
           <view class="iconfont"> &#xe617; </view>
         </view>
         <uni-table ref="uniTable" emptyText="暂无数据" type="selection"  @selection-change="selectionChange" >
