@@ -11,14 +11,16 @@
         </view>
         <view style=" position: relative;">
           <view class="goodsRank">
-            <view class="timeRank">
+            <view class="timeRank"
+                  @click="rankDevice('item')">
               <text>日期</text>
               <view class="icon">
                 <view class="iconfont iconTop color-blove">&#xea4c;</view>
                 <view class="iconfont iconBottom color-blove">&#xea4d;</view>
               </view>
             </view>
-            <view class="runNumberRank">
+            <view class="runNumberRank"
+                  @click="rankDevice('run')">
               <text>运行量</text>
               <view class="icon">
                 <view class="iconfont iconTop color-blove">&#xea4c;</view>
@@ -37,7 +39,7 @@
             <view v-for="opoupData in opoupList"
                   :key="opoupData.id"
                   class="opoup-for"
-                  @click="modifyPopup">
+                  @click="opoupFiltrate(opoupData.name)">
               <view> {{opoupData.name}} </view>
             </view>
           </view>
@@ -47,7 +49,7 @@
     <view class="goodsList-content">
       <view class="goodsList-nav"
             v-for="goodsData in goodsInformation"
-            :key="goodsData.id">
+            :key="goodsData.Id">
         <view class="nav-top">
           <view class="nav-logo">
             <img :src="goodsData.logoImg"
@@ -71,10 +73,10 @@
           </view>
         </view>
         <view class="nav-bottom">
-          <view class="TikTok">
-            <view class="iconfont">&#xe8db;</view>
-            <view>抖音</view>
-            <view class="TikTokEdition">v {{goodsData.TikTokEdition}} </view>
+          <view class="software">
+            <view class="iconfont">&#xe62c;</view>
+            <view>{{goodsData.appSoftware}}</view>
+            <view class="softwareEdition">v {{goodsData.softwareEdition}} </view>
           </view>
           <view class="run">
             <view class="iconfont">&#xe60a;</view>
@@ -94,34 +96,73 @@ import { request } from '../../server/request.js';
 export default {
   data () {
     return {
+      inputData: "",
       opoup: false,
       inputSeek: "",
       opoupList: [],
       goodsDataList: [],
       goodsInformation: [],
+      pages: { index: 1, size: 5, count: 10 }
     }
   },
   watch: {
     inputSeek (val) {
-      this.goodsInformation = []
-      this.goodsDataList.forEach(res => {
-        console.log(res)
-        if (res.appName == val) {
-          this.goodsInformation.push(res)
-        } else if (!val) {
-          this.goodsInformation = this.goodsDataList
-        }
-      })
+      this.debounce(val, 300)
     }
   },
   created () {
     this.goodsList()
     this.commodityGroup()
   },
+  onReachBottom () {
+    if (this.pages.index >= this.pages.count) {
+      uni.showToast({ title: '到底了', iccon: 'none' })
+    } else {
+      this.pages.index++
+      this.goodsList()
+    }
+  },
+  onPullDownRefresh () {
+    this.initialData()
+    setTimeout(() => {
+      uni.stopPullDownRefresh()
+    }, 1000)
+  },
   methods: {
+    // 防抖动
+    debounce (val, wait) {
+      if (this.timer) {
+        clearInterval(this.timer)
+      }
+      this.timer = setTimeout(() => {
+        this.goodsList({ seek: val })
+      }, wait)
+    },
+    // app筛选
     modifyPopup () {
-      // console.log(JSON.stringify(this.opoupList))
       this.opoup = !this.opoup
+    },
+    opoupFiltrate (name) {
+      this.modifyPopup()
+      this.goodsList({ appFiltrate: name })
+    },
+    // 排序
+    rankDevice (parameter) {
+      if (parameter == "run") {
+        let runData = 1
+        this.goodsInformation.sort((a, b) => {
+          if (runData == 0) {
+            // runData = 1
+            return a.runNumber - b.runNumber
+          }
+          if (runData == 1) {
+            runData = 0
+            return b.runNumber - a.runNumber
+          }
+
+        })
+      }
+
     },
     // 获得商品分组
     commodityGroup () {
@@ -141,14 +182,20 @@ export default {
     },
     // 获取应用数据列表
     goodsList () {
+      const data = { index: this.pages.index + '', size: this.pages.size + '', orderby: 'id desc' }
+      uni.showLoading({ title: '加载中' });
+      this.goodsDataList = []
       request({
         url: "/goodsList",
         method: "post",
+        data: this.inputData
       })
         .then(res => {
+          console.log(res)
+          uni.hideLoading()
           let { statusCode, data } = res
           if (statusCode == 200) {
-            data.forEach(element => {
+            data.list.forEach(element => {
               this.goodsDataList.push(element)
             });
           }
@@ -319,7 +366,7 @@ page {
   color: #faad14;
   overflow: hidden;
 }
-.nav-bottom .TikTok,
+.nav-bottom .software,
 .nav-bottom .run {
   float: left;
   margin-right: 15px;
@@ -329,16 +376,16 @@ page {
   position: relative;
   top: 2px;
 }
-.TikTok view,
+.software view,
 .run view {
   display: inline;
 }
-.nav-bottom .TikTok view:nth-child(1) {
+.nav-bottom .software view:nth-child(1) {
   font-size: 32rpx;
   color: #409efe;
 }
-.nav-bottom .TikTok view:nth-child(2) {
-  margin: 0 5px;
+.nav-bottom .software view:nth-child(2) {
+  margin: 0 7px 0 3px;
 }
 .nav-bottom .run view:nth-child(1) {
   font-size: 52rpx;
@@ -351,7 +398,7 @@ page {
   top: -10px;
   margin-left: 3px;
 }
-.nav-bottom .TikTokEdition {
+.nav-bottom .softwareEdition {
   color: #df343f;
 }
 /* 弹窗 */
