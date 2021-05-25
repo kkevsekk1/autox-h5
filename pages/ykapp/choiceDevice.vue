@@ -47,7 +47,6 @@
           </uni-tr>
         </uni-table>
       </view>
-      <button @click="getCheckedDevices()" >ok</button>
     </view>
   </view>
 </template>

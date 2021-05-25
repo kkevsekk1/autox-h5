@@ -27,9 +27,34 @@ export default {
   },
    methods: {
      next(){
-      this.stepIndex++;
        console.log(this.$refs.setParams.scriptParams);
-       console.log(this.$refs.choiceDevice);
+       console.log(this.$refs.choiceDevice.getCheckedDevices());
+       if(this.stepIndex==2){
+          if(this.$refs.choiceDevice.getCheckedDevices().length==0){
+             alert("至少选一个设备");
+          }else{
+            this.stepIndex++;
+          }
+       }
+       if(this.stepIndex==1){
+         let rs = this.checkParams(this.$refs.setParams.scriptParams);
+         if(rs==0){
+           this.stepIndex++;
+         }else{
+            alert(rs.name+"不能为空！");
+         }
+       }
+     },
+     checkParams(params){
+      for (let index = 0; index < params.length; index++) {
+         var param  = params[index];
+         var exp = param.defaultValue;
+          console.log(param,exp == 'undefined' || !exp || !/[^\s]/.test(exp));
+        if(exp == 'undefined' || !exp || !/[^\s]/.test(exp)){
+          return {name:param.name};
+        }
+      }
+      return 0;
      }
    }
 }
