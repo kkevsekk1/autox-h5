@@ -29,13 +29,13 @@
       </view>
       <view class="script-main">
         <view class="script-input">
-          <input type="text" v-model="searchStr" placeholder="请输入" />
+          <input type="text" v-model="searchStr" placeholder="名称，可用空格分隔" />
           <view class="iconfont"> &#xe617; </view>
         </view>
-        <uni-table emptyText="暂无数据" type="selection" @selection-change="selectChange()">
+        <uni-table ref="uniTable" emptyText="暂无数据" type="selection"  @selection-change="selectionChange" >
           <uni-tr>
-            <uni-th width="60%" :sortable="true" @sort-change="sortDevice('name')" >名称</uni-th>
-            <uni-th width="10%" :sortable="true" @sort-change="sortDevice('group')" >分组</uni-th>
+            <uni-th width="60%" :sortable=true @sort-change="sortDevice('name')" >名称</uni-th>
+            <uni-th width="10%" :sortable=true @sort-change="sortDevice('group')" >分组</uni-th>
             <uni-th width="30%">状态</uni-th>
           </uni-tr>
           <uni-tr v-for="device in showDevices" :key="device.id">
@@ -43,8 +43,7 @@
             <uni-td>{{ device.category }}</uni-td>
             <uni-td
               :class="device.status == 0 ? 'deviceIsRed' : 'deviceIsGreen'"
-              >{{ device.showStatus }}</uni-td
-            >
+              >{{ device.showStatus }}</uni-td>
           </uni-tr>
         </uni-table>
       </view>
@@ -67,15 +66,21 @@ export default {
         rotate: false,
       },
     }
+  },watch:{
+    searchStr(val,oldVal){
+        this.clearSelection();
+    }
   },
   computed: {
        showDevices: {
       get () {
-        const searchStr = this.searchStr;
+        let searchStr = this.searchStr;
         const checkedGroupName = this.checkedGroupName;
         if (searchStr) {
+          searchStr = searchStr.replace(new RegExp(" ","gm"),"|");
+          console.log(searchStr);
           var reg = new RegExp(searchStr, 'ig')
-          return this.filterDeviceByGroupNames(checkedGroupName).filter(function (e) {
+           return  this.filterDeviceByGroupNames(checkedGroupName).filter(function (e) {
             return e.name.match(reg);
           })
         };
@@ -88,12 +93,27 @@ export default {
     this.getDeviceGroups()
   },
   methods: {
-    toggleRowSelection(){
-    console.log("toggleRowSelection"); 
+    getCheckedDevices(){
+      let rs  =this.devices.filter(device=>{
+        return device.checked;
+      })
+      console.log("返回的设备",rs);
+      return rs;
     },
-    selectChange(){
-      console.log("select change");
+    clearSelection(){
+      this.$refs.uniTable.clearSelection();
     },
+		// 选择发送改变
+		selectionChange(e) {
+      this.devices.forEach(device=>{
+        device.checked=false;
+      })
+      this.showDevices.forEach((device,index)=>{
+          if(e.detail.index.includes(index)){
+            device.checked=true;
+          }
+      })
+		},
     sortDevice(type){
       console.log(type,"排序");
     },
@@ -165,6 +185,7 @@ export default {
       })
     },
     clickGroup(group) {
+      this.clearSelection();
        this.groupAll = false;
       if (!group.isShow) {
         this.$set(group, 'isShow', false)
@@ -180,11 +201,15 @@ export default {
            }
            return true;
          })
-      } 
+      }
+      if(this.checkedGroupName.length==0){
+          this.groupAll = true;
+      }
     },
     clickGroupAll() {
       this.groupAll = true
       this.checkedGroupName=[];
+       this.clearSelection();
     },
     reLoadDevices() {
       this.groupAll = true
