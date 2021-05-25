@@ -4,35 +4,45 @@
       <view class="title">
         <text>{{ scriptName }}（{{ scriptId }}）</text>
       </view>
-      <uni-row :gutter="12">
-        <view v-for="(param, index) in scriptParams" :key="index">
+      <uni-row :gutter="12"
+               class="row-float">
+        <view v-for="(param, index) in scriptParams"
+              :key="index"
+              :class="param.type != 3 ? 'uni-form-input' : 'uni-form-much'">
           <!-- 输入框 -->
-          <uni-col style="text-align: right" :span="6" v-if="param.type == 1">
+          <uni-col style="text-align: right"
+                   :span="6"
+                   v-if="param.type == 1"
+                   class="title-input">
             <view>{{ param.name }}</view>
           </uni-col>
-          <uni-col :span="18" v-if="param.type == 1">
-            <uni-easyinput
-              v-model="param.defaultValue"
-              placeholder="请输入内容"
-            ></uni-easyinput>
+          <uni-col :span="18"
+                   v-if="param.type == 1"
+                   class="uni-input">
+            <uni-easyinput v-model="param.defaultValue"
+                           placeholder="请输入内容"></uni-easyinput>
           </uni-col>
           <!-- 下拉菜单 -->
-          <uni-col
-            style="text-align: right"
-            :span="6"
-            v-if="param.type == 2 || param.type == 4">
+          <uni-col style="text-align: right; "
+                   :span="6"
+                   v-if="param.type == 2 || param.type == 4"
+                   class="title-picker">
             <view>{{ param.name }}</view>
           </uni-col>
-          <uni-col :span="18" v-if="param.type == 2 || param.type == 4">
-            <picker
-              @change="bindPickerChange($event, scriptParams, param)"
-              :value="param.defaultValue"
-              :range="param.checkValue">
-              <view class="uni-input">{{ param.checkedValue }}</view>
+          <uni-col :span="18"
+                   v-if="param.type == 2 || param.type == 4"
+                   class="uni-list-cell-db">
+            <picker @change="bindPickerChange($event, scriptParams, param)"
+                    :value="param.defaultValue"
+                    :range="param.checkValue"
+                    style="padding-left: 10px;">
+              <view>{{ param.checkedValue }}</view>
             </picker>
           </uni-col>
           <!-- 多选框 -->
-          <uni-col :span="param.span" :offset="param.offset" v-if="param.type == 3">
+          <uni-col :span="param.span"
+                   :offset="param.offset"
+                   v-if="param.type == 3">
             <checkbox value="checkbox1"><text>{{ param.name }}</text></checkbox>
           </uni-col>
         </view>
@@ -46,7 +56,7 @@ export default {
   props: {
     scriptId: Number | String,
   },
-  data() {
+  data () {
     return {
       rememberParams: null,
       scriptParams: null,
@@ -54,20 +64,19 @@ export default {
       scriptName: '加载...',
     }
   },
-  async created() {
+  async created () {
     uni.showLoading({ title: '加载中' })
     await this.loadMaterials()
     let rememberParams = await this.loadRemember()
     this.rememberParams = JSON.parse(rememberParams)
     await this.loadScript()
-    console.log()
     this.convertParams(rememberParams)
     this.convertLayout()
     uni.hideLoading()
     this.$forceUpdate()
   },
   methods: {
-    loadScript() {
+    loadScript () {
       return new Promise((resolve, reject) => {
         request({
           url: '/script/getScript?id=' + this.scriptId,
@@ -85,7 +94,7 @@ export default {
         })
       })
     },
-    loadRemember() {
+    loadRemember () {
       return new Promise((resolve, reject) => {
         request({
           url: '/userScript/remember?scriptId=' + this.scriptId,
@@ -98,7 +107,7 @@ export default {
         })
       })
     },
-    loadMaterials() {
+    loadMaterials () {
       const data = {
         index: 1,
         size: 10000,
@@ -120,7 +129,7 @@ export default {
         })
       })
     },
-    bindPickerChange(e, params, param) {
+    bindPickerChange (e, params, param) {
       let index = e.target.value
       params.forEach((item) => {
         if (item.key == param.key) {
@@ -130,7 +139,7 @@ export default {
       })
       this.$forceUpdate()
     },
-    convertLayout() {
+    convertLayout () {
       let type = -1
       let gindex = -1
       let tmpParam = null
@@ -156,12 +165,11 @@ export default {
         lastParam = param
       }
       this.scriptParams.forEach((item) => {
-        item.offset=0;
+        item.offset = 0;
         if (item.gindex) {
-          console.log(item.total, item.gindex)
           item.span = 9
           if (item.gindex % 2 == 1) {
-            item.offset=6
+            item.offset = 6
             if (item.total == item.gindex) {
               item.span = 15
             }
@@ -169,11 +177,12 @@ export default {
         }
       })
     },
-    convertParams(rememberParams) {
+    convertParams (rememberParams) {
       this.scriptParams.forEach((param) => {
-        if (rememberParams &&rememberParams[param.key] && rememberParams[param.key] != '') {
+        if (rememberParams && rememberParams[param.key] && rememberParams[param.key] != '') {
           param.defaultValue = rememberParams[param.key]
         }
+
         if (param.type === 2) {
           //普通选择
           //checkValue 数组，checkedValue选中的显示值，defaultValue 放置参数值
@@ -214,17 +223,6 @@ export default {
 </script>
 
 <style>
-@font-face {
-  font-family: 'iconfont';
-  src: url('../../iconfont/iconfont.ttf?t=1621477806456') format('truetype');
-}
-.iconfont {
-  font-family: 'iconfont' !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
 .header {
   background-color: #f5f7fa;
   height: 50px;
@@ -240,7 +238,7 @@ export default {
   color: #67c239;
 }
 .header text::after {
-  content: '';
+  content: "";
   width: 10px;
   height: 10px;
   position: absolute;
@@ -251,7 +249,7 @@ export default {
   transform: rotate(45deg);
 }
 .header text:last-of-type::after {
-  content: '';
+  content: "";
   display: none;
 }
 .setParameter .nav {
@@ -264,36 +262,30 @@ export default {
   font-size: 20px;
   font-weight: 300;
 }
-.uni-form-input,
-.uni-form--much,
-.uni-title-picker {
+.uni-form-input {
+  width: 100%;
   margin-top: 20px;
-}
-
-/* 下拉菜单 */
-.uni-title-picker {
-  overflow: hidden;
   height: 40px;
   line-height: 40px;
+  overflow: hidden;
   display: flex;
   justify-content: space-between;
 }
-.uni-title-picker .uni-list-cell-db,
-.uni-title-picker .title-picker {
+.uni-form-input .uni-list-cell-db,
+.uni-form-input .title-picker {
   float: left;
 }
-.uni-title-picker .uni-list-cell-db {
+.uni-form-input .uni-list-cell-db {
   height: 40px;
   width: 80%;
   margin-left: 10px;
   border: 1px solid #d7dae2;
   border-radius: 5px;
-  padding-left: 10px;
   position: relative;
   box-sizing: border-box;
 }
-.uni-title-picker .uni-list-cell-db::after {
-  content: '';
+.uni-form-input .uni-list-cell-db::after {
+  content: "";
   width: 8px;
   height: 8px;
   position: absolute;
@@ -303,36 +295,13 @@ export default {
   border-bottom: 1px solid #a6abb8;
   transform: rotate(45deg);
 }
-/* 多选 */
-.uni-form--much {
+.uni-form-much {
+  width: 50%;
+  float: left;
   overflow: hidden;
+  margin: 10px 0;
 }
-.uni-form--much .much {
-  float: right;
-  width: 80%;
-}
-.uni-form--much .label-much {
-  width: 30%;
-  margin-bottom: 10px;
-}
-.uni-btn {
-  margin-top: 40px;
+.row-float {
   overflow: hidden;
-  height: 40px;
-  line-height: 40px;
-}
-.uni-btn-default {
-  float: right;
-  width: 70px;
-  font-size: 14px;
-  color: #606266;
-}
-.uni-btn-submit {
-  float: right;
-  width: 100px;
-  margin-left: 10px;
-  background-color: #409eff;
-  color: #fff;
-  font-size: 14px;
 }
 </style>

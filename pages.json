@@ -1,6 +1,5 @@
 {
-  "pages": [
-    {
+  "pages": [{
       "path": "pages/index/index",
       "style": {
         "navigationBarTitleText": "二维码记录",
@@ -114,8 +113,7 @@
     "borderStyle": "white",
     "backgroundColor": "#ffffff",
     "fontSize": "28rpx",
-    "list": [
-      {
+    "list": [{
         "pagePath": "pages/word/words",
         "text": "口令",
         "iconPath": "static/word.png",
@@ -134,7 +132,7 @@
         "selectedIconPath": "static/slcMine.png"
       },
       {
-        "pagePath": "pages/goodsList/goodsList",
+        "pagePath": "pages/ykapp/choiseFeature",
         "text": "商品列表",
         "iconPath": "static/mine.png",
         "selectedIconPath": "static/slcMine.png"
