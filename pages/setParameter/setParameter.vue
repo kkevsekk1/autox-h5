@@ -15,7 +15,8 @@
         </view>
         <form @submit="formSubmit">
           <view v-for="(parameter,index) in taskParameter"
-                :key="index">
+                :key="index"
+                class="uni-form-input">
             <!-- 输入框 -->
             <view class="uni-form-input"
                   v-if="parameter.type==1">
@@ -281,9 +282,7 @@ export default {
   font-size: 20px;
   font-weight: 300;
 }
-.uni-form-input,
-.uni-form--much,
-.uni-title-picker {
+.uni-form-input {
   margin-top: 20px;
 }
 /* input框 */
