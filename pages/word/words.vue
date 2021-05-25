@@ -1,47 +1,50 @@
 <template>
   <view class="container">
-    <input type="text"
-           v-model="searchContent"
-           class="search-content"
-           placeholder="请输入口令搜索内容">
-    <button class="search-btn"
-            @click="searchWord"
-            size='mini'>搜索</button>
+    <input
+      type="text"
+      v-model="searchContent"
+      class="search-content"
+      placeholder="请输入口令搜索内容"
+    />
+    <button class="search-btn" @click="searchWord" size="mini">搜索</button>
     <view class="record-box">
-      <view v-if="datas.length>0"
-            class="record-list">
-        <view v-for="item in datas"
-              :key="item.id">
-          <view class="record-info"
-                v-if="item.isGet">
+      <view v-if="datas.length > 0" class="record-list">
+        <view v-for="item in datas" :key="item.id">
+          <view class="record-info" v-if="item.isGet">
             <view class="record-header">
               <text>口令类型：{{ item.type }}</text>
               <text>口令内容：{{ item.content }}</text>
-              <button type="primary"
-                      size="mini"
-                      @click="bindWord(item)">领取</button>
+              <button type="primary" size="mini" @click="bindWord(item)">
+                领取
+              </button>
             </view>
             <view class="record-content">
-              <view style="margin-top:20rpx;">创建时间：{{ item.createTime }}</view>
-              <view style="line-height:80rpx;">商家名称：{{ item.publisherName }}</view>
+              <view style="margin-top: 20rpx"
+                >创建时间：{{ item.createTime }}</view
+              >
+              <view style="line-height: 80rpx"
+                >商家名称：{{ item.publisherName }}</view
+              >
             </view>
           </view>
 
-          <view class="record-info-change"
-                v-else>
+          <view class="record-info-change" v-else>
             <view class="record-header">
               <text>口令类型：{{ item.type }}</text>
               <text>口令内容：{{ item.content }}</text>
-              <button type="primary"
-                      size="mini"
-                      class="record-change">已领取</button>
+              <button type="primary" size="mini" class="record-change">
+                已领取
+              </button>
             </view>
             <view class="record-content">
-              <view style="margin-top:20rpx;">创建时间：{{ item.createTime |time  }}</view>
-              <view style="line-height:80rpx;">商家名称：{{ item.publisherName }}</view>
+              <view style="margin-top: 20rpx"
+                >创建时间：{{ item.createTime | time }}</view
+              >
+              <view style="line-height: 80rpx"
+                >商家名称：{{ item.publisherName }}</view
+              >
             </view>
           </view>
-
         </view>
       </view>
       <view v-else>暂无扫码记录</view>
@@ -50,127 +53,118 @@
 </template>
 
 <script>
-import {
-  request
-} from '../../server/request.js';
-import {
-  formatTime
-} from '../../utils/format.js';
+import { request } from '../../server/request.js'
+import { formatTime } from '../../utils/format.js'
 export default {
-  data () {
+  data() {
     return {
       searchContent: '',
       datas: [],
       pages: {
         index: 1,
         size: 5,
-        count: 0
-      }
-    };
+        count: 0,
+      },
+    }
   },
-  created () {
-    this.initialData();
+  created() {
+    this.initialData()
   },
-  onReachBottom () {
+  onReachBottom() {
     // 当前页大于等于总页数
     if (this.pages.index >= this.pages.count) {
       uni.showToast({
         title: '到底啦',
-        icon: 'none'
-      });
+        icon: 'none',
+      })
     } else {
-      this.pages.index++;
-      this.getDatas();
+      this.pages.index++
+      this.getDatas()
     }
     // 进入下一页
   },
-  onPullDownRefresh () {
-    this.initialData();
+  onPullDownRefresh() {
+    this.initialData()
     setTimeout(() => {
-      uni.stopPullDownRefresh();
-    }, 1000);
+      uni.stopPullDownRefresh()
+    }, 1000)
   },
   methods: {
-    initialData () {
-      this.pages.index = 1;
-      this.datas = [];
-      this.getDatas();
+    initialData() {
+      this.pages.index = 1
+      this.datas = []
+      this.getDatas()
     },
-    getDatas () {
+    getDatas() {
       const data = {
         index: this.pages.index + '',
         size: this.pages.size + '',
         search: '',
-        orderby: 'createTime'
-      };
+        orderby: 'createTime',
+      }
       uni.showLoading({
-        title: '加载中'
-      });
+        title: '加载中',
+      })
       request({
         url: '/word/pagetoshop',
         method: 'post',
-        data: data
+        data: data,
+      }).then((loadresult) => {
+        // console.log(loadresult)
+        uni.hideLoading()
+        const { message, code, data } = loadresult.data
+        if (code === 200) {
+          this.pages = {
+            count: data.count,
+            index: data.index,
+            size: data.size,
+          }
+          data.list.forEach((record) => {
+            record.createTime = formatTime(record.createTime)
+            record.isGet = false
+            this.changeCodeType(record)
+            this.datas.push(record)
+          })
+        }
+        this.selecteWords()
+        if (code === -1) {
+          uni.showToast({
+            title: message,
+            icon: 'none',
+          })
+          setTimeout(() => {
+            uni.reLaunch({
+              url: '/pages/login/login?path=' + this.$route.path,
+            })
+          }, 2000)
+        }
       })
-        .then((loadresult) => {
-          // console.log(loadresult)
-          uni.hideLoading();
-          const {
-            message,
-            code,
-            data
-          } = loadresult.data;
-          if (code === 200) {
-            this.pages = {
-              count: data.count,
-              index: data.index,
-              size: data.size
-            };
-            data.list.forEach(record => {
-              record.createTime = formatTime(record.createTime);
-              record.isGet = false;
-              this.changeCodeType(record);
-              this.datas.push(record);
-            });
-          }
-          this.selecteWords();
-          if (code === -1) {
-            uni.showToast({
-              title: message,
-              icon: 'none'
-            });
-            setTimeout(() => {
-              uni.reLaunch({
-                url: '/pages/login/login?path=' + this.$route.path
-              });
-            }, 2000);
-          }
-        });
     },
-    selecteWords () {
-      var ids = [-1];
-      this.datas.forEach(item => {
-        ids.push(item.id);
-      });
+    selecteWords() {
+      var ids = [-1]
+      this.datas.forEach((item) => {
+        ids.push(item.id)
+      })
       request({
         url: '/word/check',
         method: 'post',
         data: {
-          ids: ids
-        }
+          ids: ids,
+        },
       }).then((res) => {
-        this.isGetCode(res.data.data);
-      });
+        this.isGetCode(res.data.data)
+      })
     },
-    isGetCode (data) {
+    isGetCode(data) {
       for (var i = 0; i < this.datas.length; i++) {
         if (this.idInIt(this.datas[i].id, data)) {
-          this.datas[i].isGet = false;
+          this.datas[i].isGet = false
         } else {
-          this.datas[i].isGet = true;
+          this.datas[i].isGet = true
         }
       }
     },
-    changeCodeType (item) {
+    changeCodeType(item) {
       if (item.type == 1) {
         item.type = '支付宝'
       }
@@ -181,100 +175,89 @@ export default {
         item.type = '淘宝'
       }
     },
-    idInIt (id, checkDatas) {
+    idInIt(id, checkDatas) {
       for (var i = 0; i < checkDatas.length; i++) {
         if (checkDatas[i].wordId == id) {
-          return true;
+          return true
         }
       }
-      return false;
+      return false
     },
-    bindWord (word) {
+    bindWord(word) {
       uni.showLoading({
-        title: '领取中'
-      });
+        title: '领取中',
+      })
       request({
         url: '/word/release?id=' + word.id,
         method: 'get',
+      }).then((loadresult) => {
+        uni.hideLoading()
+        const { message, code, data } = loadresult.data
+        word.isGet = false
+        this.$router.go(0)
+        if (code === 200) {
+          uni.showToast({
+            title: message,
+            icon: 'none',
+          })
+          this.pages = {
+            count: data.count,
+            index: data.index,
+            size: data.size,
+          }
+          data.list.forEach((record) => {
+            record.createTime = formatTime(record.createTime)
+            this.datas.push(record)
+          })
+        }
+        if (code === -1) {
+          uni.showToast({
+            title: message,
+            icon: 'none',
+          })
+          setTimeout(() => {
+            uni.reLaunch({
+              url: '/pages/login/login',
+            })
+          }, 2000)
+        }
       })
-        .then((loadresult) => {
-          uni.hideLoading();
-          const {
-            message,
-            code,
-            data
-          } = loadresult.data;
-          word.isGet = false;
-          this.$router.go(0)
-          if (code === 200) {
-            uni.showToast({
-              title: message,
-              icon: 'none'
-            });
-            this.pages = {
-              count: data.count,
-              index: data.index,
-              size: data.size
-            };
-            data.list.forEach(record => {
-              record.createTime = formatTime(record.createTime);
-              this.datas.push(record);
-            });
-          }
-          if (code === -1) {
-            uni.showToast({
-              title: message,
-              icon: 'none'
-            });
-            setTimeout(() => {
-              uni.reLaunch({
-                url: '/pages/login/login'
-              });
-            }, 2000);
-          }
-        });
     },
-    searchWord () {
-
+    searchWord() {
       const data = {
         index: this.pages.index + '',
         size: this.pages.size + '',
         search: this.searchContent,
-        orderby: 'createTime'
-      };
+        orderby: 'createTime',
+      }
       uni.showLoading({
-        title: '加载中'
-      });
+        title: '加载中',
+      })
       request({
         url: '/word/pagetoshop',
         method: 'post',
-        data: data
-      })
-        .then((loadresult) => {
-          uni.hideLoading();
-          const {
-            message,
-            code,
-            data
-          } = loadresult.data;
-          if (code === 200) {
-            this.datas = []
-            this.pages = {
-              count: data.count,
-              index: data.index,
-              size: data.size
-            };
-            data.list.forEach(record => {
-              record.createTime = formatTime(record.createTime);
-              record.isGet = false;
-              this.changeCodeType(record);
-              this.datas.push(record);
-            });
+        data: data,
+      }).then((loadresult) => {
+        uni.hideLoading()
+        const { message, code, data } = loadresult.data
+        if (code === 200) {
+          this.datas = []
+          this.pages = {
+            count: data.count,
+            index: data.index,
+            size: data.size,
           }
-        });
-    }
+          data.list.forEach((record) => {
+            record.createTime = formatTime(record.createTime)
+            record.isGet = false
+            this.changeCodeType(record)
+            this.datas.push(record)
+          })
+        }
+      })
+    },
   },
-};
+}
 </script>
 
 <style>

@@ -90,6 +90,13 @@
         "navigationBarTitleText": "商品列表",
         "enablePullDownRefresh": true
       }
+    },
+    {
+      "path": "pages/feature/index",
+      "style": {
+        "navigationBarTitleText": "功能选择",
+        "enablePullDownRefresh": true
+      }
     }
   ],
   "globalStyle": {
