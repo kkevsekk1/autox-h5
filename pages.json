@@ -83,6 +83,13 @@
         "navigationBarTitleText": "选择设备",
         "enablePullDownRefresh": true
       }
+    },
+    {
+      "path": "pages/goodsList/goodsList",
+      "style": {
+        "navigationBarTitleText": "商品列表",
+        "enablePullDownRefresh": true
+      }
     }
   ],
   "globalStyle": {
@@ -120,8 +127,8 @@
         "selectedIconPath": "static/slcMine.png"
       },
       {
-        "pagePath": "pages/ykapp/choiseFeature",
-        "text": "准备运行",
+        "pagePath": "pages/goodsList/goodsList",
+        "text": "商品列表",
         "iconPath": "static/mine.png",
         "selectedIconPath": "static/slcMine.png"
       }
