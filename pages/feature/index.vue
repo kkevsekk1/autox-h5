@@ -251,7 +251,6 @@ page {
   padding-top: 100px;
 }
 .goodsList-nav {
-  height: 100px;
   background-color: #fff;
   margin: 10px 0;
   padding: 10px 20px;
