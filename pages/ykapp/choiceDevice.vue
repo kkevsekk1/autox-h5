@@ -81,7 +81,6 @@ export default {
         const checkedGroupName = this.checkedGroupName;
         if (searchStr) {
           searchStr = searchStr.replace(new RegExp(" ", "gm"), "|");
-          console.log(searchStr);
           var reg = new RegExp(searchStr, 'ig')
           return this.filterDeviceByGroupNames(checkedGroupName).filter(function (e) {
             return e.name.match(reg);
@@ -100,7 +99,6 @@ export default {
       let rs = this.devices.filter(device => {
         return device.checked;
       })
-      console.log("返回的设备", rs);
       return rs;
     },
     clearSelection () {
@@ -116,9 +114,6 @@ export default {
           device.checked = true;
         }
       })
-    },
-    sortDevice (type) {
-      console.log(type, "排序");
     },
     filterDeviceByGroupNames (checkedGroupName) {
       var rsDevices = [];
@@ -183,7 +178,6 @@ export default {
               id: id,
             })
           })
-          console.log(this.devices)
         }
       })
     },
@@ -194,7 +188,6 @@ export default {
         this.$set(group, 'isShow', false)
       }
       group.isShow = !group.isShow
-      console.log(group.name);
       if (group.isShow) {
         this.checkedGroupName.push(group.name)
       } else {
@@ -233,11 +226,14 @@ page {
   margin: 0;
   padding: 0;
 }
+.choiceDevice-box {
+  padding-top: 60px;
+  padding-bottom: 100px;
+}
 .choiceDevice {
   margin: 0 10px;
   border: 1px solid #e5e5e9;
   border-radius: 5px;
-  padding-top: 50px;
 }
 .script-header {
   height: 35px;
@@ -246,7 +242,7 @@ page {
   background-color: #e5e5e9;
 }
 .script-haed {
-  width: 60px;
+  width: 20%;
   text-align: center;
 }
 .refresh {

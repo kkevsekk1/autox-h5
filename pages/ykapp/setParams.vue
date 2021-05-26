@@ -1,53 +1,50 @@
 <template>
   <view class="setParameter">
-    <view class="nav">
-      <view class="title">
-        <text>{{ scriptName }}（{{ scriptId }}）</text>
-      </view>
-      <uni-row :gutter="12"
-               class="row-float">
-        <view v-for="(param, index) in scriptParams"
-              :key="index"
-              :class="param.type != 3 ? 'uni-form-input' : 'uni-form-much'">
-          <!-- 输入框 -->
-          <uni-col style="text-align: right"
-                   :span="6"
-                   v-if="param.type == 1"
-                   class="title-input">
-            <view>{{ param.name }}</view>
-          </uni-col>
-          <uni-col :span="18"
-                   v-if="param.type == 1"
-                   class="uni-input">
-            <uni-easyinput v-model="param.defaultValue"
-                           placeholder="请输入内容"></uni-easyinput>
-          </uni-col>
-          <!-- 下拉菜单 -->
-          <uni-col style="text-align: right; "
-                   :span="6"
-                   v-if="param.type == 2 || param.type == 4"
-                   class="title-picker">
-            <view>{{ param.name }}</view>
-          </uni-col>
-          <uni-col :span="18"
-                   v-if="param.type == 2 || param.type == 4"
-                   class="uni-list-cell-db">
-            <picker @change="bindPickerChange($event, scriptParams, param)"
-                    :value="param.defaultValue"
-                    :range="param.checkValue"
-                    style="padding-left: 10px;">
-              <view>{{ param.checkedValue }}</view>
-            </picker>
-          </uni-col>
-          <!-- 多选框 -->
-          <uni-col :span="param.span"
-                   :offset="param.offset"
-                   v-if="param.type == 3">
-            <checkbox value="checkbox1"><text>{{ param.name }}</text></checkbox>
-          </uni-col>
-        </view>
-      </uni-row>
+    <view class="title">
+      <text>{{ scriptName }}（{{ scriptId }}）</text>
     </view>
+    <uni-row :gutter="12">
+      <view v-for="(param, index) in scriptParams"
+            :key="index"
+            :class="param.type != 3 ? 'script-params':''">
+        <!-- 输入框 -->
+        <uni-col style="text-align: right"
+                 :span="6"
+                 v-if="param.type == 1">
+          <view>{{ param.name }}</view>
+        </uni-col>
+        <uni-col :span="18"
+                 v-if="param.type == 1">
+          <uni-easyinput v-model="param.defaultValue"
+                         placeholder="请输入内容"></uni-easyinput>
+        </uni-col>
+        <!-- 下拉菜单 -->
+        <uni-col style="text-align: right; "
+                 :span="6"
+                 v-if="param.type == 2 || param.type == 4">
+          <view>{{ param.name }}</view>
+        </uni-col>
+        <uni-col :span="18"
+                 v-if="param.type == 2 || param.type == 4">
+          <picker @change="bindPickerChange($event, scriptParams, param)"
+                  :value="param.defaultValue"
+                  :range="param.checkValue"
+                  class="pull-down-menu">
+            <view>{{ param.checkedValue }}</view>
+          </picker>
+        </uni-col>
+        <!-- 多选框 -->
+        <uni-col :span="param.span"
+                 :offset="param.offset"
+                 v-if="param.type == 3"
+                 style="margin-top:10px;margin-bottom:10px;">
+          <view>
+            <checkbox value="checkbox1"
+                      style="transform-origin:0 0 ; transform:scale(0.8)"><text style="font-size: 17.5px">{{ param.name }}</text></checkbox>
+          </view>
+        </uni-col>
+      </view>
+    </uni-row>
   </view>
 </template>
 <script>
@@ -80,7 +77,7 @@ export default {
       return new Promise((resolve, reject) => {
         request({
           url: '/script/getScript?id=' + this.scriptId,
-          method: 'get',
+          method: 'ge7t',
         }).then((res) => {
           let {
             data: { name: scriptName, taskParameter: scriptParams },
@@ -171,7 +168,7 @@ export default {
           if (item.gindex % 2 == 1) {
             item.offset = 6
             if (item.total == item.gindex) {
-              item.span = 15
+              item.span = 18
             }
           }
         }
@@ -223,68 +220,28 @@ export default {
 </script>
 
 <style>
-.header {
-  background-color: #f5f7fa;
-  height: 50px;
-  padding: 0 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.header text {
-  position: relative;
-}
-.classGreen {
-  color: #67c239;
-}
-.header text::after {
-  content: "";
-  width: 10px;
-  height: 10px;
-  position: absolute;
-  top: 2px;
-  right: -23px;
-  border-right: 1px solid #a6abb8;
-  border-top: 1px solid #a6abb8;
-  transform: rotate(45deg);
-}
-.header text:last-of-type::after {
-  content: "";
-  display: none;
-}
-.setParameter .nav {
-  padding: 10px 10px;
-  font-size: 28rpx;
+.setParameter {
+  margin: 0 10px;
+  padding-top: 60px;
   color: #606266;
+  padding-bottom: 100px;
 }
-.setParameter .nav .title {
+.setParameter .title {
   text-align: center;
   font-size: 20px;
   font-weight: 300;
 }
-.uni-form-input {
-  width: 100%;
-  margin-top: 20px;
-  height: 40px;
-  line-height: 40px;
-  overflow: hidden;
-  display: flex;
-  justify-content: space-between;
-}
-.uni-form-input .uni-list-cell-db,
-.uni-form-input .title-picker {
-  float: left;
-}
-.uni-form-input .uni-list-cell-db {
-  height: 40px;
-  width: 80%;
-  margin-left: 10px;
+.pull-down-menu {
+  height: 36px;
+  line-height: 36px;
   border: 1px solid #d7dae2;
-  border-radius: 5px;
+  border-radius: 4px;
+  padding-left: 10px;
   position: relative;
   box-sizing: border-box;
+  font-size: 14px;
 }
-.uni-form-input .uni-list-cell-db::after {
+.pull-down-menu::after {
   content: "";
   width: 8px;
   height: 8px;
@@ -295,13 +252,13 @@ export default {
   border-bottom: 1px solid #a6abb8;
   transform: rotate(45deg);
 }
-.uni-form-much {
-  width: 50%;
-  float: left;
-  overflow: hidden;
-  margin: 10px 0;
+.script-params {
+  margin-top: 15px;
+  line-height: 36px;
 }
-.row-float {
-  overflow: hidden;
+.script-params::after {
+  content: "";
+  display: block;
+  clear: both;
 }
 </style>
