@@ -59,42 +59,20 @@
       "path": "pages/ykapp/choiseFeature",
       "style": {
         "navigationBarTitleText": "功能选择",
-        "enablePullDownRefresh": true
+        "enablePullDownRefresh": true,
+        "app-plus": {
+          "titleNView": false
+        }
       }
     },
     {
       "path": "pages/ykapp/running",
       "style": {
         "navigationBarTitleText": "运行",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
-      "path": "pages/setParameter/setParameter",
-      "style": {
-        "navigationBarTitleText": "设置参数",
-        "enablePullDownRefresh": true
-      }
-    },
-    {
-      "path": "pages/choiceDevice/choiceDevice",
-      "style": {
-        "navigationBarTitleText": "选择设备",
-        "enablePullDownRefresh": true
-      }
-    },
-    {
-      "path": "pages/goodsList/goodsList",
-      "style": {
-        "navigationBarTitleText": "商品列表",
-        "enablePullDownRefresh": true
-      }
-    },
-    {
-      "path": "pages/feature/index",
-      "style": {
-        "navigationBarTitleText": "功能选择",
-        "enablePullDownRefresh": true
+        "enablePullDownRefresh": false,
+        "app-plus": {
+          "titleNView": false
+        }
       }
     }
   ],
