@@ -15,61 +15,72 @@
                   @click="rank('date')">
               <text>日期</text>
               <view class="icon">
-                <view class="iconfont iconTop color-blove">&#xea4c;</view>
-                <view class="iconfont iconBottom color-blove">&#xea4d;</view>
+                <view class="iconfont iconTop "
+                      :class="sortDate ? 'color-blove':''">&#xea4c;</view>
+                <view class="iconfont iconBottom "
+                      :class="sortDate ? '':'color-blove'">&#xea4d;</view>
               </view>
             </view>
             <view class="runNumberRank"
                   @click="rank('run')">
               <text>运行量</text>
               <view class="icon">
-                <view class="iconfont iconTop color-blove">&#xea4c;</view>
-                <view class="iconfont iconBottom">&#xea4d;</view>
+                <view class="iconfont iconTop "
+                      :class=" sortRun ? 'color-blove':''">&#xea4c;</view>
+                <view class="iconfont iconBottom"
+                      :class=" sortRun ? '':'color-blove'">&#xea4d;</view>
               </view>
             </view>
             <view class="appFiltrate"
-                  @click="clickFilter()" >
+                  @click="popUp = !popUp">
               <text>app筛选</text>
               <view class="iconfont iconLeft color-blove">&#xea4d;</view>
             </view>
           </view>
+          <view v-show="popUp">
+            <choise-app @choiseApp="onChoiseApp"></choise-app>
+          </view>
         </view>
       </view>
-          <view v-show="popUp">
-            <choise-app  @choiseApp="onChoiseApp"></choise-app> 
-          </view>
     </view>
-        <view v-for=" feature in features" :key="feature.id">
-        <feature-item :feature="feature"  @run="run" ></feature-item>
+    <view class="goodsList-content">
+      <view v-for=" feature in features"
+            :key="feature.id"
+            class="goodsList-nav">
+        <feature-item :feature="feature"
+                      @run="run"></feature-item>
+      </view>
     </view>
   </view>
 </template>
 
 <script>
 import { request } from '../../server/request.js';
-import featureItem  from './featueItem'
+import featureItem from './featueItem'
 import choiseApp from './choiseApp'
 export default {
-    components: {
-    featureItem:featureItem,
-    choiseApp:choiseApp
+  components: {
+    featureItem: featureItem,
+    choiseApp: choiseApp
   },
   data () {
     return {
       search: "",
-      appName:"",
-      page: { index: 1, size: 20,orderBy:"id desc" ,pages:2},
-      features:[],
-      popUp:false,
+      appName: "",
+      page: { index: 1, size: 20, orderBy: "id desc", pages: 2 },
+      features: [],
+      popUp: false,
+      sortDate: true,
+      sortRun: true
     }
   },
   watch: {
-    search (val){
+    search (val) {
       this.debounce(300);
     }
   },
   created () {
-   this.loadFeatures()
+    this.loadFeatures()
   },
   onReachBottom () {
     if (this.page.index >= this.page.pages) {
@@ -80,39 +91,37 @@ export default {
     }
   },
   onPullDownRefresh () {
-    this.page.index =1;
-    this.features=[];
+    this.page.index = 1;
+    this.features = [];
     this.loadFeatures();
     setTimeout(() => {
       uni.stopPullDownRefresh()
     }, 1000)
   },
   methods: {
-    clickFilter(){
-      console.log("弹出筛选");
-      this.popUp=true;
-    },
-    onChoiseApp(appName){
-      console.log("onChooiseApp",appName);
-      this.appName =appName;
-      this.popUp=false;
-      
-      this.features=[];
-      this.page.index=1;
+    onChoiseApp (appName) {
+      console.log("onChooiseApp", appName);
+      this.appName = appName;
+      this.popUp = false;
+      this.features = [];
+      this.page.index = 1;
       this.loadFeatures();
     },
-    run(id){
-      console.log("index",id)
+    run (id) {
+      console.log("index", id)
     },
-    rank(type){
-      console.log("排序");
-      this.page.index=1;
-      this.features=[];
-      if(type=="date"){
-        this.page.orderBy="updateTime desc"
+    rank (type) {
+      this.page.index = 1;
+      this.features = [];
+      if (type == "date") {
+        this.page.orderBy = this.sortDate ? "updateTime desc" : "updateTime asc";
+        this.sortDate = !this.sortDate
       }
-      if(type=="run"){
-        this.page.orderBy="id desc"
+      if (type == "run") {
+        this.page.orderBy = this.sortRun ? "id desc" : "id asc";
+        console.log(this.page.orderBy)
+        this.sortRun = !this.sortRun
+        console.log(this.sortRun)
       }
       this.loadFeatures();
     },
@@ -122,14 +131,14 @@ export default {
         clearInterval(this.timer)
       }
       this.timer = setTimeout(() => {
-       this.page.index=1;
-       this.features=[];
-       this.loadFeatures();
+        this.page.index = 1;
+        this.features = [];
+        this.loadFeatures();
       }, wait)
     },
     loadFeatures () {
       uni.showLoading({ title: '加载中' });
-      let data ={search:this.search,appName:this.appName,orderBy:this.page.orderBy,index:this.page.index,size:this.page.size};
+      let data = { search: this.search, appName: this.appName, orderBy: this.page.orderBy, index: this.page.index, size: this.page.size };
       request({
         url: "/script/list",
         method: "post",
@@ -137,13 +146,14 @@ export default {
       })
         .then(res => {
           uni.hideLoading()
-          let { code, data:{list,pages} } = res.data;
-          console.log(data);
+          let { code, data: { list, pages } } = res.data;
+          console.log(res.data, "数据");
           if (code == 200) {
-             list.forEach(element => {
+            list.forEach(element => {
               this.features.push(element)
             });
-            this.page.pages =pages;
+            this.page.pages = pages;
+            console.log(this.features[0])
           }
         })
     }
@@ -158,13 +168,13 @@ page {
 /* 头部 */
 .fixation-header {
   position: fixed;
+  top: 0;
   width: 100%;
-  height: 90px;
-  background: #fff;
   z-index: 9;
 }
 .goodsList-header {
-  padding: 0 8px;
+  padding: 10px 8px;
+  background: #f5f5f5;
 }
 .input-seek {
   position: relative;
@@ -176,7 +186,7 @@ page {
   border: 1px solid #dcdfe6;
   border-radius: 5px;
   padding-left: 40px;
-  font-size: 28rpx;
+  font-size: 14px;
 }
 .inputSeek {
   color: #c0c4cc;
@@ -190,7 +200,7 @@ page {
   transform: translate(-9px, -10px);
 }
 .goodsRank {
-  margin: 10px 0;
+  margin-top: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -202,11 +212,11 @@ page {
 }
 .goodsRank text {
   color: #409efe;
-  font-size: 14rpx;
+  font-size: 14px;
 }
 .goodsRank view {
   display: inline-block;
-  font-size: 24rpx;
+  font-size: 16px;
   color: #dcdfe6;
 }
 .goodsRank .icon {
@@ -227,147 +237,12 @@ page {
 
 /* 列表 */
 .goodsList-content {
-  padding-top: 87px;
+  padding-top: 100px;
 }
 .goodsList-nav {
   height: 100px;
   background-color: #fff;
   margin: 10px 0;
   padding: 10px 20px;
-}
-.nav-top {
-  height: 64px;
-  display: flex;
-  justify-content: space-between;
-}
-.nav-top .nav-logo {
-  width: 64px;
-}
-.nav-top .nav-logo img {
-  width: 100%;
-}
-.nav-content {
-  width: 260px;
-}
-.content-top {
-  height: 22px;
-}
-.content-top .appName {
-  font-size: 32rpx;
-  font-weight: 600;
-  margin-right: 5px;
-}
-.content-top .appNameEdition {
-  margin-right: 15px;
-}
-.content-top .appNameEdition,
-.content-top .appNameEdition view,
-.content-top .name {
-  display: inline-block;
-}
-.content-top .appEdition,
-.content-top .name text {
-  font-size: 24rpx;
-  color: #faad14;
-}
-.content-top .name .iconfontName {
-  font-size: 44rpx;
-  margin-right: 3px;
-  color: #409efe;
-}
-.content-top .btn-operation {
-  float: right;
-  width: 66px;
-  height: 22px;
-  font-size: 14px;
-  background-color: #67c239;
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.nav-content .describe {
-  width: 532rpx;
-  height: 34px;
-  font-size: 24rpx;
-  color: #969799;
-  overflow: hidden;
-  margin-top: 6px;
-  position: relative;
-}
-.nav-content .describe ::after {
-  content: ".....";
-  width: 18px;
-  height: 18px;
-  background-color: #fff;
-  position: absolute;
-  top: 17px;
-  right: 3px;
-}
-.nav-bottom {
-  height: 18px;
-  margin-top: 15px;
-  font-size: 24rpx;
-  color: #faad14;
-  overflow: hidden;
-}
-.nav-bottom .software,
-.nav-bottom .run {
-  float: left;
-  margin-right: 15px;
-}
-.nav-bottom .tiem {
-  float: right;
-  position: relative;
-  top: 2px;
-}
-.software view,
-.run view {
-  display: inline;
-}
-.nav-bottom .software view:nth-child(1) {
-  font-size: 32rpx;
-  color: #409efe;
-}
-.nav-bottom .software view:nth-child(2) {
-  margin: 0 7px 0 3px;
-}
-.nav-bottom .run view:nth-child(1) {
-  font-size: 52rpx;
-  color: #409efe;
-  position: relative;
-  top: -5px;
-}
-.nav-bottom .runNumber {
-  position: relative;
-  top: -10px;
-  margin-left: 3px;
-}
-.nav-bottom .softwareEdition {
-  color: #df343f;
-}
-/* 弹窗 */
-.opoup {
-  position: absolute;
-  top: 37px;
-  padding: 4px;
-  padding-bottom: 100px;
-  background-color: #fff;
-  border: 1px solid #dcdfe6;
-  border-radius: 5px;
-  z-index: 99;
-}
-.opoup .opoup-for {
-  float: left;
-  width: 30%;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid #dcdfe6;
-  border-radius: 5px;
-  margin: 4px;
-  font-size: 28rpx;
-  color: #606266;
 }
 </style>
