@@ -79,7 +79,7 @@
       "path": "pages/feature/index",
       "style": {
         "navigationBarTitleText": "商品列表",
-        "enablePullDownRefresh": false,
+        "enablePullDownRefresh": true,
         "app-plus": {
           "titleNView": false
         }

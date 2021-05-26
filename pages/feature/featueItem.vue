@@ -116,19 +116,11 @@ export default {
   font-size: 12px;
   color: #969799;
   margin-top: 15px;
-  height: 34px;
-  line-height: 17px;
   overflow: hidden;
-  position: relative;
-}
-.describe ::after {
-  content: ".....";
-  width: 18px;
-  height: 18px;
-  background-color: #fff;
-  position: absolute;
-  top: 17px;
-  right: 3px;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 .nav-bottom {
   height: 18px;
