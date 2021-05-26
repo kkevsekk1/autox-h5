@@ -74,6 +74,16 @@
           "titleNView": false
         }
       }
+    },
+    {
+      "path": "pages/feature/index",
+      "style": {
+        "navigationBarTitleText": "商品列表",
+        "enablePullDownRefresh": false,
+        "app-plus": {
+          "titleNView": false
+        }
+      }
     }
   ],
   "globalStyle": {
@@ -110,7 +120,7 @@
         "selectedIconPath": "static/slcMine.png"
       },
       {
-        "pagePath": "pages/ykapp/choiseFeature",
+        "pagePath": "pages/feature/index",
         "text": "商品列表",
         "iconPath": "static/mine.png",
         "selectedIconPath": "static/slcMine.png"
