@@ -18,6 +18,7 @@
               class="uni-btn-submit">下一步</button>
       <button v-show="stepIndex==2"
               @click="next()"
+               :disabled="runable"
               class="uni-btn-submit">运行</button>
       <button class="uni-btn-default"
               @click="btnReturn()">返回</button>
@@ -27,15 +28,18 @@
 <script>
 import SetParams from './setParams.vue'
 import choiceDevice from './choiceDevice.vue'
+import { request } from '../../server/request.js'
 export default {
   components: {
     SetParams, choiceDevice
   },
+  
   data () {
     return {
       steps: ['选择功能', '设置参数', '选择设备', '运行'],
       stepIndex: 1,
       scriptId: 104,
+      runable:false,
     }
   },
   onLoad (option) {
@@ -43,15 +47,14 @@ export default {
   },
   methods: {
     next () {
-      // console.log(this.$refs.setParams.scriptParams, "参数");
+      console.log(this.$refs.setParams.scriptParams, "参数");
       // console.log(this.$refs.choiceDevice.getCheckedDevices());
       if (this.stepIndex == 2) {
         if (this.$refs.choiceDevice.getCheckedDevices().length == 0) {
           alert("至少选一个设备");
-        }
-        // else {
-        //   this.stepIndex++;
-        // }
+        }else {
+          this.running(this.$refs.setParams.scriptParams,this.$refs.choiceDevice.getCheckedDevices(),this.$refs.setParams.scriptName);
+         }
       }
       if (this.stepIndex == 1) {
         let rs = this.checkParams(this.$refs.setParams.scriptParams);
@@ -61,6 +64,50 @@ export default {
           alert(rs.name + " 不能为空！");
         }
       }
+    },
+    running(taskParams,devices,taskName){
+        const data = this.dealSubmitData (taskParams,devices,taskName);
+        console.log(data)
+        request({
+          url: "/task/addTask",
+          method: "post",
+          data:data
+        }).then(res => {
+          const { code, message } = res.data;
+          console.log(code,message);
+          if (code === 200) {
+            this.submitSuccess();
+            this.toast(taskName+",已运行");
+          } else {
+           this.toast(message);
+          }
+        });
+    },
+    submitSuccess () {
+      this.runable = true;
+      setTimeout(() => {
+        this.runable = false;
+      }, 5000);
+    },
+    toast(msg){
+      uni.showToast({ title: msg, icon: 'none' })
+    },
+    dealSubmitData (taskParams,devices,taskName) {
+       taskParams = taskParams.filter((task) => { return Number(task.type) !== 5; });
+      const paramsObj = Object.fromEntries(taskParams.map(item => [item.key, item.defaultValue]));
+      const deviceIds = [-1];
+      devices.forEach(device => {
+         deviceIds.push(device.id);
+      });
+      const data = {
+        name: taskName,
+        scriptId: this.scriptId,
+        deviceIds: deviceIds,
+        runParameter: paramsObj,
+        status: 1,
+        type: 1
+      };
+      return data;
     },
     btnReturn () {
       if (this.stepIndex > 1) {
@@ -73,11 +120,14 @@ export default {
       for (let index = 0; index < params.length; index++) {
         var param = params[index];
         var exp = param.defaultValue;
-        // console.log(param, exp == 'undefined' || !exp || !/[^\s]/.test(exp));
-        if (exp == 'undefined' || !exp || !/[^\s]/.test(exp)) {
+        if(param.type!=5){
+          if (exp == 'undefined' || !exp || !/[^\s]/.test(exp)) {
+            if(exp===true||exp===false){
+              continue;
+          }
           return { name: param.name };
-
         }
+       }
       }
       return 0;
     }
