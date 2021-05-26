@@ -1,7 +1,10 @@
 <template>
-  <view class="setParameter">
+  <view class="setParameter" >
     <view class="title">
       <text>{{ scriptName }}（{{ scriptId }}）</text>
+    </view>
+    <view style="margin-top:100rpx" v-if="scriptParams&&scriptParams.length==0" >
+       无需设置参数，点击下一步
     </view>
     <uni-row :gutter="12">
       <view v-for="(param, index) in scriptParams"
