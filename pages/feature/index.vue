@@ -10,33 +10,42 @@
           <text class="iconfont">&#xe617;</text>
         </view>
         <view style=" position: relative;">
-          <view class="goodsRank">
-            <view class="timeRank"
-                  @click="rank('date')">
-              <text>日期</text>
-              <view class="icon">
-                <view class="iconfont iconTop "
-                      :class="sortDate ? 'color-blove':''">&#xea4c;</view>
-                <view class="iconfont iconBottom "
-                      :class="sortDate ? '':'color-blove'">&#xea4d;</view>
+          <uni-row class="goodsRank">
+            <uni-col :span="8">
+              <view class="timeRank"
+                    @click="rank('date')"
+                    style="float:left">
+                <text>更新日期</text>
+                <view class="icon">
+                  <view class="iconfont iconTop "
+                        :class="sortDate ? 'color-blove':''">&#xea4c;</view>
+                  <view class="iconfont iconBottom "
+                        :class="sortDate ? '':'color-blove'">&#xea4d;</view>
+                </view>
               </view>
-            </view>
-            <view class="runNumberRank"
-                  @click="rank('run')">
-              <text>运行量</text>
-              <view class="icon">
-                <view class="iconfont iconTop "
-                      :class=" sortRun ? 'color-blove':''">&#xea4c;</view>
-                <view class="iconfont iconBottom"
-                      :class=" sortRun ? '':'color-blove'">&#xea4d;</view>
+            </uni-col>
+            <uni-col :span="8"
+                     style="text-align: center;">
+              <view class="runNumberRank"
+                    @click="rank('run')">
+                <text>运行量</text>
+                <view class="icon">
+                  <view class="iconfont iconTop "
+                        :class=" sortRun ? 'color-blove':''">&#xea4c;</view>
+                  <view class="iconfont iconBottom"
+                        :class=" sortRun ? '':'color-blove'">&#xea4d;</view>
+                </view>
               </view>
-            </view>
-            <view class="appFiltrate"
-                  @click="popUp = !popUp">
-              <text>app筛选</text>
-              <view class="iconfont iconLeft color-blove">&#xea4d;</view>
-            </view>
-          </view>
+            </uni-col>
+            <uni-col :span="8">
+              <view class="appFiltrate"
+                    @click="popUp = !popUp"
+                    style="float:right">
+                <text>{{appFiltrate}}</text>
+                <view class="iconfont iconLeft color-blove">&#xea4d;</view>
+              </view>
+            </uni-col>
+          </uni-row>
           <view v-show="popUp">
             <choise-app @choiseApp="onChoiseApp"></choise-app>
           </view>
@@ -65,6 +74,7 @@ export default {
   },
   data () {
     return {
+      appFiltrate: "app筛选",
       search: "",
       appName: "",
       page: { index: 1, size: 20, orderBy: "id desc", pages: 2 },
@@ -106,6 +116,8 @@ export default {
       this.features = [];
       this.page.index = 1;
       this.loadFeatures();
+      console.log(appName)
+      this.appFiltrate = appName ? appName : "app筛选";
     },
     run (id) {
       console.log("index", id)
@@ -201,14 +213,13 @@ page {
 }
 .goodsRank {
   margin-top: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   height: 33px;
+  line-height: 31px;
   border: 1px solid #dcdfe6;
   border-radius: 5px;
   background-color: #fff;
   padding: 0 5px;
+  overflow: hidden;
 }
 .goodsRank text {
   color: #409efe;
