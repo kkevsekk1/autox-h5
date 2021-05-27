@@ -11,6 +11,7 @@
                 :scriptId="scriptId"
                 ref="setParams"></set-params>
     <choice-device v-show="stepIndex==2"
+                   :deviceList="deviceList"
                    ref="choiceDevice"></choice-device>
     <view class="uni-btn">
       <button v-show="stepIndex==1"
@@ -36,26 +37,33 @@ export default {
       steps: ['选择功能', '设置参数', '选择设备', '运行'],
       stepIndex: 1,
       scriptId: 104,
+      path: "",
+      deviceList: "",
+      checkedGroup: ""
     }
   },
   onLoad (option) {
     this.scriptId = option.id;
+    this.path = option.path
+    this.deviceList = {
+      equipmentId: option.equipmentId,
+      entrance: option.entrance
+    }
+    this.checkedGroup = option.checkedGroup
   },
   methods: {
     next () {
-      // console.log(this.$refs.setParams.scriptParams, "参数");
-      // console.log(this.$refs.choiceDevice.getCheckedDevices());
+      console.log(this.$refs.setParams.scriptParams, "参数");
+      console.log(this.$refs.choiceDevice.getCheckedDevices());
       if (this.stepIndex == 2) {
         if (this.$refs.choiceDevice.getCheckedDevices().length == 0) {
           alert("至少选一个设备");
         }
-        // else {
-        //   this.stepIndex++;
-        // }
       }
       if (this.stepIndex == 1) {
         let rs = this.checkParams(this.$refs.setParams.scriptParams);
         if (rs == 0) {
+          this.$refs.choiceDevice.toggleRowSelection()
           this.stepIndex++;
         } else {
           alert(rs.name + " 不能为空！");
@@ -66,7 +74,9 @@ export default {
       if (this.stepIndex > 1) {
         this.stepIndex--;
       } else {
-        history.back()
+        uni.reLaunch({
+          url: this.path + "?checkedGroup=" + this.checkedGroup
+        })
       }
     },
     checkParams (params) {
