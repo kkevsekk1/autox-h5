@@ -1,12 +1,15 @@
 <template>
-  <view class="setParameter">
+  <view class="setParameter" >
     <view class="title">
       <text>{{ scriptName }}（{{ scriptId }}）</text>
+    </view>
+    <view style="margin-top:100rpx" v-if="scriptParams&&scriptParams.length==0" >
+       无需设置参数，点击下一步
     </view>
     <uni-row :gutter="12">
       <view v-for="(param, index) in scriptParams"
             :key="index"
-            :class="param.type != 3 ? 'script-params':''">
+           >
         <!-- 输入框 -->
         <uni-col style="text-align: right"
                  :span="6"
@@ -16,7 +19,8 @@
         <uni-col :span="18"
                  v-if="param.type == 1">
           <uni-easyinput v-model="param.defaultValue"
-                         placeholder="请输入内容"></uni-easyinput>
+                          :placeholder="param.des||'请输入'+param.name"></uni-easyinput>
+                          <view style="font-size:8px;color:green;line-height:10px" >{{param.des}}</view>
         </uni-col>
         <!-- 下拉菜单 -->
         <uni-col style="text-align: right; "
@@ -34,12 +38,23 @@
           </picker>
         </uni-col>
         <!-- 多选框 -->
+        <uni-col :span="6"
+                 v-if="param.type == 5" style="line-height:20px;text-align: right;" >
+          <view>
+           {{param.name}}
+          </view>
+        </uni-col>
+                <uni-col :span="18"
+                 v-if="param.type == 5" style="line-height:20px;" >
+          <view style="font-size:8px;color:green;" >
+             {{param.des||"&nbsp;"}}
+          </view>
+        </uni-col>
         <uni-col :span="param.span"
                  :offset="param.offset"
-                 v-if="param.type == 3"
-                 style="margin-top:10px;margin-bottom:10px;">
+                 v-if="param.type == 3" style="line-height:20px" >
           <view>
-            <checkbox value="checkbox1"
+            <checkbox  @click="checkBoxChange(param)" :checked="param.defaultValue"
                       style="transform-origin:0 0 ; transform:scale(0.8)"><text style="font-size: 17.5px">{{ param.name }}</text></checkbox>
           </view>
         </uni-col>
@@ -64,15 +79,19 @@ export default {
   async created () {
     uni.showLoading({ title: '加载中' })
     await this.loadMaterials()
-    let rememberParams = await this.loadRemember()
-    this.rememberParams = JSON.parse(rememberParams)
+    let rememberParamsStr = await this.loadRemember()
+    this.rememberParams = JSON.parse(rememberParamsStr)
     await this.loadScript()
-    this.convertParams(rememberParams)
+    this.convertParams(this.rememberParams)
     this.convertLayout()
     uni.hideLoading()
     this.$forceUpdate()
   },
   methods: {
+    checkBoxChange(e){
+      e.defaultValue=!e.defaultValue;
+      // console.log(e.defaultValue,e.name)
+    },
     loadScript () {
       return new Promise((resolve, reject) => {
         request({
@@ -175,19 +194,23 @@ export default {
       })
     },
     convertParams (rememberParams) {
+      console.log(rememberParams)
       this.scriptParams.forEach((param) => {
         if (rememberParams && rememberParams[param.key] && rememberParams[param.key] != '') {
           param.defaultValue = rememberParams[param.key]
         }
 
-        if (param.type === 2) {
+        if (param.type == 2) {
           //普通选择
           //checkValue 数组，checkedValue选中的显示值，defaultValue 放置参数值
           param.checkKey = param.checkValue
+          console.log(param.defaultValue,"default")
           if (param.defaultValue instanceof Array) {
             param.checkedValue = param.checkValue[0]
             param.defaultValue = param.checkKey[0]
           }
+          param.checkedValue=param.defaultValue;
+          console.log(param.checkedValue)
         }
         if (param.type === 4) {
           //素材
@@ -197,7 +220,7 @@ export default {
           for (let key in this.materials) {
             const value = this.materials[key]
             param.checkValue.push(value)
-            param.checkKey.push(value)
+            param.checkKey.push(key)
             if (index == 0 || param.defaultValue == key) {
               param.checkedValue = value //默认显示值
               param.defaultValue = key //程序使用的值
@@ -252,8 +275,8 @@ export default {
   border-bottom: 1px solid #a6abb8;
   transform: rotate(45deg);
 }
-.script-params {
-  margin-top: 15px;
+.uni-col {
+  margin-top: 3px;
   line-height: 36px;
 }
 .script-params::after {
