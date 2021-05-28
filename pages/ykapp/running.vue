@@ -11,7 +11,7 @@
                 :scriptId="scriptId"
                 ref="setParams"></set-params>
     <choice-device v-show="stepIndex==2"
-                   :deviceList="deviceList"
+                   :entrance="entrance"
                    ref="choiceDevice"></choice-device>
     <view class="uni-btn">
       <button v-show="stepIndex==1"
@@ -41,7 +41,7 @@ export default {
       stepIndex: 1,
       scriptId: 104,
       path: "",
-      deviceList: "",
+      entrance: "",
       checkedGroup: "",
       runable: false,
     }
@@ -49,10 +49,7 @@ export default {
   onLoad (option) {
     this.scriptId = option.id;
     this.path = option.path
-    this.deviceList = {
-      equipmentId: option.equipmentId,
-      entrance: option.entrance
-    }
+    this.entrance = option.entrance
     this.checkedGroup = option.checkedGroup
   },
   methods: {
@@ -69,7 +66,6 @@ export default {
       if (this.stepIndex == 1) {
         let rs = this.checkParams(this.$refs.setParams.scriptParams);
         if (rs == 0) {
-          this.$refs.choiceDevice.toggleRowSelection()
           this.stepIndex++;
         } else {
           alert(rs.name + " 不能为空！");
@@ -78,7 +74,7 @@ export default {
     },
     running (taskParams, devices, taskName) {
       const data = this.dealSubmitData(taskParams, devices, taskName);
-      console.log(data)
+      console.log(data, "data")
       request({
         url: "/task/addTask",
         method: "post",

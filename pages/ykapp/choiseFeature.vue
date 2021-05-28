@@ -29,13 +29,13 @@ export default {
       scriptGroups: [],
       scriptList: [],
       checkedGroup: '',
+      optionCheckedGroup: "",
       path: '',
-      equipmentId: "688"
     }
   },
-  // onLoad (option) {
-  //   this.checkedGroup = option.checkedGroup
-  // },
+  onLoad (option) {
+    this.optionCheckedGroup = option.checkedGroup
+  },
   async created () {
     this.path = this.$route.path
     let data = null
@@ -53,13 +53,13 @@ export default {
       console.log('显示没有功能可用')
     }
     this.scriptGroups = data
-    this.checkedGroup = this.scriptGroups[0].appName
+    this.checkedGroup = this.optionCheckedGroup ? this.optionCheckedGroup : this.scriptGroups[0].appName
     this.searchScrpit()
   },
   methods: {
     navigatorTo (scriptId) {
       uni.reLaunch({
-        url: '/pages/ykapp/running?id=' + scriptId + '&path=' + this.path + '&equipmentId=' + this.equipmentId
+        url: '/pages/ykapp/running?id=' + scriptId + '&path=' + this.path
           + '&checkedGroup=' + this.checkedGroup
       })
     },
