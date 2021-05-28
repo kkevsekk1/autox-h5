@@ -1,15 +1,15 @@
 <template>
-  <view class="setParameter" >
+  <view class="setParameter">
     <view class="title">
       <text>{{ scriptName }}（{{ scriptId }}）</text>
     </view>
-    <view style="margin-top:100rpx" v-if="scriptParams&&scriptParams.length==0" >
-       无需设置参数，点击下一步
+    <view style="margin-top:100rpx"
+          v-if="scriptParams&&scriptParams.length==0">
+      无需设置参数，点击下一步
     </view>
     <uni-row :gutter="12">
       <view v-for="(param, index) in scriptParams"
-            :key="index"
-           >
+            :key="index">
         <!-- 输入框 -->
         <uni-col style="text-align: right"
                  :span="6"
@@ -19,8 +19,8 @@
         <uni-col :span="18"
                  v-if="param.type == 1">
           <uni-easyinput v-model="param.defaultValue"
-                          :placeholder="param.des||'请输入'+param.name"></uni-easyinput>
-                          <view style="font-size:8px;color:green;line-height:10px" >{{param.des}}</view>
+                         :placeholder="param.des||'请输入'+param.name"></uni-easyinput>
+          <view style="font-size:8px;color:green;line-height:10px">{{param.des}}</view>
         </uni-col>
         <!-- 下拉菜单 -->
         <uni-col style="text-align: right; "
@@ -39,22 +39,26 @@
         </uni-col>
         <!-- 多选框 -->
         <uni-col :span="6"
-                 v-if="param.type == 5" style="line-height:20px;text-align: right;" >
+                 v-if="param.type == 5"
+                 style="line-height:20px;text-align: right;">
           <view>
-           {{param.name}}
+            {{param.name}}
           </view>
         </uni-col>
-                <uni-col :span="18"
-                 v-if="param.type == 5" style="line-height:20px;" >
-          <view style="font-size:8px;color:green;" >
-             {{param.des||"&nbsp;"}}
+        <uni-col :span="18"
+                 v-if="param.type == 5"
+                 style="line-height:20px;">
+          <view style="font-size:8px;color:green;">
+            {{param.des||"&nbsp;"}}
           </view>
         </uni-col>
         <uni-col :span="param.span"
                  :offset="param.offset"
-                 v-if="param.type == 3" style="line-height:20px" >
+                 v-if="param.type == 3"
+                 style="line-height:20px">
           <view>
-            <checkbox  @click="checkBoxChange(param)" :checked="param.defaultValue"
+            <checkbox @click="checkBoxChange(param)"
+                      :checked="param.defaultValue"
                       style="transform-origin:0 0 ; transform:scale(0.8)"><text style="font-size: 17.5px">{{ param.name }}</text></checkbox>
           </view>
         </uni-col>
@@ -88,8 +92,8 @@ export default {
     this.$forceUpdate()
   },
   methods: {
-    checkBoxChange(e){
-      e.defaultValue=!e.defaultValue;
+    checkBoxChange (e) {
+      e.defaultValue = !e.defaultValue;
       // console.log(e.defaultValue,e.name)
     },
     loadScript () {
@@ -194,7 +198,6 @@ export default {
       })
     },
     convertParams (rememberParams) {
-      console.log(rememberParams)
       this.scriptParams.forEach((param) => {
         if (rememberParams && rememberParams[param.key] && rememberParams[param.key] != '') {
           param.defaultValue = rememberParams[param.key]
@@ -204,13 +207,11 @@ export default {
           //普通选择
           //checkValue 数组，checkedValue选中的显示值，defaultValue 放置参数值
           param.checkKey = param.checkValue
-          console.log(param.defaultValue,"default")
           if (param.defaultValue instanceof Array) {
             param.checkedValue = param.checkValue[0]
             param.defaultValue = param.checkKey[0]
           }
-          param.checkedValue=param.defaultValue;
-          console.log(param.checkedValue)
+          param.checkedValue = param.defaultValue;
         }
         if (param.type === 4) {
           //素材

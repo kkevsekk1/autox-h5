@@ -47,7 +47,6 @@ export default {
     this.initialData()
   },
   onLoad: function (option) {
-    console.log(option)
     const item = JSON.parse(decodeURIComponent(option.codeId));
     this.codeId = item
   },
@@ -72,13 +71,11 @@ export default {
       this.getShopList()
     },
     searchShop () {
-      console.log(this.shopData)
       request({
         url: '/auth/getShopPage',
         method: 'post',
         data: { index: this.pages.index.toString(), size: '15', search: this.shopName, orderby: 'id desc' }
       }).then((res) => {
-        console.log(res);
         if (res.data.data.count != 0) {
           this.shopData = []
           let tmplist = []

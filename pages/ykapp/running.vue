@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     next () {
-      console.log(this.$refs.setParams.scriptParams, "参数");
+      // console.log(this.$refs.setParams.scriptParams, "参数");
       // console.log(this.$refs.choiceDevice.getCheckedDevices());
       if (this.stepIndex == 2) {
         if (this.$refs.choiceDevice.getCheckedDevices().length == 0) {
@@ -74,14 +74,12 @@ export default {
     },
     running (taskParams, devices, taskName) {
       const data = this.dealSubmitData(taskParams, devices, taskName);
-      console.log(data, "data")
       request({
         url: "/task/addTask",
         method: "post",
         data: data
       }).then(res => {
         const { code, message } = res.data;
-        console.log(code, message);
         if (code === 200) {
           this.submitSuccess();
           this.toast(taskName + ",已运行");

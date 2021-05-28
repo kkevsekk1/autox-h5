@@ -39,7 +39,7 @@
                     @sort-change="sortDevice('name',$event)">名称</uni-th>
             <uni-th width="10%"
                     :sortable=true
-                    @sort-change="sortDevice('group')">分组</uni-th>
+                    @sort-change="sortDevice('name',$event)">分组</uni-th>
             <uni-th width="30%">状态</uni-th>
           </uni-tr>
           <uni-tr v-for="device in showDevices"
@@ -50,7 +50,6 @@
           </uni-tr>
         </uni-table>
       </view>
-      <button @click="test()"> {{content}} </button>
     </view>
   </view>
 </template>
@@ -70,7 +69,7 @@ export default {
         show: true,
         rotate: false,
       },
-      content: "test"
+      equipmentIemi: "862679031009341"
     }
   },
   watch: {
@@ -98,16 +97,23 @@ export default {
   },
   created () {
     this.getDeviceGroups()
+    this.equipmentIemiData()
   },
   methods: {
-    test () {
-      this.content = "测试";
+    // 排序
+    sortDevice () {
+      let result = this.showDevices.sort(
+        function compareFuntion (param1, param2) {
+          return param1.localeCompare(param2)
+        }
+      )
+    },
+    equipmentIemiData () {
       try {
         var x = android.getUid();
-        this.content = x;
+        this.equipmentIemi = x;
       } catch (error) {
-        this.content = error;
-        console.log(error);
+        // this.equipmentIemi = error;
       }
     },
     toggleRowSelection () {
@@ -123,7 +129,7 @@ export default {
           if (!entrance) {
             for (let index = 0; index < this.showDevices.length; index++) {
               let showDevices = this.showDevices[index]
-              if (showDevices.id == this.equipmentId) {
+              if (showDevices.iemi == this.equipmentIemi) {
                 toggleRow = index
                 showDevices.showStatus = "本机"
                 showDevices.statusColor = "deviceIsPurple"
@@ -134,7 +140,7 @@ export default {
       })
     },
     sortDevice (name, e) {
-      console.log(name, e)
+      // console.log(name, e)
     },
     getCheckedDevices () {
       let rs = this.devices.filter(device => {
@@ -210,11 +216,11 @@ export default {
         if (code === 200) {
           this.devices = []
           data.list.forEach((element) => {
-            let { status, name, id, category } = element
+            let { status, name, id, category, iemi } = element
             let showStatus = status === 0 ? '离线' : '在线'
             let statusColor = status == 0 ? 'deviceIsRed' : 'deviceIsGreen'
             if (entrance == "formMenu") {
-              if (element.id == this.equipmentId) {
+              if (element.iemi == this.equipmentIemi) {
                 element.showStatus = showStatus
                 this.devices.push(element)
               }
@@ -225,6 +231,7 @@ export default {
                 showStatus: showStatus,
                 status: status,
                 id: id,
+                iemi: iemi,
                 statusColor: statusColor,
               })
             }
