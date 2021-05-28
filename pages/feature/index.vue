@@ -81,7 +81,8 @@ export default {
       features: [],
       popUp: false,
       sortDate: true,
-      sortRun: true
+      sortRun: true,
+      equipmentId: "358"
     }
   },
   watch: {
@@ -120,7 +121,13 @@ export default {
       this.appFiltrate = appName ? appName : "app筛选";
     },
     run (id) {
-      console.log("index", id)
+      uni.reLaunch({
+        url:
+          "/pages/ykapp/running?entrance=formMenu&id=" +
+          id + "&path=" + this.$route.path +
+          "&equipmentId="
+          + this.equipmentId
+      })
     },
     rank (type) {
       this.page.index = 1;
@@ -251,7 +258,6 @@ page {
   padding-top: 100px;
 }
 .goodsList-nav {
-  height: 100px;
   background-color: #fff;
   margin: 10px 0;
   padding: 10px 20px;

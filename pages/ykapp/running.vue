@@ -11,6 +11,7 @@
                 :scriptId="scriptId"
                 ref="setParams"></set-params>
     <choice-device v-show="stepIndex==2"
+                   :deviceList="deviceList"
                    ref="choiceDevice"></choice-device>
     <view class="uni-btn">
       <button v-show="stepIndex==1"
@@ -18,7 +19,7 @@
               class="uni-btn-submit">下一步</button>
       <button v-show="stepIndex==2"
               @click="next()"
-               :disabled="runable"
+              :disabled="runable"
               class="uni-btn-submit">运行</button>
       <button class="uni-btn-default"
               @click="btnReturn()">返回</button>
@@ -33,17 +34,26 @@ export default {
   components: {
     SetParams, choiceDevice
   },
-  
+
   data () {
     return {
       steps: ['选择功能', '设置参数', '选择设备', '运行'],
       stepIndex: 1,
       scriptId: 104,
-      runable:false,
+      path: "",
+      deviceList: "",
+      checkedGroup: "",
+      runable: false,
     }
   },
   onLoad (option) {
     this.scriptId = option.id;
+    this.path = option.path
+    this.deviceList = {
+      equipmentId: option.equipmentId,
+      entrance: option.entrance
+    }
+    this.checkedGroup = option.checkedGroup
   },
   methods: {
     next () {
@@ -52,36 +62,37 @@ export default {
       if (this.stepIndex == 2) {
         if (this.$refs.choiceDevice.getCheckedDevices().length == 0) {
           alert("至少选一个设备");
-        }else {
-          this.running(this.$refs.setParams.scriptParams,this.$refs.choiceDevice.getCheckedDevices(),this.$refs.setParams.scriptName);
-         }
+        } else {
+          this.running(this.$refs.setParams.scriptParams, this.$refs.choiceDevice.getCheckedDevices(), this.$refs.setParams.scriptName);
+        }
       }
       if (this.stepIndex == 1) {
         let rs = this.checkParams(this.$refs.setParams.scriptParams);
         if (rs == 0) {
+          this.$refs.choiceDevice.toggleRowSelection()
           this.stepIndex++;
         } else {
           alert(rs.name + " 不能为空！");
         }
       }
     },
-    running(taskParams,devices,taskName){
-        const data = this.dealSubmitData (taskParams,devices,taskName);
-        console.log(data)
-        request({
-          url: "/task/addTask",
-          method: "post",
-          data:data
-        }).then(res => {
-          const { code, message } = res.data;
-          console.log(code,message);
-          if (code === 200) {
-            this.submitSuccess();
-            this.toast(taskName+",已运行");
-          } else {
-           this.toast(message);
-          }
-        });
+    running (taskParams, devices, taskName) {
+      const data = this.dealSubmitData(taskParams, devices, taskName);
+      console.log(data)
+      request({
+        url: "/task/addTask",
+        method: "post",
+        data: data
+      }).then(res => {
+        const { code, message } = res.data;
+        console.log(code, message);
+        if (code === 200) {
+          this.submitSuccess();
+          this.toast(taskName + ",已运行");
+        } else {
+          this.toast(message);
+        }
+      });
     },
     submitSuccess () {
       this.runable = true;
@@ -89,15 +100,15 @@ export default {
         this.runable = false;
       }, 5000);
     },
-    toast(msg){
+    toast (msg) {
       uni.showToast({ title: msg, icon: 'none' })
     },
-    dealSubmitData (taskParams,devices,taskName) {
-       taskParams = taskParams.filter((task) => { return Number(task.type) !== 5; });
+    dealSubmitData (taskParams, devices, taskName) {
+      taskParams = taskParams.filter((task) => { return Number(task.type) !== 5; });
       const paramsObj = Object.fromEntries(taskParams.map(item => [item.key, item.defaultValue]));
       const deviceIds = [-1];
       devices.forEach(device => {
-         deviceIds.push(device.id);
+        deviceIds.push(device.id);
       });
       const data = {
         name: taskName,
@@ -113,21 +124,23 @@ export default {
       if (this.stepIndex > 1) {
         this.stepIndex--;
       } else {
-        history.back()
+        uni.reLaunch({
+          url: this.path + "?checkedGroup=" + this.checkedGroup
+        })
       }
     },
     checkParams (params) {
       for (let index = 0; index < params.length; index++) {
         var param = params[index];
         var exp = param.defaultValue;
-        if(param.type!=5){
+        if (param.type != 5) {
           if (exp == 'undefined' || !exp || !/[^\s]/.test(exp)) {
-            if(exp===true||exp===false){
+            if (exp === true || exp === false) {
               continue;
+            }
+            return { name: param.name };
           }
-          return { name: param.name };
         }
-       }
       }
       return 0;
     }

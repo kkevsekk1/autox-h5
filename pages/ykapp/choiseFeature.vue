@@ -14,14 +14,9 @@
       <view v-for="(script, index) in scriptList"
             :key="index"
             class="script-nav">
-        <navigator :url="
-            '/pages/ykapp/running?id=' +
-            script.id +
-            '&appName=' +
-            script.appName
-          ">
+        <view @click="navigatorTo(script.id)">
           {{ script.name }}
-        </navigator>
+        </view>
       </view>
     </view>
   </view>
@@ -35,8 +30,12 @@ export default {
       scriptList: [],
       checkedGroup: '',
       path: '',
+      equipmentId: "688"
     }
   },
+  // onLoad (option) {
+  //   this.checkedGroup = option.checkedGroup
+  // },
   async created () {
     this.path = this.$route.path
     let data = null
@@ -58,6 +57,12 @@ export default {
     this.searchScrpit()
   },
   methods: {
+    navigatorTo (scriptId) {
+      uni.reLaunch({
+        url: '/pages/ykapp/running?id=' + scriptId + '&path=' + this.path + '&equipmentId=' + this.equipmentId
+          + '&checkedGroup=' + this.checkedGroup
+      })
+    },
     getDeviceGroups: () => {
       return new Promise((resolve, reject) => {
         request({

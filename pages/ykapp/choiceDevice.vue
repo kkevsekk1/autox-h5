@@ -57,6 +57,9 @@
 <script>
 import { request } from '../../server/request.js'
 export default {
+  props: {
+    deviceList: Number | String,
+  },
   data () {
     return {
       deviceGroups: [],
@@ -69,8 +72,9 @@ export default {
         rotate: false,
       },
     }
-  }, watch: {
-    searchStr (val, oldVal) {
+  },
+  watch: {
+    searchStr () {
       this.clearSelection();
     }
   },
@@ -88,13 +92,33 @@ export default {
         };
         return this.filterDeviceByGroupNames(checkedGroupName);
       },
-      set () { }
+      set () {
+      }
     },
   },
   created () {
     this.getDeviceGroups()
   },
   methods: {
+    toggleRowSelection () {
+      let { entrance, equipmentId } = this.$props.deviceList
+      let toggleRow = ''
+      if (!entrance) {
+        for (let index = 0; index < this.showDevices.length; index++) {
+          if (this.showDevices[index].id == equipmentId) {
+            toggleRow = index
+            this.showDevices[index].checked = true
+          }
+        }
+      } else {
+        toggleRow = 0
+        this.showDevices[0].checked = true
+      }
+      this.$refs.uniTable.toggleRowSelection([toggleRow], true)
+    },
+    sortDevice (e) {
+      console.log(e)
+    },
     getCheckedDevices () {
       let rs = this.devices.filter(device => {
         return device.checked;
@@ -164,19 +188,27 @@ export default {
         method: 'post',
         data,
       }).then((res) => {
+        let { entrance, equipmentId } = this.$props.deviceList
         let { data, code } = res.data
         if (code === 200) {
           this.devices = []
           data.list.forEach((element) => {
             let { status, name, id, category } = element
             let showStatus = status === 1 ? '在线' : '离线'
-            this.devices.push({
-              name: name,
-              category: category,
-              showStatus: showStatus,
-              status: status,
-              id: id,
-            })
+            if (entrance == "formMenu") {
+              if (element.id == equipmentId) {
+                element.showStatus = showStatus
+                this.devices.push(element)
+              }
+            } else {
+              this.devices.push({
+                name: name,
+                category: category,
+                showStatus: showStatus,
+                status: status,
+                id: id,
+              })
+            }
           })
         }
       })
