@@ -46,19 +46,21 @@ export default {
   },
   created () {
     uni.removeStorageSync('token')
-    this.getUser()
-  },
-  onLoad (option) {
-    this.path = option.path;
-    if(!option.path||option.path=="pages/login/login"){
-       this.path ="/pages/index/index"
-    }
+    this.getStorageSyncData()
   },
   methods: {
-    getUser () {
+    getStorageSyncData () {
       if (uni.getStorageSync("userData")) {
         let userList = JSON.parse(uni.getStorageSync("userData"))
         this.user = userList
+      }
+      if (uni.getStorageSync("pathParameter")) {
+        let pathParameter = uni.getStorageSync('pathParameter')
+        let path = "/" + pathParameter.route + "?"
+        for (const key in pathParameter.options) {
+          path += key + '=' + pathParameter.options[key] + "&"
+        }
+        this.path = path.substring(0, path.length - 1)
       }
     },
     submitForm () {
@@ -76,8 +78,11 @@ export default {
               uni.setStorageSync("userData", user)
               uni.setStorageSync('token', data.token)
               setTimeout(() => {
-                console.log("来源页",this.path)
-                uni.reLaunch({ url: this.path})
+                if (this.path && this.path != "pages/login/login") {
+                  uni.reLaunch({ url: this.path })
+                } else {
+                  uni.reLaunch({ url: "/pages/index/index" })
+                }
               }, 2000)
             }
           })
