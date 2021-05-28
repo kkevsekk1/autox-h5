@@ -69,7 +69,7 @@ export default {
         show: true,
         rotate: false,
       },
-      equipmentIemi: "862679031009341"
+      equipmentIemi: ""
     }
   },
   watch: {
@@ -113,7 +113,7 @@ export default {
         var x = android.getUid();
         this.equipmentIemi = x;
       } catch (error) {
-        // this.equipmentIemi = error;
+        this.equipmentIemi = error;
       }
     },
     toggleRowSelection () {
