@@ -30,7 +30,6 @@ export default {
       this.$emit('choiseApp', appName)
     },
     loadApp () {
-      console.log("load");
       request({
         url: '/script/apps',
         method: 'get',

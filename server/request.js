@@ -12,19 +12,19 @@ function request(options){
 			header:{authorization:cookie || '',cookie:''},
 		    success: (res) => {
           try {
-            console.log(res.data);
             if(res.data.code==-1){
+              let pathParameter =  { 
+                options:getCurrentPages()[0].options,
+                route:getCurrentPages()[0].route}
+              uni.setStorageSync("pathParameter",pathParameter)
               setTimeout(() => {
                 uni.reLaunch({ url: '/pages/login/login' })
               }, 2000);
               return null;
             }
           } catch (error) {
-            
           }
 				resolve(res)
-
-
 		    }
 		});
 	})

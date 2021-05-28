@@ -78,7 +78,7 @@
     {
       "path": "pages/feature/index",
       "style": {
-        "navigationBarTitleText": "商品列表",
+        "navigationBarTitleText": "功能列表",
         "enablePullDownRefresh": true,
         "app-plus": {
           "titleNView": false
@@ -120,7 +120,7 @@
         "selectedIconPath": "static/slcMine.png"
       },
       {
-        "pagePath": "pages/feature/index",
+        "pagePath": "pages/ykapp/choiseFeature",
         "text": "商品列表",
         "iconPath": "static/mine.png",
         "selectedIconPath": "static/slcMine.png"
