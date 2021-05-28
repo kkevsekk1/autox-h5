@@ -50,6 +50,7 @@
           </uni-tr>
         </uni-table>
       </view>
+      <button @click="test()"> {{content}} </button>
     </view>
   </view>
 </template>
@@ -69,7 +70,7 @@ export default {
         show: true,
         rotate: false,
       },
-      equipmentId: "405",
+      content: "test"
     }
   },
   watch: {
@@ -99,6 +100,16 @@ export default {
     this.getDeviceGroups()
   },
   methods: {
+    test () {
+      this.content = "测试";
+      try {
+        var x = android.getUid();
+        this.content = x;
+      } catch (error) {
+        this.content = error;
+        console.log(error);
+      }
+    },
     toggleRowSelection () {
       this.$nextTick(() => {
         let entrance = this.$props.entrance
