@@ -82,7 +82,6 @@ export default {
       popUp: false,
       sortDate: true,
       sortRun: true,
-      equipmentId: "358"
     }
   },
   watch: {
@@ -124,9 +123,7 @@ export default {
       uni.reLaunch({
         url:
           "/pages/ykapp/running?entrance=formMenu&id=" +
-          id + "&path=" + this.$route.path +
-          "&equipmentId="
-          + this.equipmentId
+          id + "&path=" + this.$route.path
       })
     },
     rank (type) {

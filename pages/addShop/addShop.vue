@@ -115,7 +115,6 @@ export default {
           orderby: 'id desc'
         }
       }).then((loadresult) => {
-        // console.log(loadresult.data)
         uni.hideLoading()
         const {
           message,
@@ -128,7 +127,6 @@ export default {
             index: data.index,
             size: data.size,
           }
-          // console.log(this.pages)
           loadresult.data.data.list.forEach((item) => {
             this.shopList.push(item)
           })
@@ -151,7 +149,6 @@ export default {
     },
     submitForm (form) {
       this.$refs.form.submit().then((res) => {
-        console.log(res)
         request({
           url: '/auth/addShop',
           method: 'post',
@@ -165,7 +162,6 @@ export default {
         })
           .then((loadresult) => {
             let { code, message, data } = loadresult.data
-            console.log(loadresult)
           })
       })
       this.$router.go(0)
