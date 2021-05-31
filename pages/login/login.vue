@@ -30,6 +30,7 @@ export default {
   data () {
     return {
       path: "",
+      pathMin: "",
       user: { phone: '', verifyCode: '' },
       rules: {
         phone: {
@@ -48,6 +49,9 @@ export default {
     uni.removeStorageSync('token')
     this.getStorageSyncData()
   },
+  onLoad (option) {
+    this.pathMin = option.path
+  },
   methods: {
     getStorageSyncData () {
       if (uni.getStorageSync("userData")) {
@@ -57,12 +61,10 @@ export default {
       if (uni.getStorageSync("pathParameter")) {
         let pathParameter = uni.getStorageSync('pathParameter')
         let path = "/" + pathParameter.route + "?"
-        let pathData = [path]
         for (const key in pathParameter.options) {
-          let keyData = key + '=' + pathParameter.options[key]
-          pathData.push(keyData)
+          path += key + '=' + pathParameter.options[key] + "&"
         }
-        this.path = pathData.join("&")
+        this.path = path.substring(0, path.length - 1)
       }
     },
     submitForm () {
@@ -80,6 +82,10 @@ export default {
               uni.setStorageSync("userData", user)
               uni.setStorageSync('token', data.token)
               setTimeout(() => {
+                if (this.pathMin) {
+                  uni.reLaunch({ url: this.pathMin })
+                  return null
+                }
                 if (this.path && this.path != "pages/login/login") {
                   uni.reLaunch({ url: this.path })
                 } else {

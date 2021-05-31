@@ -124,14 +124,6 @@ export default {
           dataMines.time = data.vipExpirationTime.substring(0, 10)
           dataMines.surplus = data.scanningTimes
         }
-        if (code === -1) {
-          uni.showToast({ title: message, icon: "none" })
-          setTimeout(() => {
-            uni.reLaunch({
-              url: '/pages/login/login?path=' + this.$route.path
-            })
-          }, 2000)
-        }
       })
     },
     submitForm () {

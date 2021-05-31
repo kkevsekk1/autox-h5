@@ -45,7 +45,7 @@ export default {
       uni.showToast({ title: error, icon: 'none' })
       setTimeout(() => {
         uni.reLaunch({
-          url: '/pages/login/login?path=' + this.path,
+          url: '/pages/login/login',
         })
       }, 2000)
     }

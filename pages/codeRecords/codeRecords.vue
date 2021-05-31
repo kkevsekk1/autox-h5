@@ -68,12 +68,6 @@ export default {
               this.codeRecords.push(record)
             })
           }
-          if (code === -1) {
-            uni.showToast({ title: message, icon: 'none' })
-            setTimeout(() => {
-              uni.navigateTo({ url: '/pages/login/login' })
-            }, 2000)
-          }
         })
     }
   }

@@ -105,14 +105,6 @@ export default {
           })
           this.shopList.push({ letter: '商家', data: tmplist })
         }
-        if (code === -1) {
-          uni.showToast({ title: message, icon: "none" })
-          setTimeout(() => {
-            uni.reLaunch({
-              url: '/pages/login/login?path=' + this.path
-            })
-          }, 2000)
-        }
       })
     },
     selectShop (data) {
