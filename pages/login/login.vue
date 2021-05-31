@@ -90,6 +90,7 @@ export default {
                   uni.reLaunch({ url: this.path })
                 } else {
                   uni.reLaunch({ url: "/pages/index/index" })
+
                 }
               }, 2000)
             }
