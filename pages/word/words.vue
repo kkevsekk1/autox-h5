@@ -1,48 +1,48 @@
 <template>
   <view class="container">
-    <input
-      type="text"
-      v-model="searchContent"
-      class="search-content"
-      placeholder="请输入口令搜索内容"
-    />
-    <button class="search-btn" @click="searchWord" size="mini">搜索</button>
+    <input type="text"
+           v-model="searchContent"
+           class="search-content"
+           placeholder="请输入口令搜索内容" />
+    <button class="search-btn"
+            @click="searchWord"
+            size="mini">搜索</button>
     <view class="record-box">
-      <view v-if="datas.length > 0" class="record-list">
-        <view v-for="item in datas" :key="item.id">
-          <view class="record-info" v-if="item.isGet">
+      <view v-if="datas.length > 0"
+            class="record-list">
+        <view v-for="item in datas"
+              :key="item.id">
+          <view class="record-info"
+                v-if="item.isGet">
             <view class="record-header">
               <text>口令类型：{{ item.type }}</text>
               <text>口令内容：{{ item.content }}</text>
-              <button type="primary" size="mini" @click="bindWord(item)">
+              <button type="primary"
+                      size="mini"
+                      @click="bindWord(item)">
                 领取
               </button>
             </view>
             <view class="record-content">
-              <view style="margin-top: 20rpx"
-                >创建时间：{{ item.createTime }}</view
-              >
-              <view style="line-height: 80rpx"
-                >商家名称：{{ item.publisherName }}</view
-              >
+              <view style="margin-top: 20rpx">创建时间：{{ item.createTime }}</view>
+              <view style="line-height: 80rpx">商家名称：{{ item.publisherName }}</view>
             </view>
           </view>
 
-          <view class="record-info-change" v-else>
+          <view class="record-info-change"
+                v-else>
             <view class="record-header">
               <text>口令类型：{{ item.type }}</text>
               <text>口令内容：{{ item.content }}</text>
-              <button type="primary" size="mini" class="record-change">
+              <button type="primary"
+                      size="mini"
+                      class="record-change">
                 已领取
               </button>
             </view>
             <view class="record-content">
-              <view style="margin-top: 20rpx"
-                >创建时间：{{ item.createTime | time }}</view
-              >
-              <view style="line-height: 80rpx"
-                >商家名称：{{ item.publisherName }}</view
-              >
+              <view style="margin-top: 20rpx">创建时间：{{ item.createTime | time }}</view>
+              <view style="line-height: 80rpx">商家名称：{{ item.publisherName }}</view>
             </view>
           </view>
         </view>
@@ -56,7 +56,7 @@
 import { request } from '../../server/request.js'
 import { formatTime } from '../../utils/format.js'
 export default {
-  data() {
+  data () {
     return {
       searchContent: '',
       datas: [],
@@ -67,10 +67,10 @@ export default {
       },
     }
   },
-  created() {
+  created () {
     this.initialData()
   },
-  onReachBottom() {
+  onReachBottom () {
     // 当前页大于等于总页数
     if (this.pages.index >= this.pages.count) {
       uni.showToast({
@@ -83,19 +83,19 @@ export default {
     }
     // 进入下一页
   },
-  onPullDownRefresh() {
+  onPullDownRefresh () {
     this.initialData()
     setTimeout(() => {
       uni.stopPullDownRefresh()
     }, 1000)
   },
   methods: {
-    initialData() {
+    initialData () {
       this.pages.index = 1
       this.datas = []
       this.getDatas()
     },
-    getDatas() {
+    getDatas () {
       const data = {
         index: this.pages.index + '',
         size: this.pages.size + '',
@@ -134,13 +134,13 @@ export default {
           })
           setTimeout(() => {
             uni.reLaunch({
-              url: '/pages/login/login?path=' + this.$route.path,
+              url: '/pages/login/login',
             })
           }, 2000)
         }
       })
     },
-    selecteWords() {
+    selecteWords () {
       var ids = [-1]
       this.datas.forEach((item) => {
         ids.push(item.id)
@@ -155,7 +155,7 @@ export default {
         this.isGetCode(res.data.data)
       })
     },
-    isGetCode(data) {
+    isGetCode (data) {
       for (var i = 0; i < this.datas.length; i++) {
         if (this.idInIt(this.datas[i].id, data)) {
           this.datas[i].isGet = false
@@ -164,7 +164,7 @@ export default {
         }
       }
     },
-    changeCodeType(item) {
+    changeCodeType (item) {
       if (item.type == 1) {
         item.type = '支付宝'
       }
@@ -175,7 +175,7 @@ export default {
         item.type = '淘宝'
       }
     },
-    idInIt(id, checkDatas) {
+    idInIt (id, checkDatas) {
       for (var i = 0; i < checkDatas.length; i++) {
         if (checkDatas[i].wordId == id) {
           return true
@@ -183,7 +183,7 @@ export default {
       }
       return false
     },
-    bindWord(word) {
+    bindWord (word) {
       uni.showLoading({
         title: '领取中',
       })
@@ -210,20 +210,9 @@ export default {
             this.datas.push(record)
           })
         }
-        if (code === -1) {
-          uni.showToast({
-            title: message,
-            icon: 'none',
-          })
-          setTimeout(() => {
-            uni.reLaunch({
-              url: '/pages/login/login',
-            })
-          }, 2000)
-        }
       })
     },
-    searchWord() {
+    searchWord () {
       const data = {
         index: this.pages.index + '',
         size: this.pages.size + '',

@@ -131,17 +131,6 @@ export default {
             this.shopList.push(item)
           })
         }
-        if (res.data.code === -1) {
-          uni.showToast({
-            title: message,
-            icon: 'none'
-          });
-          setTimeout(() => {
-            uni.navigateTo({
-              url: '/pages/login/login'
-            });
-          }, 2000);
-        }
       })
     },
     addShop () {
