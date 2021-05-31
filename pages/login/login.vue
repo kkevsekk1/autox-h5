@@ -57,12 +57,10 @@ export default {
       if (uni.getStorageSync("pathParameter")) {
         let pathParameter = uni.getStorageSync('pathParameter')
         let path = "/" + pathParameter.route + "?"
-        let pathData = [path]
         for (const key in pathParameter.options) {
-          let keyData = key + '=' + pathParameter.options[key]
-          pathData.push(keyData)
+          path += key + '=' + pathParameter.options[key] + "&"
         }
-        this.path = pathData.join("&")
+        this.path = path.substring(0, path.length - 1)
       }
     },
     submitForm () {

@@ -120,10 +120,14 @@ export default {
       this.appFiltrate = appName ? appName : "app筛选";
     },
     run (id) {
+      let formMenu = {
+        id: id,
+        path: this.$route.path
+      }
+      uni.setStorageSync('formMenu', formMenu)
       uni.reLaunch({
         url:
-          "/pages/ykapp/running?entrance=formMenu&id=" +
-          id + "&path=" + this.$route.path
+          "/pages/ykapp/running?entrance=formMenu"
       })
     },
     rank (type) {

@@ -40,19 +40,23 @@ export default {
       steps: ['选择功能', '设置参数', '选择设备', '运行'],
       stepIndex: 1,
       scriptId: 104,
-      path: "",
       entrance: "",
-      checkedGroup: "",
       runable: false,
+      path: ""
     }
   },
   onLoad (option) {
-    this.scriptId = option.id;
-    this.path = option.path
     this.entrance = option.entrance
-    this.checkedGroup = option.checkedGroup
+  },
+  created () {
+    this.entranceParameter()
   },
   methods: {
+    entranceParameter () {
+      let { id, path } = uni.getStorageSync(this.entrance)
+      this.scriptId = id
+      this.path = path
+    },
     next () {
       if (this.stepIndex == 2) {
         if (this.$refs.choiceDevice.getCheckedDevices().length == 0) {
@@ -115,13 +119,9 @@ export default {
     btnReturn () {
       if (this.stepIndex > 1) {
         this.stepIndex--;
-      } else if (this.entrance == 'formMenu') {
-        uni.reLaunch({
-          url: this.path
-        })
       } else {
         uni.reLaunch({
-          url: this.path + "?checkedGroup=" + this.checkedGroup
+          url: this.path
         })
       }
     },

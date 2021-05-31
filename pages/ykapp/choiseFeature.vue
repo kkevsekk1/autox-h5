@@ -29,12 +29,8 @@ export default {
       scriptGroups: [],
       scriptList: [],
       checkedGroup: '',
-      optionCheckedGroup: "",
       path: '',
     }
-  },
-  onLoad (option) {
-    this.optionCheckedGroup = option.checkedGroup
   },
   async created () {
     this.path = this.$route.path
@@ -45,7 +41,7 @@ export default {
       uni.showToast({ title: error, icon: 'none' })
       setTimeout(() => {
         uni.reLaunch({
-          url: '/pages/login/login?path=' + this.path,
+          url: '/pages/login/login'
         })
       }, 2000)
     }
@@ -53,14 +49,21 @@ export default {
       console.log('显示没有功能可用')
     }
     this.scriptGroups = data
-    this.checkedGroup = this.optionCheckedGroup ? this.optionCheckedGroup : this.scriptGroups[0].appName
+    let { checkedGroup } = uni.getStorageSync("choiseFeature")
+    let optionCheckedGroup = checkedGroup
+    this.checkedGroup = optionCheckedGroup ? optionCheckedGroup : scriptGroups[0].appName
     this.searchScrpit()
   },
   methods: {
     navigatorTo (scriptId) {
+      let choiseFeature = {
+        id: scriptId,
+        path: this.path,
+        checkedGroup: this.checkedGroup
+      }
+      uni.setStorageSync('choiseFeature', choiseFeature)
       uni.reLaunch({
-        url: '/pages/ykapp/running?id=' + scriptId + '&path=' + this.path
-          + '&checkedGroup=' + this.checkedGroup
+        url: '/pages/ykapp/running?entrance=choiseFeature'
       })
     },
     getDeviceGroups: () => {
