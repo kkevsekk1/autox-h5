@@ -54,8 +54,6 @@ export default {
   },
   methods: {
     next () {
-      // console.log(this.$refs.setParams.scriptParams, "参数");
-      // console.log(this.$refs.choiceDevice.getCheckedDevices());
       if (this.stepIndex == 2) {
         if (this.$refs.choiceDevice.getCheckedDevices().length == 0) {
           alert("至少选一个设备");
@@ -117,6 +115,10 @@ export default {
     btnReturn () {
       if (this.stepIndex > 1) {
         this.stepIndex--;
+      } else if (this.entrance == 'formMenu') {
+        uni.reLaunch({
+          url: this.path
+        })
       } else {
         uni.reLaunch({
           url: this.path + "?checkedGroup=" + this.checkedGroup
