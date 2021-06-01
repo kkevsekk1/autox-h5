@@ -19,9 +19,9 @@
     <view class="main">
       <view v-for="materialData in materialDatas"
             :key="materialData.id">
-        <material-list :materialData="materialData"
-                       @modifyData="addModify"
-                       @removeData="removeMaterial"></material-list>
+        <material-Row :materialData="materialData"
+                      @modifyData="addModify"
+                      @removeData="removeMaterial"></material-Row>
       </view>
     </view>
   </view>
@@ -30,10 +30,10 @@
 <script>
 import { request } from '../../server/request.js';
 import { formatTime } from '../../utils/format.js'
-import materialList from "./materialList"
+import materialRow from "./materialRow"
 export default {
   components: {
-    materialList,
+    materialRow,
   },
   data () {
     return {
@@ -83,9 +83,9 @@ export default {
       if (e == "add") {
         uni.reLaunch({ url: "/pages/material/modifyMaterial" })
       } else {
-        let { id, name, describe } = e
+        let { id } = e
         uni.reLaunch({
-          url: "/pages/material/modifyMaterial?id=" + id + "&name=" + name + "&describe=" + describe
+          url: "/pages/material/modifyMaterial?id=" + id
         })
       }
     },
@@ -93,7 +93,7 @@ export default {
       uni.showModal({
         title: '提示',
         content: '确定删除吗？',
-        confirmColor: '#2cb1f6',
+        confirmColor: '#409EFE',
         success: function (res) {
           if (res.confirm) {
             request({
@@ -111,11 +111,11 @@ export default {
       });
     },
     getMaterialList () {
-      console.log("123")
       uni.showLoading({
         title: '加载中'
       });
-      let data = { size: this.page.size, index: this.page.index, search: this.seekMaterial }
+      let data = { size: this.page.size, index: this.page.index, search: this.seekMaterial, orderby: "createTime desc" }
+      console.log(data)
       request({
         url: "/material/getTextPage",
         method: "post",
@@ -156,10 +156,10 @@ page {
   height: 35px;
   line-height: 35px;
   text-align: center;
-  background-color: #2cb1f6;
+  background-color: #409efe;
   border-radius: 5px;
   color: #fff;
-  font-size: 14px;
+  font-size: 28rpx;
 }
 .top-fixed .material-seek {
   height: 35px;
@@ -169,7 +169,7 @@ page {
   margin-right: 15px;
   box-sizing: border-box;
   padding-left: 25px;
-  font-size: 14px;
+  font-size: 28rpx;
 }
 .top-fixed .magnifying-glass {
   position: absolute;

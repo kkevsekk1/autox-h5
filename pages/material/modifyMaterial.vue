@@ -1,10 +1,10 @@
 <template>
   <view class="modifyMaterial-box">
     <uni-row class="material-name">
-      <uni-col :span="6">
+      <uni-col :span="7">
         <view class="material-text">素材名称：</view>
       </uni-col>
-      <uni-col :span="18">
+      <uni-col :span="17">
         <input type="text"
                placeholder="素材名称"
                v-model="materialName"
@@ -24,13 +24,16 @@
                   v-model="materialContent"
                   style="width: auto;padding:5px"
                   class="material-textarea"
+                  auto-height=true
                   :class="verifyRed.textareaRed" />
+
       </uni-col>
       <view class="textarea-text"
             v-show="verifyRed.textareaRed">请输入素材内容</view>
     </uni-row>
     <view class="bottom-btn">
-      <button @click="closePopup('save')">确定保存</button>
+      <button @click="closePopup('save')"
+              class="save">确定保存</button>
       <button @click="closePopup('cancel')">返回</button>
     </view>
   </view>
@@ -41,6 +44,7 @@ import { request } from '../../server/request.js';
 export default {
   data () {
     return {
+      id: "",
       materialName: '',
       materialContent: '',
       verifyRed: {
@@ -50,9 +54,10 @@ export default {
     }
   },
   onLoad (option) {
-    let { id, name, describe } = option
-    this.materialName = name
-    this.materialContent = describe
+    this.id = option.id
+  },
+  created () {
+    this.getMaterialList()
   },
   methods: {
     closePopup (e) {
@@ -60,8 +65,31 @@ export default {
         uni.reLaunch({ url: "/pages/material/index" })
       }
       if (e == "save") {
-        this.materiaContent()
+        if (!this.id) {
+          this.materiaContent()
+        } else {
+          this.addMateria()
+        }
       }
+    },
+    addMateria () {
+      let data = { id: this.id, text: this.materialContent, name: this.materialName }
+      request({
+        url: "/material/updateText",
+        method: "post",
+        data: data
+      })
+        .then(res => {
+          let { code, message } = res.data
+          if (code == 200) {
+            uni.showToast({
+              title: message,
+            })
+            setTimeout(() => {
+              uni.reLaunch({ url: "/pages/material/index" })
+            }, 1000)
+          }
+        })
     },
     materiaContent () {
       this.verifyRed = {
@@ -89,12 +117,37 @@ export default {
         data: materiaData
       })
         .then(res => {
-          let { code } = res.data
+          let { code, message } = res.data
           if (code == 200) {
-            uni.reLaunch({ url: "/pages/material/index" })
+            uni.showToast({
+              title: message,
+            })
+            setTimeout(() => {
+              uni.reLaunch({ url: "/pages/material/index" })
+            }, 1000)
           }
         })
-    }
+    },
+    getMaterialList () {
+      let data = { size: 999 }
+      request({
+        url: "/material/getTextPage",
+        method: "post",
+        data: data
+      })
+        .then(res => {
+          let { code, data } = res.data
+          if (code === 200) {
+            data.list.forEach(element => {
+              if (element.id == this.id) {
+                let { materialURL, materialName } = element
+                this.materialName = materialName
+                this.materialContent = materialURL
+              }
+            });
+          }
+        })
+    },
   }
 }
 </script>
@@ -119,19 +172,26 @@ export default {
 }
 .bottom-btn {
   overflow: hidden;
-  margin-top: 70px;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  background-color: #fff;
+  width: 100%;
+  padding: 10px 20px;
 }
 .bottom-btn button {
   float: right;
   height: 35px;
   margin-left: 10px;
   line-height: 35px;
-  font-size: 16px;
-  background-color: #2cb1f6;
+  font-size: 32rpx;
+}
+.bottom-btn .save {
+  background-color: #409efe;
   color: #fff;
 }
-.material-text {
-  font-size: 16px;
+.bottom-btn button .material-text {
+  font-size: 32rpx;
 }
 .material-input,
 .material-textarea {
@@ -144,6 +204,8 @@ export default {
 }
 .material-textarea {
   margin-top: 10px;
+  margin-bottom: 40px;
+  line-height: 25px;
 }
 .border-red {
   border: 1px solid #f56c6c;
@@ -151,11 +213,11 @@ export default {
 .textarea-text,
 .input-text {
   color: #f56c6c;
-  font-size: 14px;
+  font-size: 28rpx;
   position: absolute;
 }
 .textarea-text {
-  bottom: -22px;
+  bottom: 20px;
 }
 .input-text {
   bottom: -30px;

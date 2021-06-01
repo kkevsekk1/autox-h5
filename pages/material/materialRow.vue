@@ -1,15 +1,18 @@
 <template>
-  <view class="materialList-box">
-    <uni-row class="top-materialList">
-      <uni-col :span="16"
+  <view class="materialRowRow-box">
+    <uni-row class="top-materialRow">
+      <uni-col :span='14'
                class="material-Id">{{materialData.name}}（{{materialData.id}}）</uni-col>
-      <uni-col :span="8"
-               class="items">{{materialData.times}}</uni-col>
+      <uni-col :span="10"
+               class="items"
+               style="overflow:hidden">
+        <view style="float:right;">{{materialData.times}}</view>
+      </uni-col>
     </uni-row>
     <view class="describe">
       <view>{{materialData.describe}}</view>
     </view>
-    <view class="bottom-materialList">
+    <view class="bottom-materialRowRow">
       <view class="modification"
             @click="removeMaterial">删除</view>
       <view class="modification"
@@ -30,12 +33,7 @@ export default {
   },
   methods: {
     modifyMaterial () {
-      let { id, name, describe } = this.materialData
-      let modifyData = {
-        id: id,
-        name: name,
-        describe: describe
-      }
+      let modifyData = { id: this.materialData.id }
       this.$emit('modifyData', modifyData)
     },
     removeMaterial () {
@@ -46,30 +44,30 @@ export default {
 </script>
 
 <style>
-.materialList-box {
+.materialRowRow-box {
   position: relative;
   margin-top: 15px;
   padding: 10px;
   height: 100px;
   background-color: #fff;
 }
-.top-materialList {
+.top-materialRow {
   position: relative;
   height: 20px;
   line-height: 20px;
 }
 .material-Id {
-  font-size: 18px;
+  font-size: 36rpx;
   font-weight: 600;
 }
 .items {
-  font-size: 12px;
+  font-size: 24rpx;
 }
 .describe {
   height: 40px;
   line-height: 20px;
   margin-top: 8px;
-  font-size: 14px;
+  font-size: 28rpx;
   overflow: hidden;
   color: #969799;
   text-overflow: ellipsis;
@@ -77,7 +75,7 @@ export default {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
-.bottom-materialList {
+.bottom-materialRowRow {
   position: absolute;
   bottom: 10px;
   right: 10px;
@@ -87,12 +85,12 @@ export default {
   height: 25px;
   line-height: 25px;
   text-align: center;
-  background-color: #2cb1f6;
+  background-color: #409efe;
   border-radius: 5px;
   color: #fff;
   width: 70px;
   float: right;
-  font-size: 14px;
+  font-size: 28rpx;
   margin-left: 10px;
 }
 </style>
