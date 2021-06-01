@@ -84,6 +84,26 @@
           "titleNView": false
         }
       }
+    },
+    {
+      "path": "pages/material/index",
+      "style": {
+        "navigationBarTitleText": "素材库",
+        "enablePullDownRefresh": true,
+        "app-plus": {
+          "titleNView": false
+        }
+      }
+    },
+    {
+      "path": "pages/material/modifyMaterial",
+      "style": {
+        "navigationBarTitleText": "修改素材",
+        "enablePullDownRefresh": true,
+        "app-plus": {
+          "titleNView": false
+        }
+      }
     }
   ],
   "globalStyle": {
@@ -120,7 +140,7 @@
         "selectedIconPath": "static/slcMine.png"
       },
       {
-        "pagePath": "pages/ykapp/choiseFeature",
+        "pagePath": "pages/material/index",
         "text": "商品列表",
         "iconPath": "static/mine.png",
         "selectedIconPath": "static/slcMine.png"
