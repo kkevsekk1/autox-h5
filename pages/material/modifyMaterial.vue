@@ -205,7 +205,6 @@ export default {
 .material-textarea {
   margin-top: 10px;
   margin-bottom: 40px;
-  line-height: 25px;
 }
 .border-red {
   border: 1px solid #f56c6c;
@@ -213,7 +212,7 @@ export default {
 .textarea-text,
 .input-text {
   color: #f56c6c;
-  font-size: 28rpx;
+  font-size: 24rpx;
   position: absolute;
 }
 .textarea-text {
@@ -221,6 +220,6 @@ export default {
 }
 .input-text {
   bottom: -30px;
-  left: 82px;
+  left: 95px;
 }
 </style>
