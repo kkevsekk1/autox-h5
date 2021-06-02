@@ -129,7 +129,7 @@ export default {
       }
     },
     loginCheck () {
-      let { phone, verifyCode, inviteCode } = this.user
+      let { phone, verifyCode } = this.user
       if (!phone || !verifyCode) {
         if (!phone) {
           this.error.phone = "true"
