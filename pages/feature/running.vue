@@ -71,7 +71,7 @@ export default {
         const { code, message,data} = res.data;
         if (code === 200) {
            try {
-             android.runScript(data.code,data.name);
+             window.android.runScript(data.code,data.name);
              uni.showToast({ title: "启动成功", duration:2000})
              this.msgType="success"
              this.msgContent="【AutoXjs】仅能试运行该功能，"+10+"分钟后关闭！\r\n长期运行，请联系开发人员授权方或自助开通！";
