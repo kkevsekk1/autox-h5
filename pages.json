@@ -10,7 +10,10 @@
       "path": "pages/login/login",
       "style": {
         "navigationBarTitleText": "登陆",
-        "enablePullDownRefresh": false
+        "enablePullDownRefresh": false,
+        "app-plus": {
+          "titleNView": false
+        }
       }
     },
     {
@@ -78,7 +81,7 @@
     {
       "path": "pages/feature/index",
       "style": {
-        "navigationBarTitleText": "功能列表",
+        "navigationBarTitleText": "应用商店",
         "enablePullDownRefresh": true,
         "app-plus": {
           "titleNView": false
@@ -99,6 +102,26 @@
       "path": "pages/material/modifyMaterial",
       "style": {
         "navigationBarTitleText": "修改素材",
+        "enablePullDownRefresh": true,
+        "app-plus": {
+          "titleNView": false
+        }
+      }
+    },
+    {
+      "path": "pages/controlMine/controlMine",
+      "style": {
+        "navigationBarTitleText": "云控个人主页",
+        "enablePullDownRefresh": true,
+        "app-plus": {
+          "titleNView": false
+        }
+      }
+    },
+    {
+      "path": "pages/externalLinks/externalLinks",
+      "style": {
+        "navigationBarTitleText": "外部链接",
         "enablePullDownRefresh": true,
         "app-plus": {
           "titleNView": false
@@ -140,7 +163,7 @@
         "selectedIconPath": "static/slcMine.png"
       },
       {
-        "pagePath": "pages/material/index",
+        "pagePath": "pages/controlMine/controlMine",
         "text": "商品列表",
         "iconPath": "static/mine.png",
         "selectedIconPath": "static/slcMine.png"

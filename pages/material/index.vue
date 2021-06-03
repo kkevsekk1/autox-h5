@@ -62,7 +62,7 @@ export default {
   },
   onPullDownRefresh () {
     this.page.index = 1;
-    this.features = [];
+    this.materialDatas = [];
     this.getMaterialList();
     setTimeout(() => {
       uni.stopPullDownRefresh()
@@ -159,7 +159,7 @@ page {
   background-color: #409efe;
   border-radius: 5px;
   color: #fff;
-  font-size: 28rpx;
+  font-size: 14px;
 }
 .top-fixed .material-seek {
   height: 35px;
@@ -169,7 +169,7 @@ page {
   margin-right: 15px;
   box-sizing: border-box;
   padding-left: 25px;
-  font-size: 28rpx;
+  font-size: 14px;
 }
 .top-fixed .magnifying-glass {
   position: absolute;

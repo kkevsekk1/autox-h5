@@ -57,17 +57,17 @@ export default {
   line-height: 20px;
 }
 .material-Id {
-  font-size: 36rpx;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 700;
 }
 .items {
-  font-size: 24rpx;
+  font-size: 14px;
 }
 .describe {
   height: 40px;
   line-height: 20px;
   margin-top: 8px;
-  font-size: 28rpx;
+  font-size: 14px;
   overflow: hidden;
   color: #969799;
   text-overflow: ellipsis;
@@ -90,7 +90,7 @@ export default {
   color: #fff;
   width: 70px;
   float: right;
-  font-size: 28rpx;
+  font-size: 14px;
   margin-left: 10px;
 }
 </style>
