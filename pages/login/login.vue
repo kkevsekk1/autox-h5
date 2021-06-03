@@ -1,8 +1,7 @@
 <template>
   <view class="login-box">
     <view class="login-logo">
-      <img src="../../static/logo.png"
-           alt="">
+      登录界面
     </view>
     <view class="input-list">
       <view :class="error['phone']?'error-phone':''">
@@ -188,13 +187,10 @@ page {
   font-size: 28rpx;
 }
 .login-logo {
-  width: 200rpx;
-  height: 200rpx;
-  margin: 0 auto;
-}
-.login-logo img {
-  width: 100%;
-  height: 100%;
+  margin-top: 50px;
+  font-size: 60rpx;
+  font-weight: 700;
+  text-align: center;
 }
 .input-list {
   margin: 50px 0;

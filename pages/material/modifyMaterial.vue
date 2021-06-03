@@ -184,14 +184,14 @@ export default {
   height: 35px;
   margin-left: 10px;
   line-height: 35px;
-  font-size: 32rpx;
+  font-size: 16px;
 }
 .bottom-btn .save {
   background-color: #409efe;
   color: #fff;
 }
 .bottom-btn button .material-text {
-  font-size: 32rpx;
+  font-size: 16px;
 }
 .material-input,
 .material-textarea {
@@ -212,7 +212,7 @@ export default {
 .textarea-text,
 .input-text {
   color: #f56c6c;
-  font-size: 24rpx;
+  font-size: 12px;
   position: absolute;
 }
 .textarea-text {
@@ -220,6 +220,6 @@ export default {
 }
 .input-text {
   bottom: -30px;
-  left: 95px;
+  left: 190rpx;
 }
 </style>

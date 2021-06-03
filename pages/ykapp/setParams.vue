@@ -20,7 +20,7 @@
                  v-if="param.type == 1">
           <uni-easyinput v-model="param.defaultValue"
                          :placeholder="param.des||'请输入'+param.name"></uni-easyinput>
-          <view style="font-size:8px;color:green;line-height:10px">{{param.des}}</view>
+          <view style="font-size:14px;color:green;line-height:20px">{{param.des}}</view>
         </uni-col>
         <!-- 下拉菜单 -->
         <uni-col style="text-align: right; "
@@ -48,7 +48,7 @@
         <uni-col :span="18"
                  v-if="param.type == 5"
                  style="line-height:20px;">
-          <view style="font-size:8px;color:green;">
+          <view style="font-size:12px;color:green;">
             {{param.des||"&nbsp;"}}
           </view>
         </uni-col>
