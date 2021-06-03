@@ -16,15 +16,17 @@ export default {
     appData: {
       id: String || Number,
       imgPath: String,
-      appName: String
+      appName: String,
+      path: String
     }
   },
   methods: {
     pitchOn () {
-      this.$emit("pitchOn", this.appData.id)
+      uni.navigateTo({
+        url: this.appData.path
+      })
     }
   }
-
 }
 </script>
 
