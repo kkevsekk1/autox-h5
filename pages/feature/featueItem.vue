@@ -14,7 +14,7 @@
         </uni-col>
         <uni-col :span="5">
           <button class="btn-operation"
-                  @click="run">运行</button>
+                  @click="run">试运行</button>
         </uni-col>
       </uni-row>
     </view>
@@ -66,7 +66,6 @@ export default {
       this.feature.updateTime = formatTime(this.feature.updateTime)
     },
     run () {
-      console.log("item中run", this.feature.id);
       this.$emit('run', this.feature.id);
     }
   }
@@ -102,8 +101,8 @@ export default {
 }
 .content-top .btn-operation {
   float: right;
-  width: 66px;
-  height: 22px;
+  /* width: 66px; */
+  /* height: 22px; */
   font-size: 13px;
   background-color: #67c239;
   color: #fff;

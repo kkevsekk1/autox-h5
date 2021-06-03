@@ -3,7 +3,7 @@
     <view class="title">
       <text>{{ scriptName }}（{{ scriptId }}）</text>
     </view>
-    <view style="margin-top:100rpx"
+    <view style="margin-top:20px"
           v-if="scriptParams&&scriptParams.length==0">
       无需设置参数，点击下一步
     </view>
@@ -207,6 +207,7 @@ export default {
           //普通选择
           //checkValue 数组，checkedValue选中的显示值，defaultValue 放置参数值
           param.checkKey = param.checkValue
+        
           if (param.defaultValue instanceof Array) {
             param.checkedValue = param.checkValue[0]
             param.defaultValue = param.checkKey[0]
@@ -222,9 +223,10 @@ export default {
             const value = this.materials[key]
             param.checkValue.push(value)
             param.checkKey.push(key)
-            if (index == 0 || param.defaultValue == key) {
-              param.checkedValue = value //默认显示值
-              param.defaultValue = key //程序使用的值
+              console.log(index,param.defaultValue,key)
+            if (index == 0 || param.defaultValue === key) {
+              console.log(index,param.defaultValue,key,"----")
+              param.checkedValue = value //默认显示值 //
             }
             index++
           }
@@ -246,9 +248,7 @@ export default {
 <style>
 .setParameter {
   margin: 0 10px;
-  padding-top: 60px;
   color: #606266;
-  padding-bottom: 100px;
 }
 .setParameter .title {
   text-align: center;
@@ -277,8 +277,7 @@ export default {
   transform: rotate(45deg);
 }
 .uni-col {
-  margin-top: 3px;
-  line-height: 36px;
+  padding-top: 3px;
 }
 .script-params::after {
   content: "";

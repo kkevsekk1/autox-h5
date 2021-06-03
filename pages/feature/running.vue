@@ -1,74 +1,49 @@
 <template>
-  <view class="setParameter-box">
-    <view class="runnig-header">
-      <view class="header">
-        <text v-for="(step,index) in steps"
-              :key="index"
-              :class="{classGreen:index<stepIndex}">{{step}}</text>
-      </view>
-    </view>
-    <set-params style="margin-top: 60px;" v-show="stepIndex==1"
-                :scriptId="scriptId"
+  <view >
+    <set-params style="margin-top: 20px;" :scriptId="scriptId"
                 ref="setParams"></set-params>
-    <choice-device v-show="stepIndex==2"
-                   :entrance="entrance"
-                   ref="choiceDevice"></choice-device>
-    <view class="uni-btn">
-      <button v-show="stepIndex==1"
-              @click="next()"
-              class="uni-btn-submit">下一步</button>
-      <button v-show="stepIndex==2"
-              @click="next()"
+                <view style="height:80px;">&nbsp;</view>
+    <view class="uni-btn" v-if="true">
+      <button @click="next()"
               :disabled="runable"
-              class="uni-btn-submit">运行</button>
+              class="uni-btn-submit">试运行</button>
       <button class="uni-btn-default"
               @click="btnReturn()">返回</button>
     </view>
+    <uni-popup ref="popup" type="message"  >
+	    <uni-popup-message type="error" :message="errorMsg" :duration="5000"></uni-popup-message>
+    </uni-popup>
   </view>
 </template>
 <script>
-import SetParams from './setParams.vue'
-import choiceDevice from './choiceDevice.vue'
+import SetParams from '../ykapp/setParams'
 import { request } from '../../server/request.js'
 export default {
   components: {
-    SetParams, choiceDevice
+    SetParams
   },
-
   data () {
     return {
-      steps: ['选择功能', '设置参数', '选择设备', '运行'],
-      stepIndex: 1,
       scriptId: 104,
       path: "",
       entrance: "",
       checkedGroup: "",
       runable: false,
+      errorMsg:""
     }
   },
   onLoad (option) {
-    this.scriptId = option.id;
-    this.path = option.path
-    this.entrance = option.entrance
-    this.checkedGroup = option.checkedGroup
+    this.scriptId = option.id||104;
   },
   methods: {
     next () {
-      if (this.stepIndex == 2) {
-        if (this.$refs.choiceDevice.getCheckedDevices().length == 0) {
-          alert("至少选一个设备");
-        } else {
-          this.running(this.$refs.setParams.scriptParams, this.$refs.choiceDevice.getCheckedDevices(), this.$refs.setParams.scriptName);
-        }
-      }
-      if (this.stepIndex == 1) {
         let rs = this.checkParams(this.$refs.setParams.scriptParams);
         if (rs == 0) {
-          this.stepIndex++;
+          this.toast("正在处理...");
+          this.running(this.$refs.setParams.scriptParams,[],this.$refs.setParams.scriptName);
         } else {
-          alert(rs.name + " 不能为空！");
+          this.toast(rs.name + " 不能为空！");
         }
-      }
     },
     running (taskParams, devices, taskName) {
       const data = this.dealSubmitData(taskParams, devices, taskName);
@@ -77,10 +52,29 @@ export default {
         method: "post",
         data: data
       }).then(res => {
-        const { code, message } = res.data;
+        const { code, message,data} = res.data;
         if (code === 200) {
           this.submitSuccess();
-          this.toast(taskName + ",已运行");
+          this.loadCode(data.insertId);
+        } else {
+          this.toast(message);
+        }
+      });
+    },
+    loadCode(taskId){
+      request({
+        url: "/task/getRunCode?taskId="+taskId,
+        method: "GET",
+      }).then(res => {
+        const { code, message,data} = res.data;
+        if (code === 200) {
+           try {
+             android.runScript(data.code,data.name);
+             uni.showToast({ title: "启动成功", duration:2000})
+           } catch (error) {
+             this.errorMsg="错误\r\n"+error+"\r\n请在【AutoXjs】app中运行";
+              this.$refs.popup.open("center")
+           }
         } else {
           this.toast(message);
         }
@@ -98,7 +92,7 @@ export default {
     dealSubmitData (taskParams, devices, taskName) {
       taskParams = taskParams.filter((task) => { return Number(task.type) !== 5; });
       const paramsObj = Object.fromEntries(taskParams.map(item => [item.key, item.defaultValue]));
-      const deviceIds = [-1];
+      const deviceIds = [-1,-2];
       devices.forEach(device => {
         deviceIds.push(device.id);
       });
@@ -113,17 +107,7 @@ export default {
       return data;
     },
     btnReturn () {
-      if (this.stepIndex > 1) {
-        this.stepIndex--;
-      } else if (this.entrance == 'formMenu') {
-        uni.reLaunch({
-          url: this.path
-        })
-      } else {
-        uni.reLaunch({
-          url: this.path + "?checkedGroup=" + this.checkedGroup
-        })
-      }
+     uni.navigateBack();
     },
     checkParams (params) {
       for (let index = 0; index < params.length; index++) {

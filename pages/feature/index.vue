@@ -56,7 +56,7 @@
       <view v-for=" feature in features"
             :key="feature.id"
             class="goodsList-nav">
-        <feature-item :feature="feature"
+        <feature-item  :feature="feature"
                       @run="run"></feature-item>
       </view>
     </view>
@@ -120,10 +120,9 @@ export default {
       this.appFiltrate = appName ? appName : "app筛选";
     },
     run (id) {
-      uni.reLaunch({
-        url:
-          "/pages/ykapp/running?entrance=formMenu&id=" +
-          id + "&path=" + this.$route.path
+      console.log(id)
+      uni.navigateTo({
+        url:"/pages/feature/running?id=" +id
       })
     },
     rank (type) {
