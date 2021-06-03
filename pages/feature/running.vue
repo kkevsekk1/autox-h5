@@ -11,8 +11,9 @@
               @click="btnReturn()">返回</button>
     </view>
     <uni-popup ref="popup" type="message"  >
-	    <uni-popup-message type="error" :message="errorMsg" :duration="5000"></uni-popup-message>
+	    <uni-popup-message :type="msgType" :message="msgContent" :duration="5000"></uni-popup-message>
     </uni-popup>
+    
   </view>
 </template>
 <script>
@@ -29,7 +30,8 @@ export default {
       entrance: "",
       checkedGroup: "",
       runable: false,
-      errorMsg:""
+      msgContent:"",
+      msgType:""
     }
   },
   onLoad (option) {
@@ -71,9 +73,13 @@ export default {
            try {
              android.runScript(data.code,data.name);
              uni.showToast({ title: "启动成功", duration:2000})
+             this.msgType="success"
+             this.msgContent="【AutoXjs】仅能试运行脚本，"+10+"分钟后关闭！\r\n长期运行，请联系第三授权方或自助开通！";
+             this.$refs.popup.open("center")
            } catch (error) {
-             this.errorMsg="错误\r\n"+error+"\r\n请在【AutoXjs】app中运行";
-              this.$refs.popup.open("center")
+             this.msgType="error"
+             this.msgContent="错误\r\n"+error+"\r\n请在【AutoXjs】app中运行";
+             this.$refs.popup.open("center")
            }
         } else {
           this.toast(message);
