@@ -39,7 +39,6 @@
                  v-for="appData in appDataList"
                  :key="appData.id">
           <open-app :appData="appData"
-                    @pitchOn="pitchOn"
                     class="nav-list-number"> </open-app>
         </uni-col>
       </uni-row>
@@ -76,17 +75,20 @@ export default {
         {
           id: "3",
           imgPath: "../../static/downloadApp.png",
-          appName: "下载更新"
+          appName: "下载更新",
+          path: "",
         },
         {
           id: "4",
           imgPath: "../../static/appControl.png",
-          appName: "应用商店"
+          appName: "应用商店",
+          path: "/pages/feature/index"
         },
         {
           id: "5",
           imgPath: "../../static/material.png",
-          appName: "管理素材"
+          appName: "管理素材",
+          path: "/pages/material/index"
         },
         {
           id: "6",
@@ -100,23 +102,12 @@ export default {
     this.getMineData()
   },
   methods: {
-    pitchOn (id) {
-      let path
-      switch (id) {
-        case "3":
-          path = "/pages/externalLinks/externalLinks?externalPath=" + this.externalPath + "&path="
-            + this.$route.path
-          break;
-        case "4":
-          path = "/pages/feature/index"
-          break;
-        case "5":
-          path = "/pages/material/index"
-          break;
-      }
-      uni.navigateTo({
-        url: path
-      })
+    downloadPath () {
+      this.appDataList.forEach(element => {
+        if (element.id == "3") {
+          element.path = "/pages/externalLinks/externalLinks?externalPath=" + this.externalPath + "&path=" + this.$route.path
+        }
+      });
     },
     getMineData () {
       request({
@@ -127,7 +118,6 @@ export default {
         .then(res => {
           let { code, data, message } = res.data
           if (code == 200) {
-            console.log(data)
             let { name, code, balance, role } = data
             role = role == '7' ? '普通用户' : '代理商'
             this.mineData = {
@@ -136,7 +126,7 @@ export default {
               role: role,
               balance: balance
             }
-            console.log(this.mineData)
+            this.downloadPath()
           }
         })
     },
