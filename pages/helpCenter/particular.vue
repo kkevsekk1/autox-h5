@@ -7,7 +7,7 @@
                class="solve-col">
         <view class="solve"
               :class="solve =='up'?'solveGreen':''"
-              @click="solve='up'">
+              @click="solveClick('up')">
           <view class="iconfont">&#xe9a2;</view>
           <view>已解决</view>
         </view>
@@ -16,7 +16,7 @@
                class="solve-col">
         <view class="solve"
               :class="solve=='down'?'solveGreen':''"
-              @click="solve='down'">
+              @click="solveClick('down')">
           <view class="iconfont">&#xe9a4;</view>
           <view>未解决</view>
         </view>
@@ -32,6 +32,7 @@ export default {
       solve: "",
       title: "",
       content: "",
+      index: 1
     }
   },
   onLoad () {
@@ -39,6 +40,14 @@ export default {
     this.title = helpCenter.title
     this.content = helpCenter.content
   },
+  methods: {
+    solveClick (e) {
+      if (this.index === 1) {
+        this.index++
+        this.solve = e
+      }
+    }
+  }
 }
 </script>
 

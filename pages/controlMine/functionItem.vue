@@ -10,8 +10,8 @@
     <uni-popup ref="popup"
                type="center">
       <view class="list">
-        <view>邀请码已复制</view>
-        <view> {{functionData.content}} </view>
+        <view>地址已复制</view>
+        <textarea v-model="functionData.content" />
         <view> <img src="../../static/btn_skip.png"
                alt=""> </view>
       </view>
@@ -43,7 +43,7 @@ export default {
       }
     },
     openPopup () {
-      setClipboardData(this.functionData.code);
+      setClipboardData(this.functionData.content);
       console.log(this.functionData.code)
       this.$refs.popup.open();
     },
@@ -91,11 +91,12 @@ export default {
   font-size: 16px;
   text-align: center;
 }
-.list view:nth-child(2) {
+.list textarea {
+  margin: 0 auto;
   width: 250px;
   height: 125px;
   padding: 10px;
-  font-size: 12px;
+  font-size: 14px;
   background-color: #f5f5f5;
 }
 .list view:nth-child(3) {

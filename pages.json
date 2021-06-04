@@ -124,17 +124,17 @@
         "navigationBarTitleText": "帮助中心",
         "enablePullDownRefresh": true,
         "app-plus": {
-          "titleNView": false
+          "titleNView": true
         }
       }
     },
     {
       "path": "pages/helpCenter/particular",
       "style": {
-        "navigationBarTitleText": "帮助中心详情页",
+        "navigationBarTitleText": "详情页",
         "enablePullDownRefresh": true,
         "app-plus": {
-          "titleNView": false
+          "titleNView": true
         }
       }
     }
