@@ -127,6 +127,26 @@
           "titleNView": false
         }
       }
+    },
+    {
+      "path": "pages/helpCenter/helpCenter",
+      "style": {
+        "navigationBarTitleText": "帮助中心",
+        "enablePullDownRefresh": true,
+        "app-plus": {
+          "titleNView": false
+        }
+      }
+    },
+    {
+      "path": "pages/helpCenter/particular",
+      "style": {
+        "navigationBarTitleText": "帮助中心详情页",
+        "enablePullDownRefresh": true,
+        "app-plus": {
+          "titleNView": false
+        }
+      }
     }
   ],
   "globalStyle": {

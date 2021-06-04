@@ -111,7 +111,8 @@ export default {
         {
           type: "internalLinks",
           imgPath: "../../static/helpCenter.png",
-          functionName: "帮助中心"
+          functionName: "帮助中心",
+          path: "/pages/helpCenter/helpCenter"
         }
       ]
     }
@@ -127,8 +128,12 @@ export default {
         }
         this.functionDataList.push(element)
       });
+      uni.hideLoading()
     },
     getMineData () {
+      uni.showLoading({
+        title: '加载中'
+      });
       request({
         url: '/auth/userInfoApp',
         method: 'get',
