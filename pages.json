@@ -117,16 +117,6 @@
           "titleNView": false
         }
       }
-    },
-    {
-      "path": "pages/externalLinks/externalLinks",
-      "style": {
-        "navigationBarTitleText": "外部链接",
-        "enablePullDownRefresh": true,
-        "app-plus": {
-          "titleNView": false
-        }
-      }
     }
   ],
   "globalStyle": {

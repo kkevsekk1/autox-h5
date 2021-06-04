@@ -12,24 +12,17 @@
 
 <script>
 export default {
-  data () {
-    return {
-      externalLinks: "/pages/externalLinks/externalLinks"
-    }
-  },
   props: ["functionData"],
   methods: {
     pitchOn () {
-      let { type, path, externalPath } = this.functionData
+      let { type, path } = this.functionData
       if (type === "internalLinks") {
         uni.navigateTo({
           url: path
         })
       }
       if (type === "externalLinks") {
-        uni.navigateTo({
-          url: this.externalLinks + "?externalPath=" + externalPath + "&path=" + path
-        })
+        window.location.href = path
       }
     }
   }

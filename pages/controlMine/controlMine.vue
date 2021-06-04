@@ -75,8 +75,7 @@ export default {
           type: "externalLinks",
           imgPath: "../../static/downloadApp.png",
           functionName: "下载更新",
-          path: this.$route.path,
-          externalPath: "http://120.25.164.233:8080/appstore/app/20210524111935.apk"
+          path: "http://120.25.164.233:8080/appstore/app/20210524111935.apk"
         },
         {
           type: "internalLinks",
@@ -114,7 +113,7 @@ export default {
         data: '',
       })
         .then(res => {
-          let { code, data, message } = res.data
+          let { code, data } = res.data
           if (code == 200) {
             let { name, code, balance, role } = data
             role = role == '7' ? '普通用户' : '代理商'
