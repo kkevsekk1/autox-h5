@@ -1,27 +1,30 @@
 <template>
-  <view class="particular-box">
-    <view class="title"> {{title}} </view>
-    <view class="content"> {{content}} </view>
-    <uni-row class="feedback">
-      <uni-col :span="12"
-               class="solve-col">
-        <view class="solve"
-              :class="solve =='up'?'solveGreen':''"
-              @click="solveClick('up')">
-          <view class="iconfont">&#xe9a2;</view>
-          <view>已解决</view>
-        </view>
-      </uni-col>
-      <uni-col :span="12"
-               class="solve-col">
-        <view class="solve"
-              :class="solve=='down'?'solveGreen':''"
-              @click="solveClick('down')">
-          <view class="iconfont">&#xe9a4;</view>
-          <view>未解决</view>
-        </view>
-      </uni-col>
-    </uni-row>
+  <view>
+    <view class="head">详情</view>
+    <view class="particular-box">
+      <view class="title"> {{title}} </view>
+      <view class="content"> {{content}} </view>
+      <uni-row class="feedback">
+        <uni-col :span="12"
+                 class="solve-col">
+          <view class="solve"
+                :class="solve =='up'?'solveGreen':''"
+                @click="solveClick('up')">
+            <view class="iconfont">&#xe9a2;</view>
+            <view>已解决</view>
+          </view>
+        </uni-col>
+        <uni-col :span="12"
+                 class="solve-col">
+          <view class="solve"
+                :class="solve=='down'?'solveGreen':''"
+                @click="solveClick('down')">
+            <view class="iconfont">&#xe9a4;</view>
+            <view>未解决</view>
+          </view>
+        </uni-col>
+      </uni-row>
+    </view>
   </view>
 </template>
 
@@ -55,8 +58,21 @@ export default {
 page {
   background-color: #f5f5f5;
 }
+.head {
+  position: fixed;
+  top: 0;
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
+  font-size: 20px;
+  font-weight: 800;
+  width: 100%;
+  background: #ececec;
+  z-index: 99;
+}
 .particular-box {
   padding: 0 15px;
+  padding-top: 40px;
   background-color: #fff;
 }
 .title {

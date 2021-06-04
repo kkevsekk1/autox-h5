@@ -1,5 +1,6 @@
 <template>
   <view>
+    <view class="head">帮助中心</view>
     <view v-for="(helpCenterData,index) in helpCenterDataList"
           :key="index"
           @click="seekParticular(helpCenterData.title,helpCenterData.content)"
@@ -48,12 +49,25 @@ export default {
 page {
   background-color: #f5f5f5;
 }
+.head {
+  position: fixed;
+  top: 0;
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
+  font-size: 20px;
+  font-weight: 800;
+  width: 100%;
+  background: #ececec;
+  z-index: 99;
+}
 .helpCenterTitle {
   position: relative;
+  top: 40px;
   margin: 3px 0;
   padding-left: 15px;
-  height: 50px;
-  line-height: 50px;
+  height: 60px;
+  line-height: 60px;
   font-size: 16px;
   background: #fff;
 }
