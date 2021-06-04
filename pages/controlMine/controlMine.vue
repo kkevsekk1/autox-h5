@@ -70,12 +70,25 @@ export default {
         {
           type: "recommend",
           imgPath: "../../static/share.png",
-          functionName: "推荐朋友"
+          functionName: "推荐朋友",
+          content: " 邀请你注册Autoxjs ，请在浏览器中打开地址 http://www.autoxjs.com/"
+        },
+        {
+          type: "recommend",
+          imgPath: "../../static/share.png",
+          functionName: "推荐下载",
+          content: " 最新Autoxjs下载地址， http://120.25.164.233:8080/appstore/app/20210524111935.apk"
         },
         {
           type: "externalLinks",
           imgPath: "../../static/downloadApp.png",
-          functionName: "下载更新",
+          functionName: "下载autoJs",
+          path: "http://120.25.164.233:8080/appstore/app/20210524111935.apk"
+        },
+        {
+          type: "externalLinks",
+          imgPath: "../../static/downloadApp.png",
+          functionName: "下载知斗云",
           path: "http://120.25.164.233:8080/appstore/app/20210524111935.apk"
         },
         {
@@ -93,7 +106,7 @@ export default {
         {
           type: "internalLinks",
           imgPath: "../../static/extractAb.png",
-          functionName: "提现A币"
+          functionName: "A币申请退货"
         },
         {
           type: "internalLinks",
@@ -111,7 +124,6 @@ export default {
       this.then.forEach(element => {
         if (element.type === 'recommend') {
           element.code = this.mineData.code
-          element.content = "推荐好友拿************"
         }
         this.functionDataList.push(element)
       });
