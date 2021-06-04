@@ -10,14 +10,10 @@
     <uni-popup ref="popup"
                type="center">
       <view class="list">
-        <view>地址已复制</view>
+        <view>内容已复制</view>
         <textarea v-model="functionData.content" />
-        <view> <img src="../../static/btn_skip.png"
+        <view @click="closePopup"> <img src="../../static/btn_skip.png"
                alt=""> </view>
-      </view>
-      <view class="close"
-            @click="closePopup"><img src="../../static/closePopup.png"
-             alt="">
       </view>
     </uni-popup>
   </view>
@@ -103,14 +99,6 @@ export default {
   width: 200px;
 }
 .list view:nth-child(3) img {
-  width: 100%;
-}
-.close {
-  width: 40px;
-  margin: 0 auto;
-  margin-top: 35px;
-}
-.close img {
   width: 100%;
 }
 </style>
