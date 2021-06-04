@@ -2,29 +2,35 @@
   <view @click="pitchOn">
     <view class="nav-type">
       <view>
-        <img :src="appData.imgPath"
+        <img :src="functionData.imgPath"
              alt="">
       </view>
-      <view> {{appData.appName}} </view>
+      <view> {{functionData.functionName}} </view>
     </view>
   </view>
 </template>
 
 <script>
 export default {
-  props: {
-    appData: {
-      id: String || Number,
-      imgPath: String,
-      appName: String,
-      path: String
+  data () {
+    return {
+      externalLinks: "/pages/externalLinks/externalLinks"
     }
   },
+  props: ["functionData"],
   methods: {
     pitchOn () {
-      uni.navigateTo({
-        url: this.appData.path
-      })
+      let { type, path, externalPath } = this.functionData
+      if (type === "internalLinks") {
+        uni.navigateTo({
+          url: path
+        })
+      }
+      if (type === "externalLinks") {
+        uni.navigateTo({
+          url: this.externalLinks + "?externalPath=" + externalPath + "&path=" + path
+        })
+      }
     }
   }
 }

@@ -20,7 +20,7 @@
         <uni-col :span="5"
                  class="role"
                  style="padding-top:10px">
-          <text> {{mineData.role}} </text>
+          <text style="float:right"> {{mineData.role}} </text>
         </uni-col>
       </uni-row>
       <uni-row class="money">
@@ -36,10 +36,10 @@
         <uni-col :xs="8"
                  :sm="6"
                  :md="4"
-                 v-for="appData in appDataList"
-                 :key="appData.id">
-          <open-app :appData="appData"
-                    class="nav-list-number"> </open-app>
+                 v-for="(functionData,index) in functionDataList"
+                 :key="index">
+          <functionItem :functionData="functionData"
+                        class="nav-list-number"> </functionItem>
         </uni-col>
       </uni-row>
     </view>
@@ -51,49 +51,54 @@
 
 <script>
 import { request } from '../../server/request.js';
-import openApp from "./openApp"
+import functionItem from "./functionItem"
 export default {
   components: {
-    openApp
+    functionItem
   },
   data () {
     return {
       mineData: '',
       logoImg: "../../static/portrait.png",
-      externalPath: "http://120.25.164.233:8080/appstore/app/20210524111935.apk",
-      appDataList: [
+      functionDataList: [
         {
-          id: "1",
+          type: "internalLinks",
           imgPath: "../../static/buy.png",
-          appName: "购买A币"
+          functionName: "购买A币"
         },
         {
-          id: "2",
+          type: "internalLinks",
           imgPath: "../../static/share.png",
-          appName: "推荐朋友"
+          functionName: "推荐朋友"
         },
         {
-          id: "3",
+          type: "externalLinks",
           imgPath: "../../static/downloadApp.png",
-          appName: "下载更新",
-          path: "",
+          functionName: "下载更新",
+          path: this.$route.path,
+          externalPath: "http://120.25.164.233:8080/appstore/app/20210524111935.apk"
         },
         {
-          id: "4",
+          type: "internalLinks",
           imgPath: "../../static/appControl.png",
-          appName: "应用商店",
+          functionName: "应用商店",
           path: "/pages/feature/index"
         },
         {
-          id: "5",
+          type: "internalLinks",
           imgPath: "../../static/material.png",
-          appName: "管理素材",
+          functionName: "管理素材",
           path: "/pages/material/index"
         },
         {
-          id: "6",
+          type: "internalLinks",
           imgPath: "../../static/extractAb.png",
-          appName: "提现A币"
+          functionName: "提现A币"
+        },
+        {
+          type: "internalLinks",
+          imgPath: "../../static/helpCenter.png",
+          functionName: "帮助中心"
         }
       ]
     }
@@ -102,13 +107,6 @@ export default {
     this.getMineData()
   },
   methods: {
-    downloadPath () {
-      this.appDataList.forEach(element => {
-        if (element.id == "3") {
-          element.path = "/pages/externalLinks/externalLinks?externalPath=" + this.externalPath + "&path=" + this.$route.path
-        }
-      });
-    },
     getMineData () {
       request({
         url: '/auth/userInfoApp',
@@ -126,7 +124,6 @@ export default {
               role: role,
               balance: balance
             }
-            this.downloadPath()
           }
         })
     },
