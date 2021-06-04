@@ -54,20 +54,21 @@ import { request } from '../../server/request.js';
 import functionItem from "./functionItem"
 export default {
   components: {
-    functionItem
+    functionItem,
   },
   data () {
     return {
       mineData: '',
       logoImg: "../../static/portrait.png",
-      functionDataList: [
+      functionDataList: [],
+      then: [
         {
           type: "internalLinks",
           imgPath: "../../static/buy.png",
           functionName: "购买A币"
         },
         {
-          type: "internalLinks",
+          type: "recommend",
           imgPath: "../../static/share.png",
           functionName: "推荐朋友"
         },
@@ -106,6 +107,15 @@ export default {
     this.getMineData()
   },
   methods: {
+    getFunctionData () {
+      this.then.forEach(element => {
+        if (element.type === 'recommend') {
+          element.code = this.mineData.code
+          element.content = "推荐好友拿************"
+        }
+        this.functionDataList.push(element)
+      });
+    },
     getMineData () {
       request({
         url: '/auth/userInfoApp',
@@ -123,6 +133,7 @@ export default {
               role: role,
               balance: balance
             }
+            this.getFunctionData()
           }
         })
     },
