@@ -89,7 +89,7 @@ export default {
           type: "externalLinks",
           imgPath: "../../static/downloadApp.png",
           functionName: "下载知斗云",
-          path: "http://120.25.164.233:8080/appstore/app/20210524111935.apk"
+          path: "http://120.25.164.233:8080/appstore/app/20210514122227.apk"
         },
         {
           type: "internalLinks",
