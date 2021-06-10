@@ -89,6 +89,16 @@
       }
     },
     {
+      "path": "pages/functionDetails/index",
+      "style": {
+        "navigationBarTitleText": "功能详情",
+        "enablePullDownRefresh": true,
+        "app-plus": {
+          "titleNView": false
+        }
+      }
+    },
+    {
       "path": "pages/material/index",
       "style": {
         "navigationBarTitleText": "素材库",

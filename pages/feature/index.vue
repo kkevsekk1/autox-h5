@@ -57,7 +57,8 @@
             :key="feature.id"
             class="goodsList-nav">
         <feature-item :feature="feature"
-                      @run="run"></feature-item>
+                      @run="run"
+                      @skipDetails="skipDetails"></feature-item>
       </view>
     </view>
   </view>
@@ -126,6 +127,12 @@ export default {
           id + "&path=" + this.$route.path
       })
     },
+    skipDetails (id) {
+      console.log(id)
+      uni.navigateTo({
+        url: "/pages/functionDetails/index?id=" + id
+      })
+    },
     rank (type) {
       this.page.index = 1;
       this.features = [];
@@ -168,6 +175,7 @@ export default {
             list.forEach(element => {
               this.features.push(element)
             });
+            console.log(this.features)
             this.page.pages = pages;
             console.log(this.features[0])
           }

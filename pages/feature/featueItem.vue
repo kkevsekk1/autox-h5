@@ -4,8 +4,10 @@
       <uni-row class="content-top">
         <uni-col :span="12"
                  class="appNameEdition">
-          <view class="appName"> {{feature.name}} </view>
-          <view class="appEdition"> {{feature.scriptVersion}} </view>
+          <view @click="skipDetails">
+            <view class="appName"> {{feature.name}} </view>
+            <view class="appEdition"> {{feature.scriptVersion}} </view>
+          </view>
         </uni-col>
         <uni-col :span="7"
                  class="name">
@@ -31,7 +33,7 @@
       <uni-col :span="7"
                class="run">
         <view class="iconfont">&#xe60a;</view>
-        <view class="runNumber"> {{feature.id}} </view>
+        <view class="runNumber"> {{feature.playCount}} </view>
       </uni-col>
       <uni-col :span="9"
                class="tiem">
@@ -68,6 +70,9 @@ export default {
     run () {
       console.log("item中run", this.feature.id);
       this.$emit('run', this.feature.id);
+    },
+    skipDetails () {
+      this.$emit("skipDetails", this.feature.id)
     }
   }
 }
