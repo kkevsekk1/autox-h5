@@ -121,10 +121,9 @@ export default {
       this.appFiltrate = appName ? appName : "app筛选";
     },
     run (id) {
-      uni.reLaunch({
-        url:
-          "/pages/ykapp/running?entrance=formMenu&id=" +
-          id + "&path=" + this.$route.path
+      console.log(id)
+      uni.navigateTo({
+        url: "/pages/feature/running?id=" + id
       })
     },
     skipDetails (id) {
