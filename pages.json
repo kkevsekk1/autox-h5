@@ -89,9 +89,9 @@
       }
     },
     {
-      "path": "pages/feature/running",
+      "path": "pages/functionDetails/index",
       "style": {
-        "navigationBarTitleText": "准备运行",
+        "navigationBarTitleText": "功能详情",
         "enablePullDownRefresh": true,
         "app-plus": {
           "titleNView": false

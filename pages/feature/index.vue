@@ -56,8 +56,9 @@
       <view v-for=" feature in features"
             :key="feature.id"
             class="goodsList-nav">
-        <feature-item  :feature="feature"
-                      @run="run"></feature-item>
+        <feature-item :feature="feature"
+                      @run="run"
+                      @skipDetails="skipDetails"></feature-item>
       </view>
     </view>
   </view>
@@ -122,7 +123,13 @@ export default {
     run (id) {
       console.log(id)
       uni.navigateTo({
-        url:"/pages/feature/running?id=" +id
+        url: "/pages/feature/running?id=" + id
+      })
+    },
+    skipDetails (id) {
+      console.log(id)
+      uni.navigateTo({
+        url: "/pages/functionDetails/index?id=" + id
       })
     },
     rank (type) {
@@ -167,6 +174,7 @@ export default {
             list.forEach(element => {
               this.features.push(element)
             });
+            console.log(this.features)
             this.page.pages = pages;
             console.log(this.features[0])
           }
