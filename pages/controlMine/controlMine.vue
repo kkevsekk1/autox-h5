@@ -65,7 +65,8 @@ export default {
         {
           type: "internalLinks",
           imgPath: "../../static/buy.png",
-          functionName: "购买A币"
+          functionName: "购买A币",
+          path: "/pages/buyAbi/buyAbi"
         },
         {
           type: "recommend",

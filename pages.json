@@ -89,6 +89,16 @@
       }
     },
     {
+      "path": "pages/feature/running",
+      "style": {
+        "navigationBarTitleText": "试运行",
+        "enablePullDownRefresh": true,
+        "app-plus": {
+          "titleNView": false
+        }
+      }
+    },
+    {
       "path": "pages/functionDetails/index",
       "style": {
         "navigationBarTitleText": "功能详情",
@@ -141,7 +151,7 @@
     {
       "path": "pages/helpCenter/particular",
       "style": {
-        "navigationBarTitleText": "详情页",
+        "navigationBarTitleText": "帮助中心详情页",
         "enablePullDownRefresh": true,
         "app-plus": {
           "titleNView": false
