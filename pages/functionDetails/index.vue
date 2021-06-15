@@ -105,7 +105,7 @@ export default {
             let newTime = new Date(endTime).getTime()
             let oldTime = new Date().getTime()
             let lefttime = newTime - oldTime
-            let leftd = Math.floor(lefttime / (1000 * 60 * 60 * 24))
+            let leftd = Math.floor(lefttime / (1000 * 365 * 24))
             this.empower = {
               endTime: leftd,
               chargeWay: chargeWay,
@@ -116,7 +116,7 @@ export default {
           if (res.data.message === "用户尚未授权该脚本") {
             this.empower.isEmpower = "未授权"
           } else {
-            this.empower.isEmpower = "当前授权:"
+            this.empower.isEmpower = "当前授权："
           }
         })
     },
@@ -128,12 +128,17 @@ export default {
         data: data
       })
         .then(res => {
-          let { code, message } = res.data
-          if (code == 200) {
+          let { message } = res.data
+          if (message == "余额不足") {
             uni.showToast({
-              title: message
+              title: message,
+              icon: "none"
             })
+            return
           }
+          uni.showToast({
+            title: message
+          })
         })
     }
   }

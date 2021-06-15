@@ -2,7 +2,7 @@
   <view>
     <view class="nav-top">
       <uni-row class="content-top">
-        <uni-col :span="12"
+        <uni-col :span="11"
                  class="appNameEdition">
           <view @click="skipDetails">
             <view class="appName"> {{feature.name}} </view>
@@ -14,7 +14,7 @@
           <text class="iconfont iconfontName">&#xef98;</text>
           <text> {{feature.username}} </text>
         </uni-col>
-        <uni-col :span="5">
+        <uni-col :span="6">
           <button class="btn-operation"
                   @click="run">试运行</button>
         </uni-col>

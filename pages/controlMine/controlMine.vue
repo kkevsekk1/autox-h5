@@ -65,7 +65,8 @@ export default {
         {
           type: "internalLinks",
           imgPath: "../../static/buy.png",
-          functionName: "购买A币"
+          functionName: "购买A币",
+          path: "/pages/Abi/buyAbi"
         },
         {
           type: "recommend",
@@ -106,7 +107,8 @@ export default {
         {
           type: "internalLinks",
           imgPath: "../../static/extractAb.png",
-          functionName: "A币申请退货"
+          functionName: "A币申请退货",
+          path: "/pages/Abi/sellAbi"
         },
         {
           type: "internalLinks",

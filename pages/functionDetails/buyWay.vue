@@ -65,10 +65,17 @@
       <view>
         <view class="hasChosen">
           <text class="hasChosen-title">已选规格：</text>
-          <text>{{unitFacility}}台设备，</text>
-          <text> {{unitAbi}}A币/{{unitTime}} </text>
+          <text v-show="checked === 'isFree'">免费</text>
+          <text v-show="checked === 'unitPrice'">
+            <text>按量收费</text>
+            <text style="margin-left:10px;">{{specs.unitPrice}}币/次/台设备</text>
+          </text>
+          <text v-show="checked === 'packages'">
+            <text>{{unitFacility}}台设备，</text>
+            <text> {{unitAbi}}A币/{{unitTime}} </text>
+          </text>
         </view>
-        <view>
+        <view v-show="checked === 'packages'">
           <text class="hasChosen-title"> 数&emsp;&emsp;量：</text>
           <lxc-count @handleCount="handleCountClick"
                      class="lxc-count-calss">
@@ -76,19 +83,20 @@
           <text> {{unitTime}} </text>
         </view>
         <view style="float:right;height:29px;line-height:29px">
-          <text style="margin-right:14px;">共<text style="color:red">{{buyTime*unitAbi}}</text> A币</text>
+          <text v-show="checked === 'packages'"
+                style="margin-right:14px;">共<text style="color:red">{{buyTime*unitAbi}}</text> A币</text>
           <button @click="getEmpower"
                   size="mini"
                   class="btn-Empower">授权</button>
         </view>
       </view>
     </view>
+    <view></view>
   </view>
 </template>
 
 <script>
 import lxcCount from '@/components/lxc-count/lxc-count.vue'
-import { request } from '../../server/request.js';
 export default {
   components: {
     lxcCount
@@ -104,12 +112,7 @@ export default {
       unitAbi: "0",
       unitTime: "天",
       buyTime: "",
-      balance: "",
     }
-  },
-  created () {
-    this.getBalance()
-    console.log(this.empower)
   },
   computed: {
     chargeWay: function () {
@@ -156,19 +159,6 @@ export default {
     radioChange (evt) {
       this.checked = evt.detail.value
     },
-    getBalance () {
-      request({
-        url: '/auth/userInfoApp',
-        method: 'get',
-        data: '',
-      })
-        .then(res => {
-          let { code, data } = res.data
-          if (code == 200) {
-            this.balance = data.balance
-          }
-        })
-    },
     theAmount () {
       this.checked = 'unitPrice'
       this.pitchOn = ''
@@ -211,17 +201,18 @@ export default {
         return null
       }
       if (this.lengthTime || this.checked !== "packages") {
-        if (this.balance >= sum) {
-          this.$emit("buy", data)
-        } else {
-          uni.showToast({
-            title: "余额不足，请充值",
-            icon: "none"
-          })
-        }
+        uni.showModal({
+          title: '提示',
+          content: '是否确定购买？',
+          success: function (res) {
+            if (res.confirm) {
+              this.$emit("buy", data)
+            }
+          }.bind(this)
+        });
       } else {
         uni.showToast({
-          title: "请填写授权时间",
+          title: "请选择购买数量",
           icon: "none"
         })
       }
@@ -276,7 +267,7 @@ export default {
   line-height: 20px;
 }
 .hasChosen {
-  margin: 20px 0;
+  margin-top: 20px;
 }
 .hasChosen-title {
   font-size: 14px;
@@ -296,7 +287,7 @@ export default {
 .lxc-count-calss {
   display: inline-block;
   position: relative;
-  top: 12px;
+  top: 10px;
   margin-right: 5px;
 }
 </style>
