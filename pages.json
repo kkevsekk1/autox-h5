@@ -157,6 +157,26 @@
           "titleNView": false
         }
       }
+    },
+    {
+      "path": "pages/Abi/buyAbi",
+      "style": {
+        "navigationBarTitleText": "购买A币",
+        "enablePullDownRefresh": true,
+        "app-plus": {
+          "titleNView": false
+        }
+      }
+    },
+    {
+      "path": "pages/Abi/sellAbi",
+      "style": {
+        "navigationBarTitleText": "退款A币",
+        "enablePullDownRefresh": true,
+        "app-plus": {
+          "titleNView": false
+        }
+      }
     }
   ],
   "globalStyle": {
