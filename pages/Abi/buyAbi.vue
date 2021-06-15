@@ -4,7 +4,7 @@
          :title="'购买A币'"></sum>
     <view class="payWay">
       <view class="payWay-zfb"
-            @click="payWayType = 'zfb'">
+            @click="payWayTypeZFB">
         <text class="iconfont  payWay-iconfont-left"
               style="color:rgb(6, 180, 253);">&#xe65f;</text>
         <text>支付宝</text>
@@ -12,7 +12,7 @@
               :class="payWayType === 'zfb'?'payWay-iconfont-color':''">&#xe64b;</text>
       </view>
       <view class="payWay-wx"
-            @click="payWayType ='wx'">
+            @click="payWayTypeWX ">
         <text class="iconfont payWay-iconfont-left"
               style="color:rgb(9, 187, 7)">&#xe7e5;</text>
         <text>微信</text>
@@ -52,6 +52,17 @@ export default {
     sumBuyNumber (data) {
       this.buyNumber = data.index
     },
+    payWayTypeZFB () {
+      this.payWayType = 'zfb'
+    },
+    payWayTypeWX () {
+      uni.showToast({
+        title: "目前暂不支持微信支付",
+        icon: "none"
+      })
+      return
+      this.payWayType = 'wx'
+    },
     buy () {
       if (this.buyNumber && this.payWayType) {
         let type = this.payWayType == "zfb" ? '1' : '0'
@@ -60,10 +71,9 @@ export default {
           method: "get"
         })
           .then(res => {
-            if (res.data.code) {
-              uni.showToast({
-                title: "购买成功"
-              })
+            let { code, data } = res.data
+            if (code == 200) {
+              window.location.href = data.url
             }
           })
       }

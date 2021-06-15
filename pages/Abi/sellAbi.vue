@@ -52,13 +52,13 @@
               <view class="account-content-right">
                 <text class="iconfont "
                       :class="index == popupIndex?'account-content-color':''">&#xe64b;</text>
-                <text class="iconfont account-content-delete ">&#xe60b;</text>
+                <text @click.stop="deleteAccount(index)"
+                      class="iconfont account-content-delete ">&#xe60b;</text>
               </view>
             </view>
             <view class="account-content-bottom">
               <text>预计24小时内到账</text>
-              <text style="float:right;margin-right:10px;"
-                    @click.stop="deleteAccount(index)"> {{account.withdrawType}} </text>
+              <text style="float:right;margin-right:10px;"> {{account.withdrawType}} </text>
             </view>
           </view>
           <view style="padding-top:10px"
@@ -227,7 +227,9 @@ export default {
               uni.showToast({
                 title: "订单提交成功"
               })
-              location.reload()
+              setTimeout(() => {
+                location.reload()
+              }, 500)
             }
           })
       }
