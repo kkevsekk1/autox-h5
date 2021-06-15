@@ -82,7 +82,7 @@
         </view>
         <view class="addAccount-row">
           <text class="addAccount-text-name">账号：</text>
-          <input type="number"
+          <input type="text"
                  v-model="addAccount.withdrawAccount">
         </view>
         <view class="addAccount-row">
