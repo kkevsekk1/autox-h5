@@ -71,10 +71,14 @@ export default {
           method: "get"
         })
           .then(res => {
-            let { code, data } = res.data
+            let { code, message, data } = res.data
             if (code == 200) {
               window.location.href = data.url
             }
+            uni.showToast({
+              title: message,
+              icon: "none"
+            })
           })
       }
     }

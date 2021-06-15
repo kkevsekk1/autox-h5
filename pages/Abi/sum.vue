@@ -10,7 +10,7 @@
             v-show="inputNumber">&#xe62f;</text>
     </view>
     <view class="sum-balance"
-          v-show="balance">
+          v-show="balance>=0">
       <text v-show="!isExceed">
         <text>A币余额：{{balance}} </text>
       </text>

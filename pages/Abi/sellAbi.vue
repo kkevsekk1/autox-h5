@@ -222,7 +222,7 @@ export default {
           data: data
         })
           .then(res => {
-            let { code } = res.data
+            let { code, message } = res.data
             if (code == 200) {
               uni.showToast({
                 title: "订单提交成功"
@@ -231,6 +231,10 @@ export default {
                 location.reload()
               }, 500)
             }
+            uni.showToast({
+              title: message,
+              icon: "none"
+            })
           })
       }
     },
