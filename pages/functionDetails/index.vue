@@ -210,17 +210,13 @@ page {
   color: red;
   font-size: 10px;
 }
-.detail {
-  margin-top: 30px;
-}
 .detail-title {
-  margin: 10px 0;
   font-size: 14px;
   font-weight: 700;
 }
 .detail-content {
   word-wrap: break-word;
-  padding: 0 5px;
+  margin: 30px 0px 30px 0px;
   font-size: 12px;
 }
 </style>
