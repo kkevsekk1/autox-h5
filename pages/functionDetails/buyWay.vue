@@ -3,17 +3,20 @@
     <view style="font-size:16px;font-weight:600">授权方式</view>
     <view style="color:#7a7a7a">
       <view class="empower">
-        <view>
+        <view style="color:blue" >
           <text>{{empower.isEmpower}}</text>
           <text v-show="empower.chargeWay=='1'"> 免费 </text>
           <text v-show="empower.chargeWay=='2'">
             {{empower.unitPrice}}币/次/台设备
           </text>
           <text v-show="empower.chargeWay=='3'">
-            {{empower.endTime}}天 ({{empower.deviceCount}}台)
+            {{empower.endTime}} ({{empower.deviceCount}}台)
           </text>
         </view>
       </view>
+       <view >
+         自助择授权方式:
+       </view>
       <radio-group @change="radioChange">
         <view v-show="specs.isFree==='true'"
               @click="checked = 'isFree'">
@@ -54,10 +57,13 @@
         <view class="explain">
           <uni-row v-show="specs.isFree==='false'">
             <uni-col :span="24">升降级提醒: </uni-col>
-            <uni-col :span="24">
-              <view>1.新购设备数小于或等于当前设备，新购规格叠加时间，设备数将以新购为准</view>
-              <view>2.新购设备数大于当前数设备，新购时间不与原时间叠加，视为自动放弃之前的剩余时间</view>
-              <view>3.基于上述建议，一次购买足够的设备数和时间，或者在原授权到期后再升级</view>
+            <uni-col :span="24"  >
+              <view style="padding-left:30px" >
+              <view>1.升级设备数小于或等于当前设备，新升级时间与原剩余时间叠加计算，设备数将以新升级为准</view>
+              <view>2.升级设备数大于当前数设备，新升级时间不与原时间叠加，视为自动放弃之前的剩余时间</view>
+              <view>3.由包年包月，降级为按量，视为自动放弃剩余包年包月时间</view>
+              <view>4.基于上述建议，一次购买足够的设备数和时间，或者在原授权到期后再升级</view>
+              </view>
             </uni-col>
           </uni-row>
         </view>
@@ -203,7 +209,7 @@ export default {
       if (this.lengthTime || this.checked !== "packages") {
         uni.showModal({
           title: '提示',
-          content: '是否确定购买？',
+          content: '确认要自助授权？',
           success: function (res) {
             if (res.confirm) {
               this.$emit("buy", data)
@@ -279,7 +285,6 @@ export default {
   color: #fff;
 }
 .explain {
-  margin-left: 30px;
   margin-top: 5px;
   font-size: 10px;
   color: red;

@@ -34,10 +34,12 @@
     </uni-row>
     <uni-row class="area">
       <uni-col :span="24">
+        <view style="padding-right:8px;" >
         <buy-way v-if="specs&&empower"
                  :empower="empower"
                  :specs="specs"
                  @buy="buy"></buy-way>
+        </view>
       </uni-col>
     </uni-row>
     <uni-row class="area">
@@ -88,6 +90,29 @@ export default {
           }
         })
     },
+    getLeftTime(endTime){
+      console.log(endTime)
+    var nowtime = new Date();  //获取当前时间
+    var lefttime = endTime.getTime() - nowtime.getTime(),  //距离结束时间的毫秒数
+        leftd = Math.floor(lefttime/(1000*60*60*24)),  //计算天数
+        lefth = Math.floor(lefttime/(1000*60*60)%24),  //计算小时数
+        leftm = Math.floor(lefttime/(1000*60)%60),  //计算分钟数
+        lefts = Math.floor(lefttime/1000%60);  //计算秒数
+        var rs ="";
+
+        if(leftd){
+           return leftd + "天";
+        }
+        if(lefth){
+           return lefth + "小时";
+        }
+        if(leftm){
+           return leftm + "分钟";
+        }
+        if(lefts){
+           return lefts + "秒";
+        }
+    },
     getIsEmpower () {
       let data = {
         scriptId: this.$route.query.id,
@@ -102,10 +127,8 @@ export default {
           console.log(res)
           if (code == 200) {
             let { endTime, chargeWay, unitPrice, deviceCount } = data
-            let newTime = new Date(endTime).getTime()
-            let oldTime = new Date().getTime()
-            let lefttime = newTime - oldTime
-            let leftd = Math.floor(lefttime / (1000 * 365 * 24))
+            let leftd = this.getLeftTime(new Date(endTime));
+           leftd='剩余 '+leftd;
             this.empower = {
               endTime: leftd,
               chargeWay: chargeWay,
@@ -140,6 +163,9 @@ export default {
             title: message
           })
         })
+        setTimeout(()=>{
+         location.reload();
+        },3000);
     }
   }
 }
