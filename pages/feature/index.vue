@@ -160,7 +160,7 @@ export default {
     },
     loadFeatures () {
       uni.showLoading({ title: '加载中' });
-      let data = { search: this.search, appName: this.appName, orderBy: this.page.orderBy, index: this.page.index, size: this.page.size };
+      let data = { search: this.search,status:'1', appName: this.appName, orderBy: this.page.orderBy, index: this.page.index, size: this.page.size };
       request({
         url: "/script/list",
         method: "post",
