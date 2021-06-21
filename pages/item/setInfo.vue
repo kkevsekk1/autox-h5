@@ -22,6 +22,12 @@ export default {
     return {
       id:28,
       item:{},
+      datas:[]
+    }
+  },
+  watch: {
+    'item.barcode' () {
+      this.debounce(300,this.loadItems)
     }
   },
   created (optins) {
@@ -33,6 +39,24 @@ export default {
 
   },
   methods: {
+   loadItems () {
+     if(!this.item.barcode){
+       console.log('不允许搜索词为空',this.search,'333')
+       return ;
+     }
+      request({
+        url: '/item/findItems?search='+this.search,
+        method: 'get',
+      }).then((res) => {
+        this.datas=[];
+        const { message, code, data } = res.data
+        if (code === 200) {
+          data.forEach((item) => {
+            this.datas.push(item)
+          })
+        }
+      })
+    },
    loadData () {
       uni.showLoading({
         title: '加载中',
