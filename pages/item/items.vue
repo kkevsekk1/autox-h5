@@ -11,11 +11,14 @@
     </uni-col>
 </uni-row>
 <uni-row class="demo-uni-row">
-    <uni-col :span="24">
+    <uni-col :span="24" v-if="datas.length>0" >
     <view v-for="item,index in datas" :key="index">
-        <view>{{item.name}}</view>
+        <view>{{item.title}}</view>
     </view>
-    </uni-col>
+  </uni-col>
+    <uni-col :span="24" v-if="datas.length==0" >
+        <view style="text-align:center;padding-top:20px;">暂无内容</view>
+  </uni-col>
 </uni-row>
   </view>
 </template>
@@ -44,6 +47,7 @@ export default {
   },
   methods: {
     scanBarcode(){
+        console.log(jssdk)
         this.search="123"
     },
     debounce (wait,fun) {
@@ -55,6 +59,10 @@ export default {
       }, wait)
     },
    loadData () {
+     if(!this.search){
+       console.log('不允许搜索词为空',this.search,'333')
+       return ;
+     }
       uni.showLoading({
         title: '加载中',
       })
@@ -62,18 +70,17 @@ export default {
         url: '/item/findItems?search='+this.search,
         method: 'get',
       }).then((res) => {
+        this.datas=[];
         uni.hideLoading()
         const { message, code, data } = res.data
         if (code === 200) {
-     
           data.forEach((item) => {
             this.datas.push(item)
           })
         }
       })
     },
-  }  
-    
+  }     
 }
 </script>
 

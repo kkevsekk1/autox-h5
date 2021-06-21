@@ -27,6 +27,16 @@
       }
     },
     {
+      "path": "pages/item/setInfo",
+      "style": {
+        "navigationBarTitleText": "设置商品",
+        "enablePullDownRefresh": false,
+        "app-plus": {
+          "titleNView": false
+        }
+      }
+    },
+    {
       "path": "pages/codeRecords/codeRecords",
       "style": {
         "navigationBarTitleText": "扫码记录",
