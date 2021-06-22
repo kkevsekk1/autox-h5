@@ -36,7 +36,7 @@
         <uni-col :xs="8"
                  :sm="6"
                  :md="4"
-                 v-for="(functionData,index) in functionDataList"
+                 v-for="(functionData,index) in then"
                  :key="index">
           <functionItem :functionData="functionData"
                         class="nav-list-number"> </functionItem>
@@ -60,78 +60,14 @@ export default {
     return {
       mineData: '',
       logoImg: "../../static/portrait.png",
-      functionDataList: [],
-      then: [
-        {
-          type: "internalLinks",
-          imgPath: "../../static/buy.png",
-          functionName: "购买A币",
-          path: "/pages/Abi/buyAbi"
-        },
-        {
-          type: "recommend",
-          imgPath: "../../static/share.png",
-          functionName: "推荐朋友",
-          content: " 邀请你注册Autoxjs ，请在浏览器中打开地址 http://www.autoxjs.com/"
-        },
-        {
-          type: "recommend",
-          imgPath: "../../static/share.png",
-          functionName: "推荐下载",
-          content: " 最新Autoxjs下载地址， http://120.25.164.233:8080/appstore/app/20210524111935.apk"
-        },
-        {
-          type: "externalLinks",
-          imgPath: "../../static/downloadApp.png",
-          functionName: "下载autoJs",
-          path: "http://120.25.164.233:8080/appstore/app/20210524111935.apk"
-        },
-        {
-          type: "externalLinks",
-          imgPath: "../../static/downloadApp.png",
-          functionName: "下载知斗云",
-          path: "http://120.25.164.233:8080/appstore/app/20210514122227.apk"
-        },
-        {
-          type: "internalLinks",
-          imgPath: "../../static/appControl.png",
-          functionName: "应用商店",
-          path: "/pages/feature/index"
-        },
-        {
-          type: "internalLinks",
-          imgPath: "../../static/material.png",
-          functionName: "管理素材",
-          path: "/pages/material/index"
-        },
-        {
-          type: "internalLinks",
-          imgPath: "../../static/extractAb.png",
-          functionName: "A币申请退货",
-          path: "/pages/Abi/sellAbi"
-        },
-        {
-          type: "internalLinks",
-          imgPath: "../../static/helpCenter.png",
-          functionName: "帮助中心",
-          path: "/pages/helpCenter/helpCenter"
-        }
-      ]
+      then: [],
     }
   },
   created () {
     this.getMineData()
+    this.getColumn('首页功能')
   },
   methods: {
-    getFunctionData () {
-      this.then.forEach(element => {
-        if (element.type === 'recommend') {
-          element.code = this.mineData.code
-        }
-        this.functionDataList.push(element)
-      });
-      uni.hideLoading()
-    },
     getMineData () {
       uni.showLoading({
         title: '加载中'
@@ -143,6 +79,7 @@ export default {
       })
         .then(res => {
           let { code, data } = res.data
+          uni.hideLoading()
           if (code == 200) {
             let { name, code, balance, role } = data
             role = role == '7' ? '普通用户' : '代理商'
@@ -152,7 +89,6 @@ export default {
               role: role,
               balance: balance
             }
-            this.getFunctionData()
           }
         })
     },
@@ -160,6 +96,27 @@ export default {
       uni.reLaunch({
         url: "/pages/login/login?path=" + this.$route.path
       })
+    },
+    getColumn (name) {
+      request({
+        url: '/program/getByName?name=' + name,
+        method: 'get',
+      })
+        .then(res => {
+          let { code, data } = res.data
+          if (code == 200) {
+            data.children.forEach(element => {
+              let { type, name, content, icon1, icon2 } = element
+              this.then.push({
+                type: type,
+                imgPath: icon1 || icon2,
+                functionName: name,
+                path: content,
+              })
+            })
+            console.log(this.then, "then")
+          }
+        })
     }
   }
 }

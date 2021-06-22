@@ -11,7 +11,7 @@
                type="center">
       <view class="list">
         <view>内容已复制</view>
-        <textarea v-model="functionData.content" />
+        <textarea v-model="functionData.path" />
         <view @click="closePopup"> <img src="../../static/btn_skip.png"
                alt=""> </view>
       </view>
@@ -26,21 +26,20 @@ export default {
   methods: {
     pitchOn () {
       let { type, path } = this.functionData
-      if (type === "internalLinks") {
+      if (type === "内部链接") {
         uni.navigateTo({
           url: path
         })
       }
-      if (type === "externalLinks") {
+      if (type === "外部链接") {
         window.location.href = path
       }
-      if (type === 'recommend') {
+      if (type === '复制功能') {
         this.openPopup()
       }
     },
     openPopup () {
-      setClipboardData(this.functionData.content);
-      console.log(this.functionData.code)
+      setClipboardData(this.functionData.path);
       this.$refs.popup.open();
     },
     closePopup () {

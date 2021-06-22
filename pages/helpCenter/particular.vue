@@ -3,7 +3,7 @@
     <view class="head">详情</view>
     <view class="particular-box">
       <view class="title"> {{title}} </view>
-      <view class="content"> {{content}} </view>
+      <rich-text :nodes="content"></rich-text>
       <uni-row class="feedback">
         <uni-col :span="12"
                  class="solve-col">
