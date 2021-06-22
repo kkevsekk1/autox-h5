@@ -12,10 +12,11 @@
 </template>
 
 <script>
+import { request } from '../../server/request.js';
 export default {
   data () {
     return {
-      helpCenterDataList: ""
+      helpCenterDataList: '',
     }
   },
   created () {
@@ -26,13 +27,17 @@ export default {
       uni.showLoading({
         title: '加载中'
       });
-      uni.request({
-        url: "http://yapi.ar01.cn/mock/85/help/list",
-        success: (res) => {
-          uni.hideLoading()
-          this.helpCenterDataList = res.data
-        }
+      request({
+        url: "/doc/getByType?type=帮助",
+        method: "get"
       })
+        .then(res => {
+          uni.hideLoading()
+          let { code, data } = res.data
+          if (code == 200) {
+            this.helpCenterDataList = data
+          }
+        })
     },
     seekParticular (title, content) {
       let helpCenter = { title: title, content: content }

@@ -142,7 +142,7 @@
       "path": "pages/material/modifyMaterial",
       "style": {
         "navigationBarTitleText": "修改素材",
-        "enablePullDownRefresh": true,
+        "enablePullDownRefresh": false,
         "app-plus": {
           "titleNView": false
         }
@@ -152,7 +152,7 @@
       "path": "pages/controlMine/controlMine",
       "style": {
         "navigationBarTitleText": "云控个人主页",
-        "enablePullDownRefresh": true,
+        "enablePullDownRefresh": false,
         "app-plus": {
           "titleNView": false
         }
@@ -162,7 +162,7 @@
       "path": "pages/helpCenter/helpCenter",
       "style": {
         "navigationBarTitleText": "帮助中心",
-        "enablePullDownRefresh": true,
+        "enablePullDownRefresh": false,
         "app-plus": {
           "titleNView": false
         }
@@ -172,7 +172,7 @@
       "path": "pages/helpCenter/particular",
       "style": {
         "navigationBarTitleText": "帮助中心详情页",
-        "enablePullDownRefresh": true,
+        "enablePullDownRefresh": false,
         "app-plus": {
           "titleNView": false
         }
@@ -182,7 +182,7 @@
       "path": "pages/Abi/buyAbi",
       "style": {
         "navigationBarTitleText": "购买A币",
-        "enablePullDownRefresh": true,
+        "enablePullDownRefresh": false,
         "app-plus": {
           "titleNView": false
         }
@@ -192,7 +192,7 @@
       "path": "pages/Abi/sellAbi",
       "style": {
         "navigationBarTitleText": "退款A币",
-        "enablePullDownRefresh": true,
+        "enablePullDownRefresh": false,
         "app-plus": {
           "titleNView": false
         }
