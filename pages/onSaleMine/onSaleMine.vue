@@ -14,11 +14,17 @@
             {{ mineData.name }}
           </view>
         </uni-col>
-        <!-- <uni-col :span="5"
+        <uni-col :span="5"
                  class="role"
                  style="padding-top: 10px">
           <text style="float: right"> {{ mineData.role }} </text>
-        </uni-col> -->
+        </uni-col>
+      </uni-row>
+      <uni-row class="money">
+        <uni-col :span="24"
+                 class="money-balance">
+          <h2>欢迎使用</h2>
+        </uni-col>
       </uni-row>
     </view>
     <view class="nav">
@@ -52,6 +58,15 @@ export default {
       mineData: '',
       logoImg: '../../static/portrait.png',
       then: [],
+      roles: {
+        1: '管理员',
+        2: '普通用户',
+        3: '服务商',
+        4: '代理1',
+        5: '代理2',
+        6: '代理3',
+        7: '商户',
+      }
     }
   },
   created () {
@@ -66,13 +81,12 @@ export default {
       request({
         url: '/auth/userInfoApp',
         method: 'get',
-        data: '',
       }).then((res) => {
         let { code, data } = res.data
         uni.hideLoading()
         if (code == 200) {
           let { name, code, balance, role } = data
-          role = role == '7' ? '普通用户' : '代理商'
+          role = this.roles[role]
           this.mineData = {
             name: name,
             code: code,

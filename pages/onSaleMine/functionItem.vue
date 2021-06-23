@@ -27,6 +27,7 @@ export default {
     pitchOn () {
       let { type, path } = this.functionData
       if (type === "内部链接") {
+        console.log(path)
         uni.navigateTo({
           url: path
         })
