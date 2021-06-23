@@ -207,16 +207,6 @@
           "titleNView": false
         }
       }
-    },
-    {
-      "path": "pages/controlGoods/index",
-      "style": {
-        "navigationBarTitleText": "管理货品",
-        "enablePullDownRefresh": false,
-        "app-plus": {
-          "titleNView": false
-        }
-      }
     }
   ],
   "globalStyle": {
