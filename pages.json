@@ -197,6 +197,16 @@
           "titleNView": false
         }
       }
+    },
+    {
+      "path": "pages/onSaleMine/onSaleMine",
+      "style": {
+        "navigationBarTitleText": "特价商品个人主页",
+        "enablePullDownRefresh": false,
+        "app-plus": {
+          "titleNView": false
+        }
+      }
     }
   ],
   "globalStyle": {
@@ -233,7 +243,7 @@
         "selectedIconPath": "static/slcMine.png"
       },
       {
-        "pagePath": "pages/controlMine/controlMine",
+        "pagePath": "pages/onSaleMine/onSaleMine",
         "text": "商品列表",
         "iconPath": "static/mine.png",
         "selectedIconPath": "static/slcMine.png"
