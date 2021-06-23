@@ -75,13 +75,17 @@ export default {
         }else{
           this.item.push(item);
         }
+        //添加进购物车
     },
     callBackSetting() {//确定设置
       this.cart.user.code = '客户代码'
       this.cart.uuid = UUID();
       console.log(this.cart.uuid)
+      //初始化购物车
+    
       //继续扫码
       this.scanBarcode();
+      
     },
    async loadInfoByBarcode() {
       uni.showLoading({
