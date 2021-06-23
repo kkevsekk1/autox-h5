@@ -37,6 +37,26 @@
       }
     },
     {
+      "path": "pages/order/orders",
+      "style": {
+        "navigationBarTitleText": "订单",
+        "enablePullDownRefresh": false,
+        "app-plus": {
+          "titleNView": false
+        }
+      }
+    },
+    {
+      "path": "pages/order/preOrder",
+      "style": {
+        "navigationBarTitleText": "扫码出库",
+        "enablePullDownRefresh": false,
+        "app-plus": {
+          "titleNView": false
+        }
+      }
+    },
+    {
       "path": "pages/codeRecords/codeRecords",
       "style": {
         "navigationBarTitleText": "扫码记录",
