@@ -23,7 +23,7 @@
     </uni-row>
     <uni-row v-for="item,index in  cart.items" :key="index" >
       <uni-col >
-        <pre-order-item :item="item" :userType="userType" ></pre-order-item>
+        <pre-order-item :item="item" :userType="userType"></pre-order-item>
       </uni-col>
     </uni-row>
   </view>
@@ -61,14 +61,20 @@ export default {
         
       }else if(rs.length==1){
         //只有1条，加入列表
-        this.cart.items.push(rs[0]);
+        this.addItemToItems(rs[0]);
       }else {
         //商品不存在或没有库存，请先调整库存或入库
+
       }
     },
     addItemToItems(item){//添加商品到商品列表
-      //如果列表中存在
-
+      //如果列表中存在 者增加数量
+        let barItem = this.cart.items.filter(tmpItem =>tmpItem.id ==time.id);
+        if(barItem&&barItem.length>0){
+          barItem.num+=item.num;
+        }else{
+          this.item.push(item);
+        }
     },
     callBackSetting() {//确定设置
       this.cart.user.code = '客户代码'
