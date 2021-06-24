@@ -6,7 +6,7 @@
                class="col-class">
         <view class="title">
           <text>{{ item.title }}</text>
-          <text>（{{ surplusTime }}天）</text>
+          <text>（{{ item.surplusDays }}天）</text>
           <view class="iconfont icon-delete"
                 @click="deleteItem">&#xe62f;</view>
         </view>
@@ -24,7 +24,7 @@
       </uni-col>
       <uni-col :span="8"
                class="col-class">
-        <text style="color: red">单价：{{ univalence }}</text>
+        <text style="color: red">单价：{{ item.univalence }}</text>
       </uni-col>
     </uni-row>
     <uni-row>
@@ -37,6 +37,7 @@
                    style="  position: relative">
             <lxc-count @handleCount="handleCountClick"
                        class="lxc-count"
+                       :max="item.surplusStock"
                        :value="item.num"
                        :delayed="100">
             </lxc-count>
@@ -59,40 +60,10 @@ export default {
     lxcCount
   },
   props: ['item', 'userType',],
-  computed: {
-    univalence () {
-      let univalences = {
-        普通: 'sellingPrice',
-        会员: 'vipPrice',
-        代理: 'proxyPrice',
-      }
-      return this.item[univalences[this.userType]] || ''
-    },
-    surplusTime () {
-      if (!this.item.endTime) {
-        return
-      }
-      let now = new Date()
-      let date = this.item.endTime.slice(0, 10)
-      let until = new Date(date)
-      let days = (until - now) / 1000 / 3600 / 24 + 1
-      return Math.floor(days)
-    },
-    sum () {
-      let sum = this.item.num * this.univalence
-      this.subtotal(sum)
-      return sum
-    },
-  },
   data () {
-    return {}
-  },
-  watch: {
-    'item.num' () {
-      if (Number(this.item.num) > Number(this.item.surplusStock)) {
-        this.item.num = ''
-      }
-    },
+    return {
+      sum: 0
+    }
   },
   methods: {
     deleteItem () {
@@ -107,6 +78,7 @@ export default {
     },
     handleCountClick (val) {
       this.item.num = val
+      this.sum = this.item.num * this.item.univalence
     }
   }
 }
