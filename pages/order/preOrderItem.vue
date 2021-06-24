@@ -78,7 +78,7 @@ export default {
     }
   },
   watch: {
-    purchaseNumber () {
+    'item.purchaseNumber' () {
       if (Number(this.item.purchaseNumber) > Number(this.item.surplusStock)) {
         this.item.purchaseNumber = ''
       }
@@ -93,9 +93,7 @@ export default {
         id: this.item.id,
         sum: sum
       }
-      if (sum) {
-        this.$emit("subtotal", data)
-      }
+      this.$emit("subtotal", data)
     }
   }
 }
