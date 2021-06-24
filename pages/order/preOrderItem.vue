@@ -6,6 +6,7 @@
                class="col-class">
         <view class="title">
           <text>{{ item.title }}</text>
+          <text>（{{ surplusTime }}天）</text>
           <view class="iconfont icon-delete"
                 @click="deleteItem">&#xe62f;</view>
         </view>
@@ -27,19 +28,15 @@
       </uni-col>
     </uni-row>
     <uni-row>
-      <uni-col :span="8"
-               class="col-class">
-        <text>剩余：{{ surplusTime }} 天</text>
-      </uni-col>
-      <uni-col :span="8"
-               class="col-class">
+      <uni-col :span="16"
+               class="col-class"
+               style="margin-top:5px">
         <uni-row>
           <uni-col :span="10"> 数量： </uni-col>
           <uni-col :span="14"
                    style="  position: relative">
             <lxc-count @handleCount="handleCountClick"
                        class="lxc-count"
-                       style="transform: scale(0.7);"
                        :value="item.num"
                        :delayed="100">
             </lxc-count>
@@ -48,7 +45,7 @@
       </uni-col>
       <uni-col :span="8"
                class="col-class"
-               style="padding-left: 5px;">
+               style="padding-left: 5px;margin-top:5px">
         <text>小计：{{ sum }} 元</text>
       </uni-col>
     </uni-row>
@@ -61,7 +58,7 @@ export default {
   components: {
     lxcCount
   },
-  props: ['item', 'userType'],
+  props: ['item', 'userType',],
   computed: {
     univalence () {
       let univalences = {
@@ -144,7 +141,7 @@ export default {
 }
 .lxc-count {
   position: absolute;
-  top: -8px;
-  left: -25px;
+  top: -4px;
+  left: -49px;
 }
 </style>

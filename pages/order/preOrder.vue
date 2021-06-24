@@ -56,8 +56,28 @@
     <!-- 弹窗 -->
     <uni-popup ref="popup"
                type="center">
-      <view>132113</view>
-      <view></view>
+      <view>
+        <uni-easyinput v-model="search"
+                       style="background-color: #fff"
+                       placeholder="请输入内容"></uni-easyinput>
+      </view>
+      <view>
+        <uni-row v-for="item,index in  cart.items"
+                 :key="index">
+
+          <uni-col :span="6">
+            <img src=""
+                 alt="">
+          </uni-col>
+          <uni-col :span="18">
+            <view> {{item.title}} </view>
+            <view>{{item.subTitle}}</view>
+            <view>剩余：{{ surplusTime }} 天</view>
+            <view> 库存： {{ item.surplusStock }}{{ item.unit }}</view>
+            <text style="color: red">单价：{{ univalence }}</text>
+          </uni-col>
+        </uni-row>
+      </view>
       <button @click="$refs.popup.close()">取消</button>
     </uni-popup>
   </view>
@@ -72,6 +92,7 @@ export default {
   data () {
     return {
       sum: "",
+      surplusTime: "",
       search: '',
       userType: '普通',
       index: 0,
@@ -84,6 +105,18 @@ export default {
         items: [{}],
       },
     }
+  },
+  computed: {
+    surplusTime () {
+      if (!this.item.endTime) {
+        return
+      }
+      let now = new Date()
+      let date = this.item.endTime.slice(0, 10)
+      let until = new Date(date)
+      let days = (until - now) / 1000 / 3600 / 24 + 1
+      return Math.floor(days)
+    },
   },
   created () {
     this.datas()
@@ -102,23 +135,24 @@ export default {
         })
     },
     scanBarcode () {
-      // if (!this.cart.user.code) {
-      //   alert('弹出出库单，设置信息')
-      //   return
-      // }
+      if (!this.cart.user.code) {
+        this.$refs.popup.open()
+
+        // alert('弹出出库单，设置信息')
+        return
+      }
       this.search = '2'
       //加载商品信息
       let rs = this.loadInfoByBarcode();
       //如果扫码查询结果 大于1 提供选择界面
+      console.log(rs)
       if (rs.length > 1) {
-        console.log("12")
-        this.$refs.popup.open()
+
       } else if (rs.length == 1) {
         //只有1条，加入列表
         this.addItemToItems(rs[0]);
       } else {
         //商品不存在或没有库存，请先调整库存或入库
-
       }
     },
     addItemToItems (item) {//添加商品到商品列表
