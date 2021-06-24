@@ -225,6 +225,7 @@
 //进入界面1.根据id 加载商品，--不选规格
 import { request } from '../../server/request.js'
 import { formatTime } from '../../utils/format.js'
+import { isWx } from '../../utils/weixinCheck.js'
 export default {
   data() {
     const currentDate = this.getDate({
@@ -298,7 +299,22 @@ export default {
     },
     scanBarcode() {
       console.log(jssdk)
+         if (isWx()) {
+       let _this =this; 
+        jssdk.scanQRCode({
+          needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+          scanType: ['qrCode', 'barCode'], // 可以指定扫二维码还是一维码，默认二者都有
+          success: function (res) {
+            var result = res.resultStr // 当needResult 为 1 时，扫码返回的结果
+            _this.item.barcode =result; 
+          },
+          fail: function (error) {
+            uni.showToast({ title: error, icon: 'none' })
+          },
+        })
+      } else {
       this.item.barcode = '2'
+      }
     },
     loadItems() {
       request({
