@@ -1,20 +1,18 @@
 <template>
   <view style="padding:8px">
-    <view class="row-class">
-      <uni-row class="demo-uni-row "
-               :gutter=20>
+      <uni-row class="row-class">
         <uni-col :span="4"
                  class="title">
           条码：
         </uni-col>
-        <uni-col :span="15">
+        <uni-col :span="12">
           <view>
             <uni-easyinput v-model="item.barcode"
                            style="background-color:#fff"
                            placeholder="请输入内容"></uni-easyinput>
           </view>
         </uni-col>
-        <uni-col :span="5"
+        <uni-col :span="6"
                  style="text-align:left;">
           <button class="mini-btn"
                   style="background-color:#409eff;float:right;margin-top:3px;"
@@ -23,53 +21,53 @@
                   @click="scanBarcode">扫码</button>
         </uni-col>
       </uni-row>
-    </view>
     <view class="row-class">
       <uni-row>
         <uni-col :span="4"
                  class="title">
           品名：
         </uni-col>
-        <uni-col :span="15">
+        <uni-col :span="12">
           <uni-easyinput v-model="item.title"
                          style="background-color:#fff"
                          placeholder="请输入品名"></uni-easyinput>
         </uni-col>
       </uni-row>
     </view>
-    <view class="row-class">
-      <uni-row>
+      <uni-row  >
         <uni-col :span="4"
                  class="title">
           规格：
         </uni-col>
-        <uni-col :span="15">
-          <uni-easyinput v-model="item.subtitle"
+        <uni-col :span="12">
+          <uni-easyinput v-model="item.subTitle"
                          style="background-color:#fff"
                          placeholder="请输入规格"></uni-easyinput>
         </uni-col>
-        <uni-col :span="4">
-          <view class="drop-down-icon">
-            <view class="iconfont">&#xe603;</view>
-          </view>
+        <uni-col  :span="8" class="title">
+          <picker @change="allItemSpecBindPickerChange"
+                  :value="index"
+                  :range="allItemSpecs"
+                  class="title">
+            <view style="font-size:14px">选择其他规格</view>
+            <text class="iconfont popup-icon">&#xe603;</text>
+          </picker>
         </uni-col>
       </uni-row>
-    </view>
-    <view class="row-class">
-      <uni-row>
+      <uni-row class="row-class">
         <uni-col :span="4"
                  class="title">
           效期：
         </uni-col>
-        <uni-col :span="12"
+        <uni-col :span="8"
                  class="title">
           <picker mode="date"
-                  :value="date"
+                  :value="itemEndDate"
                   :start="startDate"
                   :end="endDate"
                   @change="bindDateChange"
                   class="picker">
-            <view class="uni-input">{{date}}</view>
+            <view class="uni-input">{{itemEndDate}}</view>
             <text class="iconfont popup-icon">&#xe603;</text>
           </picker>
         </uni-col>
@@ -80,17 +78,15 @@
         </uni-col>
         <uni-col :span="4">
           <picker @change="bindPickerChangeTime"
-                  :value="timeIndex"
+                  :value="itemSurplusDays-1"
                   :range="timeArray"
                   class="title">
-            <view style="font-size:14px">{{surplusTime}}天</view>
+            <view style="font-size:14px">{{itemSurplusDays}}</view>
             <text class="iconfont popup-icon">&#xe603;</text>
           </picker>
         </uni-col>
       </uni-row>
-    </view>
-    <view class="row-class">
-      <uni-row>
+      <uni-row class="row-class">
         <uni-col :span="4"
                  class="title">
           库存：
@@ -105,15 +101,13 @@
                  style="padding-left:10px;">
           单位：
         </uni-col>
-        <uni-col :span="8">
+        <uni-col :span="4">
           <uni-easyinput v-model="item.unit"
                          style="background-color:#fff"
                          placeholder="请输入单位"></uni-easyinput>
         </uni-col>
       </uni-row>
-    </view>
-    <view class="row-class">
-      <uni-row>
+      <uni-row class="row-class">
         <uni-col :span="4"
                  class="title">
           价格：
@@ -210,14 +204,12 @@
           </uni-row>
         </uni-col>
       </uni-row>
-    </view>
-    <view class="row-class">
-      <uni-row>
+      <uni-row class="row-class">
         <uni-col :span="4"
                  class="title">
           状态：
         </uni-col>
-        <uni-col :span="15">
+        <uni-col :span="12">
           <picker @change="bindPickerChange"
                   :value="index"
                   :range="array"
@@ -227,7 +219,6 @@
           </picker>
         </uni-col>
       </uni-row>
-    </view>
     <view>
       <button size="mini"
               class="popup-save"
@@ -236,6 +227,7 @@
   </view>
 </template>
 <script>
+//进入界面1.根据id 加载商品，--不选规格
 import { request } from '../../server/request.js'
 import { formatTime } from '../../utils/format.js'
 export default {
@@ -249,7 +241,6 @@ export default {
       search: "",
       id: '',
       item: {},
-      datas: [],
       index: '',
       array: ['上架', '下架'],
       arrays: {
@@ -258,16 +249,27 @@ export default {
       },
       timeArray: [],
       timeIndex: "",
+      allItems:[],
+      allItemSpecs:[],
+      itemEndDate:currentDate,
+      itemSurplusDays:0
     }
   },
   watch: {
-    search () {
-      this.debounce(300, this.loadData)
+    'item.barcode' () {
+      this.debounce(300, this.loadItems)
+    },
+    'item.endTime' () {
+     this.itemEndDate =this.item.endTime.slice(0, 10);
+     this.itemSurplusDays = this.surplusDays(new Date(this.item.endTime));
     }
   },
   created () {
     this.id = this.$route.query.id
-    this.loadData()
+    for (let index = 1; index <= 730; index++) {
+      this.timeArray.push(index)
+    }
+    this.loadData();
   },
   computed: {
     startDate () {
@@ -278,27 +280,30 @@ export default {
     }
   },
   methods: {
-    loadItems () {
-      if (!this.item.barcode) {
-        console.log('不允许搜索词为空', this.search, '333')
-        return;
-      }
-      request({
-        url: '/item/findItems?search=' + this.search,
-        method: 'get',
-      }).then((res) => {
-        this.datas = [];
-        const { message, code, data } = res.data
-        if (code === 200) {
-          data.forEach((item) => {
-            this.datas.push(item)
-          })
-        }
-      })
+    allItemSpecBindPickerChange(e){
+     let item =  this.allItems[e.target.value];
+     this.item = item;
     },
     scanBarcode () {
       console.log(jssdk)
-      this.search = "123"
+     this.item.barcode = "2"
+    },
+    loadItems(){
+      request({
+        url: '/item/findItems?search=' + this.item.barcode,
+        method: 'get',
+      }).then((res) => {
+        this.allItems = [];
+        const { message, code, data } = res.data
+        if (code === 200) {
+          console.log(data);
+          data.forEach((item) => {
+            this.allItems.push(item);
+            let spec ="效期："+this.dateFormatStr(new Date(item.endTime))+",  规格："+item.subTitle 
+            this.allItemSpecs.push(spec);
+          })
+        }
+      })
     },
     loadData () {
       uni.showLoading({
@@ -311,13 +316,8 @@ export default {
         uni.hideLoading()
         const { message, code, data } = res.data
         if (code === 200) {
-          for (let index = 1; index <= 730; index++) {
-            this.timeArray.push(index)
-          }
-          this.date = data.endTime.slice(0, 10)
           this.index = data.status
-          this.item = data;
-          this.surplusDate()
+          this.item =data
         }
       })
     },
@@ -333,27 +333,35 @@ export default {
       this.index = e.target.value
     },
     bindDateChange: function (e) {
-      this.date = e.target.value
-      this.surplusDate()
+    let date = e.target.value
+     this.item.endTime =  date+' 00:00:00' 
+     console.log(this.item.endTime);
     },
-    surplusDate () {
+    surplusDays (date) {
       let now = new Date()
-      let until = new Date(this.date)
+      let until = new Date(date)
       let days = ((until - now) / 1000 / 3600 / 24) + 1;
-      this.surplusTime = Math.floor(days);
-      this.timeIndex = this.surplusTime - 1
+       let surplusTime = Math.floor(days);
+      return surplusTime;
     },
     getDate (type) {
       const date = new Date();
       let year = date.getFullYear();
       let month = date.getMonth() + 1;
       let day = date.getDate();
-
       if (type === 'start') {
         year = year - 60;
       } else if (type === 'end') {
         year = year + 2;
       }
+      month = month > 9 ? month : '0' + month;;
+      day = day > 9 ? day : '0' + day;
+      return `${year}-${month}-${day}`;
+    },
+    dateFormatStr(date){
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      let day = date.getDate();
       month = month > 9 ? month : '0' + month;;
       day = day > 9 ? day : '0' + day;
       return `${year}-${month}-${day}`;
@@ -365,7 +373,7 @@ export default {
         id: this.id,
         barcode: item.barcode,
         title: item.title,
-        subtitle: item.subtitle,
+        subTitle: item.subTitle,
         endTime: this.date,
         totalStock: Number(item.surplusStock),
         unit: item.unit,
@@ -401,15 +409,8 @@ export default {
       return m < 10 ? '0' + m : m
     },
     bindPickerChangeTime (e) {
-      this.surplusTime = this.timeArray[e.target.value]
-      let now = this.surplusTime * 24 * 3600 * 1000
-      let until = new Date().getTime()
-      let days = now + until
-      let time = new Date(days);
-      let y = time.getFullYear();
-      let m = time.getMonth() + 1;
-      let d = time.getDate();
-      this.date = y + '-' + this.addTime(m) + '-' + this.addTime(d)
+      let endDate = new Date(new Date().getTime()+ (e.target.value)* 24 * 3600 * 1000);
+      this.item.endTime =  formatTime(endDate);
     }
   }
 }
@@ -432,7 +433,6 @@ export default {
   color: #848484;
 }
 .picker {
-  width: 175px;
   height: 30px;
   padding-left: 5px;
   border-radius: 3px;
