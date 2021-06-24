@@ -56,7 +56,7 @@
     <!-- 弹窗 -->
     <uni-popup ref="popup"
                type="center">
-      <view></view>
+      <view>132113</view>
       <view></view>
       <button @click="$refs.popup.close()">取消</button>
     </uni-popup>
@@ -102,10 +102,10 @@ export default {
         })
     },
     scanBarcode () {
-      if (!this.cart.user.code) {
-        alert('弹出出库单，设置信息')
-        return
-      }
+      // if (!this.cart.user.code) {
+      //   alert('弹出出库单，设置信息')
+      //   return
+      // }
       this.search = '2'
       //加载商品信息
       let rs = this.loadInfoByBarcode();
@@ -201,6 +201,7 @@ page {
   box-sizing: border-box;
   line-height: 40px;
   background-color: #fff;
+  z-index: 999;
 }
 .popup-icon {
   position: absolute;

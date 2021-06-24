@@ -35,8 +35,11 @@
                class="col-class">
         <uni-row>
           <uni-col :span="10"> 数量： </uni-col>
-          <uni-col :span="14">
+          <uni-col :span="14"
+                   style="  position: relative">
             <lxc-count @handleCount="handleCountClick"
+                       class="lxc-count"
+                       style="transform: scale(0.7);"
                        :value="item.num"
                        :delayed="100">
             </lxc-count>
@@ -44,7 +47,8 @@
         </uni-row>
       </uni-col>
       <uni-col :span="8"
-               class="col-class">
+               class="col-class"
+               style="padding-left: 5px;">
         <text>小计：{{ sum }} 元</text>
       </uni-col>
     </uni-row>
@@ -132,10 +136,15 @@ export default {
   color: rgb(212, 76, 76);
 }
 .content {
-  font-size: 14px;
   margin-top: 10px;
 }
 .col-class {
+  font-size: 14px;
   margin-bottom: 5px;
+}
+.lxc-count {
+  position: absolute;
+  top: -8px;
+  left: -25px;
 }
 </style>
