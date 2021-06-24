@@ -1,76 +1,86 @@
 <template>
   <view>
     <view class="head">
-      <uni-row class="demo-uni-row "
-               :gutter=20>
+      <uni-row class="demo-uni-row" :gutter="20">
         <uni-col :span="18">
           <view>
-            <uni-easyinput v-model="search"
-                           style="background-color:#fff"
-                           placeholder="请输入内容"></uni-easyinput>
+            <uni-easyinput
+              v-model="search"
+              style="background-color: #fff"
+              placeholder="请输入内容"
+            ></uni-easyinput>
           </view>
         </uni-col>
-        <uni-col :span="6"
-                 style="text-align:left;">
-          <button class="mini-btn"
-                  style="background-color:#409eff;float:right;margin-top:5px;"
-                  type="primary"
-                  size="mini"
-                  @click="scanBarcode">扫码</button>
+        <uni-col :span="6" style="text-align: left">
+          <button
+            class="mini-btn"
+            style="background-color: #409eff; float: right; margin-top: 5px"
+            type="primary"
+            size="mini"
+            @click="scanBarcode"
+          >
+            扫码
+          </button>
         </uni-col>
       </uni-row>
     </view>
     <uni-row class="demo-uni-row content">
-      <uni-col :span="24"
-               v-if="datas.length>0">
-        <view v-for="item,index in datas"
-              :key="index">
-          <item-single :item="item"
-                       class="item-single"
-                       @popupRepertory="popupRepertory"
-                       @setItem=" setItem"></item-single>
+      <uni-col :span="24" v-if="datas.length > 0">
+        <view v-for="(item, index) in datas" :key="index">
+          <item-single
+            :item="item"
+            class="item-single"
+            @popupRepertory="popupRepertory"
+            @setItem="setItem"
+          ></item-single>
         </view>
       </uni-col>
-      <uni-col :span="24"
-               v-if="datas.length==0">
-        <view style="text-align:center;padding-top:20px;">暂无内容</view>
+      <uni-col :span="24" v-if="datas.length == 0">
+        <view style="text-align: center; padding-top: 20px">暂无内容</view>
       </uni-col>
     </uni-row>
     <!-- 库存弹窗 -->
-    <uni-popup ref="popup"
-               type="center">
+    <uni-popup ref="popup" type="center">
       <view class="popupRepertory">
         <view class="popup-title">库存设置</view>
         <view class="popup-content">
           <view class="popup-nav">
             <text>库存：</text>
-            <input type='number'
-                   v-model="itemSingle.surplusStock"
-                   placeholder-style="font-size:14px"
-                   placeholder="请输入数量" />
-            <text style="margin-left:5px"> {{itemSingle.unit}} </text>
+            <input
+              type="number"
+              v-model="itemSingle.surplusStock"
+              placeholder-style="font-size:14px"
+              placeholder="请输入数量"
+            />
+            <text style="margin-left: 5px"> {{ itemSingle.unit }} </text>
           </view>
           <view class="popup-nav">
             <text>状态：</text>
-            <picker @change="bindPickerChange"
-                    :value="index"
-                    :range="array"
-                    class="picker">
-              <view style="font-size:14px">{{array[index]}}</view>
+            <picker
+              @change="bindPickerChange"
+              :value="index"
+              :range="array"
+              class="picker"
+            >
+              <view style="font-size: 14px">{{ array[index] }}</view>
               <text class="iconfont popup-icon">&#xe603;</text>
             </picker>
           </view>
         </view>
         <uni-row>
           <uni-col :span="12">
-            <button size="mini"
-                    style="float:right;margin-right:10px"
-                    @click="$refs.popup.close()">取消</button>
+            <button
+              size="mini"
+              style="float: right; margin-right: 10px"
+              @click="$refs.popup.close()"
+            >
+              取消
+            </button>
           </uni-col>
           <uni-col :span="12">
-            <button size="mini"
-                    class="popup-save"
-                    @click="saveRepertory">保存</button>
+            <button size="mini" class="popup-save" @click="saveRepertory">
+              保存
+            </button>
           </uni-col>
         </uni-row>
       </view>
@@ -81,9 +91,10 @@
 import { request } from '../../server/request.js'
 import itemSingle from './itemSingle '
 import { formatTime } from '../../utils/format.js'
+import { isWx } from '../../utils/weixinCheck.js'
 export default {
   components: { itemSingle },
-  data () {
+  data() {
     return {
       search: '',
       datas: [],
@@ -92,42 +103,56 @@ export default {
       index: '',
       array: ['上架', '下架'],
       arrays: {
-        '上架': '0',
-        '下架': '1'
+        上架: '0',
+        下架: '1',
       },
-      itemSingle: "",
+      itemSingle: '',
       orderby: '',
       searchText: '',
-      type: "",
+      type: '',
       statuss: {
         0: '已上架',
         1: '已下架',
       },
-
     }
   },
   watch: {
-    search () {
+    search() {
       this.debounce(300, this.loadData)
-    }
+    },
   },
   methods: {
-    scanBarcode () {
+    scanBarcode() {
       console.log(jssdk)
-      this.search = "123"
+      if (isWx()) {
+       let _this =this; 
+        jssdk.scanQRCode({
+          needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+          scanType: ['qrCode', 'barCode'], // 可以指定扫二维码还是一维码，默认二者都有
+          success: function (res) {
+            var result = res.resultStr // 当needResult 为 1 时，扫码返回的结果
+            _this.search =result; 
+          },
+          fail: function (error) {
+            uni.showToast({ title: error, icon: 'none' })
+          },
+        })
+      } else {
+        this.search = '123'
+      }
     },
-    debounce (wait, fun) {
+    debounce(wait, fun) {
       if (this.timer) {
         clearInterval(this.timer)
       }
       this.timer = setTimeout(() => {
-        fun();
+        fun()
       }, wait)
     },
-    loadData () {
+    loadData() {
       if (!this.search) {
         console.log('不允许搜索词为空', this.search, '333')
-        return;
+        return
       }
       uni.showLoading({
         title: '加载中',
@@ -136,7 +161,7 @@ export default {
         url: '/item/findItems?search=' + this.search,
         method: 'get',
       }).then((res) => {
-        this.datas = [];
+        this.datas = []
         uni.hideLoading()
         const { message, code, data } = res.data
         if (code === 200) {
@@ -150,44 +175,43 @@ export default {
     bindPickerChange: function (e) {
       this.index = e.target.value
     },
-    popupRepertory (data) {
+    popupRepertory(data) {
       this.itemSingle = data
-      this.index = data.status === '已上架' ? 0 : 1;
+      this.index = data.status === '已上架' ? 0 : 1
       this.$refs.popup.open()
     },
-    saveRepertory () {
+    saveRepertory() {
       let data = {
         id: this.itemSingle.id,
         status: this.arrays[this.array[this.index]],
-        totalStock: this.itemSingle.surplusStock
+        totalStock: this.itemSingle.surplusStock,
       }
       request({
-        url: "/item/setStatus",
-        method: "post",
+        url: '/item/setStatus',
+        method: 'post',
         data,
+      }).then((res) => {
+        let { code, message } = res.data
+        if (code == 200) {
+          uni.showToast({
+            title: message,
+          })
+          this.loadData()
+          this.$refs.popup.close()
+        } else {
+          uni.showToast({
+            title: message,
+            icon: 'none',
+          })
+        }
       })
-        .then(res => {
-          let { code, message } = res.data
-          if (code == 200) {
-            uni.showToast({
-              title: message
-            })
-            this.loadData()
-            this.$refs.popup.close()
-          } else {
-            uni.showToast({
-              title: message,
-              icon: "none"
-            })
-          }
-        })
     },
-    setItem (id) {
+    setItem(id) {
       uni.navigateTo({
-        url: "/pages/item/setInfo?id=" + id
+        url: '/pages/item/setInfo?id=' + id,
       })
-    }
-  }
+    },
+  },
 }
 </script>
 
