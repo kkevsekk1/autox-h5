@@ -225,7 +225,7 @@
 //进入界面1.根据id 加载商品，--不选规格
 import { request } from '../../server/request.js'
 import { formatTime } from '../../utils/format.js'
-import { isWx } from '../../utils/weixinCheck.js'
+import isWx  from '../../utils/weixinCheck'
 export default {
   data() {
     const currentDate = this.getDate({

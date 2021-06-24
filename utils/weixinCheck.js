@@ -6,4 +6,4 @@ function getIsWxClient () {
   return false;
 };
 
-export default getIsWxClient();
+export default getIsWxClient;
