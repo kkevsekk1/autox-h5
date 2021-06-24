@@ -237,7 +237,6 @@
 </template>
 <script>
 import { request } from '../../server/request.js'
-import { formatTime } from '../../utils/format.js'
 export default {
   data () {
     const currentDate = this.getDate({
