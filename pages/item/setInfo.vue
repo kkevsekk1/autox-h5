@@ -34,16 +34,13 @@
         </uni-col>
         <uni-col :span="6" class="title">
           <view
-            v-if="isUpdate"
-            style="font-size: 10px; color: red; padding-left: 10px"
-          >
+            v-if="showUpdate"
+            style="font-size: 10px; color: red; padding-left: 10px">
             将修改 ({{ item.id }})
           </view>
-          <view
-            v-if="!isUpdate"
-            style="font-size: 10px; color: green; padding-left: 10px"
-          >
-            将新增
+          <view v-if="!showUpdate"
+            style="font-size: 10px; color: green; padding-left: 10px">
+            将新增品规
           </view>
         </uni-col>
       </uni-row>
@@ -251,6 +248,7 @@ export default {
       itemEndDate: currentDate,
       itemSurplusDays: 0,
       isUpdate: false,
+      showUpdate:false,
       allEndTimes:[]
     }
   },
@@ -263,7 +261,9 @@ export default {
       this.itemSurplusDays = this.surplusDays(new Date(this.item.endTime))
       for (let index = 0; index < this.allEndTimes.length; index++) {
            console.log(this.item.endTime , this.allEndTimes[index]) 
-        if (this.id!=-1&&formatTime(this.item.endTime).slice(0,10) == formatTime(this.allEndTimes[index]).slice(0,10)) {
+           this.showUpdate=false;
+        if (!this.isUpdate&&formatTime(this.item.endTime).slice(0,10) == formatTime(this.allEndTimes[index]).slice(0,10)) {
+          this.showUpdate=true;
           break;
         }
       }
@@ -273,8 +273,10 @@ export default {
     this.id = this.$route.query.id||-1
     if(this.id==-1){
       this.isUpdate=false;
+      this.showUpdate=false; 
     }else{
       this.isUpdate=true;
+      this.showUpdate=true;
     }
     for (let index = 0; index <= 730; index++) {
       this.timeArray.push(index)
@@ -401,7 +403,7 @@ export default {
         originalPrice: Number(item.originalPrice),
         remarkPrice: Number(item.remarkPrice),
         status: Number(item.status),
-        isUpdate:this.isUpdate
+        isUpdate:this.showUpdate
       }
       request({
         url: '/item/addOrUpdate',
