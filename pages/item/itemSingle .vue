@@ -15,14 +15,13 @@
           <uni-col :span="16"
                    style="font-size: 14px;">
             <view> {{ item.subtitle}} / {{item.unit}} </view>
-            <view>剩余：{{item.surplusStock}}{{item.unit}}</view>
-            <view>库存：{{item.totalStock}}{{item.unit}} </view>
+            <view>库存：{{item.surplusStock}}{{item.unit}}</view>
           </uni-col>
           <uni-col :span="8">
             <button size='mini'
                     class="btn-set"
                     style="float:right"
-                    @click="setItem(item.id)">基础</button>
+                    @click="setItem(item.id)">设置</button>
             <button size='mini'
                     class="btn-repertory"
                     style="float:right;margin-top:3px;"
@@ -58,7 +57,7 @@ export default {
     popupRepertory (item) {
       let data = {
         id: item.id,
-        totalStock: item.totalStock,
+        surplusStock: item.surplusStock,
         unit: item.unit,
         status: item.status
       }

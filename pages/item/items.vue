@@ -13,7 +13,7 @@
         <uni-col :span="6"
                  style="text-align:left;">
           <button class="mini-btn"
-                  style="background-color:#409eff;"
+                  style="background-color:#409eff;float:right;margin-top:5px;"
                   type="primary"
                   size="mini"
                   @click="scanBarcode">扫码</button>
@@ -27,9 +27,8 @@
               :key="index">
           <item-single :item="item"
                        class="item-single"
-                       @popupRepertory="popupRepertory"></item-single>
-          <!-- @setItem="setItem" -->
-
+                       @popupRepertory="popupRepertory"
+                       @setItem=" setItem"></item-single>
         </view>
       </uni-col>
       <uni-col :span="24"
@@ -46,7 +45,7 @@
           <view class="popup-nav">
             <text>库存：</text>
             <input type='number'
-                   v-model="itemSingle.totalStock"
+                   v-model="itemSingle.surplusStock"
                    placeholder-style="font-size:14px"
                    placeholder="请输入数量" />
             <text style="margin-left:5px"> {{itemSingle.unit}} </text>
@@ -93,11 +92,10 @@ export default {
       index: '',
       array: ['上架', '下架'],
       arrays: {
-        '上架': 1,
-        '下架': 0
+        '上架': '0',
+        '下架': '1'
       },
       itemSingle: "",
-      page: { index: 1, size: 20, pages: 2 },
       orderby: '',
       searchText: '',
       type: "",
@@ -113,52 +111,7 @@ export default {
       this.debounce(300, this.loadData)
     }
   },
-  created () {
-    this.fetchData();
-  },
-  onReachBottom () {
-    if (this.page.index >= this.page.pages) {
-      uni.showToast({ title: '到底了', iccon: 'none' })
-    } else {
-      this.page.index++
-      this.loadFeatures();
-    }
-  },
-  onPullDownRefresh () {
-    this.page.index = 1;
-    this.features = [];
-    this.loadFeatures();
-    setTimeout(() => {
-      uni.stopPullDownRefresh()
-    }, 1000)
-  },
   methods: {
-    fetchData () {
-      this.datas = []
-      const data = {
-        index: this.page.index,
-        size: this.page.size,
-        orderBy: this.orderby || "id desc",
-        search: this.searchText,
-        fid: this.fid,
-        type: this.type || '-1'
-      };
-      request({
-        url: "/item/items",
-        method: "post",
-        data,
-      })
-        .then(res => {
-          let { code, data: { index, size, pages, list } } = res.data
-          if (code === 200) {
-            this.page = { index: Number(index), size: Number(size), pages: Number(pages), };
-            list.forEach(element => {
-              element.status = this.statuss[element.status]
-            })
-            this.datas = list
-          }
-        })
-    },
     scanBarcode () {
       console.log(jssdk)
       this.search = "123"
@@ -206,7 +159,7 @@ export default {
       let data = {
         id: this.itemSingle.id,
         status: this.arrays[this.array[this.index]],
-        totalStock: this.itemSingle.totalStock
+        totalStock: this.itemSingle.surplusStock
       }
       request({
         url: "/item/setStatus",
@@ -219,14 +172,20 @@ export default {
             uni.showToast({
               title: message
             })
+            this.loadData()
             this.$refs.popup.close()
           } else {
             uni.showToast({
-              titel: message,
+              title: message,
               icon: "none"
             })
           }
         })
+    },
+    setItem (id) {
+      uni.navigateTo({
+        url: "/pages/item/setInfo?id=" + id
+      })
     }
   }
 }
@@ -248,6 +207,7 @@ page {
   padding-top: 55px;
 }
 .item-single {
+  margin-bottom: 10px;
   background-color: #fff;
   padding: 10px;
 }
