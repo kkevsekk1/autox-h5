@@ -30,10 +30,10 @@
             数量：
           </uni-col>
           <uni-col :span="14">
-            <input v-model="item.purchaseNumber"
-                   style="font-size:14px;color:red;"
-                   placeholder-style="font-size:14px;"
-                   placeholder="数量">
+            <lxc-count @handleCount="handleCountClick"
+                       :value="item.num"
+                       :delayed="100">
+            </lxc-count>
           </uni-col>
         </uni-row>
       </uni-col>
@@ -46,7 +46,11 @@
 </template>
 
 <script>
+import lxcCount from '@/components/lxc-count/lxc-count.vue'
 export default {
+  components: {
+    lxcCount
+  },
   props: ['item', 'userType'],
   computed: {
     univalence () {
@@ -68,7 +72,7 @@ export default {
       return Math.floor(days);
     },
     sum () {
-      let sum = this.item.purchaseNumber * this.univalence
+      let sum = this.item.num * this.univalence
       this.subtotal(sum)
       return sum
     }
@@ -78,9 +82,9 @@ export default {
     }
   },
   watch: {
-    'item.purchaseNumber' () {
-      if (Number(this.item.purchaseNumber) > Number(this.item.surplusStock)) {
-        this.item.purchaseNumber = ''
+    'item.num' () {
+      if (Number(this.item.num) > Number(this.item.surplusStock)) {
+        this.item.num = ''
       }
     }
   },
@@ -94,6 +98,9 @@ export default {
         sum: sum
       }
       this.$emit("subtotal", data)
+    },
+    handleCountClick (val) {
+      this.item.num = val
     }
   }
 }

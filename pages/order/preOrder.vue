@@ -96,7 +96,7 @@ export default {
       })
         .then(res => {
           res.data.data.forEach(element => {
-            element.purchaseNumber = ''
+            element.num = 0
           })
           this.cart.items = res.data.data
         })
