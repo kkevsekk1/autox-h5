@@ -91,7 +91,7 @@
 import { request } from '../../server/request.js'
 import itemSingle from './itemSingle '
 import { formatTime } from '../../utils/format.js'
-import { isWx } from '../../utils/weixinCheck.js'
+import isWx  from '../../utils/weixinCheck'
 export default {
   components: { itemSingle },
   data() {

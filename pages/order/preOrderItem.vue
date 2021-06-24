@@ -1,34 +1,40 @@
 <template>
   <view class="preOrderItem">
-    <view class="title">
-      <text>{{item.title}}</text>
-      <view class="iconfont icon-delete"
-            @click="deleteItem">&#xe62f;</view>
-    </view>
-    <uni-row :gutter=20
+    <uni-row :gutter="20"
+             class="content">
+      <uni-col :span="24"
+               class="col-class">
+        <view class="title">
+          <text>{{ item.title }}</text>
+          <view class="iconfont icon-delete"
+                @click="deleteItem">&#xe62f;</view>
+        </view>
+      </uni-col>
+    </uni-row>
+    <uni-row :gutter="20"
              class="content">
       <uni-col :span="8"
                class="col-class">
-        <text>{{item.subTitle}}</text>
+        <text>{{ item.subTitle }}</text>
       </uni-col>
       <uni-col :span="8"
                class="col-class">
-        <text> 库存： {{item.surplusStock}}{{item.unit}}</text>
+        <text> 库存： {{ item.surplusStock }}{{ item.unit }}</text>
       </uni-col>
       <uni-col :span="8"
                class="col-class">
-        <text style="color:red">单价：{{univalence}}</text>
+        <text style="color: red">单价：{{ univalence }}</text>
       </uni-col>
+    </uni-row>
+    <uni-row>
       <uni-col :span="8"
                class="col-class">
-        <text>剩余：{{surplusTime}} 天</text>
+        <text>剩余：{{ surplusTime }} 天</text>
       </uni-col>
       <uni-col :span="8"
                class="col-class">
         <uni-row>
-          <uni-col :span="10">
-            数量：
-          </uni-col>
+          <uni-col :span="10"> 数量： </uni-col>
           <uni-col :span="14">
             <lxc-count @handleCount="handleCountClick"
                        :value="item.num"
@@ -39,7 +45,7 @@
       </uni-col>
       <uni-col :span="8"
                class="col-class">
-        <text>小计：{{sum}} 元</text>
+        <text>小计：{{ sum }} 元</text>
       </uni-col>
     </uni-row>
   </view>
@@ -55,9 +61,9 @@ export default {
   computed: {
     univalence () {
       let univalences = {
-        '普通': 'sellingPrice',
-        '会员': 'vipPrice',
-        '代理': 'proxyPrice',
+        普通: 'sellingPrice',
+        会员: 'vipPrice',
+        代理: 'proxyPrice',
       }
       return this.item[univalences[this.userType]] || ''
     },
@@ -68,25 +74,24 @@ export default {
       let now = new Date()
       let date = this.item.endTime.slice(0, 10)
       let until = new Date(date)
-      let days = ((until - now) / 1000 / 3600 / 24) + 1;
-      return Math.floor(days);
+      let days = (until - now) / 1000 / 3600 / 24 + 1
+      return Math.floor(days)
     },
     sum () {
       let sum = this.item.num * this.univalence
       this.subtotal(sum)
       return sum
-    }
+    },
   },
   data () {
-    return {
-    }
+    return {}
   },
   watch: {
     'item.num' () {
       if (Number(this.item.num) > Number(this.item.surplusStock)) {
         this.item.num = ''
       }
-    }
+    },
   },
   methods: {
     deleteItem () {
@@ -95,7 +100,7 @@ export default {
     subtotal (sum) {
       let data = {
         id: this.item.id,
-        sum: sum
+        sum: sum,
       }
       this.$emit("subtotal", data)
     },

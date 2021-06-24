@@ -102,10 +102,10 @@ export default {
         })
     },
     scanBarcode () {
-      // if (!this.cart.user.code) {
-      //   alert('弹出出库单，设置信息')
-      //   return
-      // }
+      if (!this.cart.user.code) {
+        alert('弹出出库单，设置信息')
+        return
+      }
       this.search = '2'
       //加载商品信息
       let rs = this.loadInfoByBarcode();
