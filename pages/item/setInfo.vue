@@ -81,7 +81,7 @@
                   :value="itemSurplusDays-1"
                   :range="timeArray"
                   class="title">
-            <view style="font-size:14px">{{itemSurplusDays}}</view>
+            <view style="font-size:14px">{{itemSurplusDays}}天</view>
             <text class="iconfont popup-icon">&#xe603;</text>
           </picker>
         </uni-col>
