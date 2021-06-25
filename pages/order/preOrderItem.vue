@@ -59,26 +59,29 @@ export default {
   components: {
     lxcCount
   },
-  props: ['item', 'userType',],
+  props: ['item', 'num'],
   data () {
     return {
-      sum: 0
+      sum: this.item.univalence
+    }
+  },
+  watch: {
+    num () {
+      this.handleCountClick(this.num)
+    },
+    sum () {
+      console.log("999")
     }
   },
   methods: {
     deleteItem () {
       this.$emit('deleteItem', this.item.id)
     },
-    subtotal (sum) {
-      let data = {
-        id: this.item.id,
-        sum: sum,
-      }
-      this.$emit("subtotal", data)
-    },
     handleCountClick (val) {
       this.item.num = val
       this.sum = this.item.num * this.item.univalence
+      this.item.sum = this.sum
+      this.$emit("subtotal")
     }
   }
 }

@@ -16,9 +16,10 @@
                :key="index">
         <uni-col>
           <pre-order-item :item="item"
-                          :userType="userType"
+                          :num='item.num'
                           @deleteItem="deleteItem"
                           @subtotal="subtotal"></pre-order-item>
+
         </uni-col>
       </uni-row>
     </view>
@@ -148,7 +149,6 @@
         </view>
       </view>
     </uni-popup>
-
   </view>
 </template>
 
@@ -180,22 +180,7 @@ export default {
       }
     }
   },
-  created () {
-    // this.datas()
-  },
   methods: {
-    datas () {
-      request({
-        url: '/item/findItems?search=2',
-        method: 'get',
-      })
-        .then(res => {
-          res.data.data.forEach(element => {
-            element.num = 0
-          })
-          this.cartItems = res.data.data
-        })
-    },
     async scanBarcode () {
       if (!this.cart.user.code) {
         this.$refs.popup.open()
@@ -210,7 +195,6 @@ export default {
       console.log(rs, '123')
 
       if (rs.length > 1) {
-        console.log('22')
         this.$refs.popupItems.open()
       } else if (rs.length == 1) {
         //只有1条，加入列表
@@ -231,7 +215,8 @@ export default {
         let targetItem = targetItems[0];
         targetItem.num += item.num;
         this.$set(this.cartItems, index, targetItem);
-        // console.log(this.cartItems,index, targetItem);
+        // console.log(this.cartItems, index, targetItem);
+        this.$forceUpdate()
       } else {
         this.cartItems.push(item);
       }
@@ -284,6 +269,9 @@ export default {
     bindPickerChange: function (e) {
       this.index = e.target.value
       this.userType = this.array[e.target.value]
+      this.cartItems.forEach(item => {
+        item.univalence = item[this.univalences[this.userType]]
+      })
     },
     deleteItem (id) {
       let deleteIndex
@@ -296,13 +284,7 @@ export default {
       this.cartItems.splice(deleteIndex, 1)
       this.count()
     },
-    subtotal (data) {
-      let { id, sum } = data
-      this.cartItems.forEach((element) => {
-        if (element.id === id) {
-          element.sum = sum
-        }
-      });
+    subtotal () {
       this.count()
     },
     count () {
@@ -314,7 +296,6 @@ export default {
     },
     addCart (item) {
       this.addItemToItems(item)
-
       this.$refs.popupItems.close()
     }
   },
