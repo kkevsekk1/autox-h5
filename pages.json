@@ -237,37 +237,5 @@
     "app-plus": {
       "background": "#efeff4"
     }
-  },
-  "tabBar": {
-    "color": "#888e94",
-    "selectedColor": "#007aff",
-    "borderStyle": "white",
-    "backgroundColor": "#ffffff",
-    "fontSize": "28rpx",
-    "list": [{
-        "pagePath": "pages/word/words",
-        "text": "口令",
-        "iconPath": "static/word.png",
-        "selectedIconPath": "static/slcWord.png"
-      },
-      {
-        "pagePath": "pages/index/index",
-        "text": "绑码",
-        "iconPath": "static/code.png",
-        "selectedIconPath": "static/slcCode.png"
-      },
-      {
-        "pagePath": "pages/mine/mine",
-        "text": "我的",
-        "iconPath": "static/mine.png",
-        "selectedIconPath": "static/slcMine.png"
-      },
-      {
-        "pagePath": "pages/onSaleMine/onSaleMine",
-        "text": "商品列表",
-        "iconPath": "static/mine.png",
-        "selectedIconPath": "static/slcMine.png"
-      }
-    ]
   }
 }
