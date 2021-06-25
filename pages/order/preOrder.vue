@@ -21,7 +21,7 @@
                :key="index">
         <uni-col>
           <pre-order-item :item="item"
-                          @deleteItem="deleteItem"></pre-order-item>
+                          @deleteItem="removeItem"></pre-order-item>
         </uni-col>
       </uni-row>
     </view>
@@ -30,6 +30,12 @@
     </view>
     <view class="fiex-bottom">
       <uni-row>
+        <uni-col :span="3"
+                 style="text-align:center"
+                 v-if="clientItems.length>0">
+          <view @click="$refs.popupClient.open()"
+                style="font-size: 14px;">历史</view>
+        </uni-col>
         <uni-col :span="4">
           <picker @change="bindPickerChange"
                   :value="index"
@@ -39,12 +45,12 @@
             <text class="iconfont popup-icon">&#xe603;</text>
           </picker>
         </uni-col>
-        <uni-col :span="8"
+        <uni-col :span="clientItems.length>0 ? 7 : 10"
                  style="font-size: 14px">
           <text>共计：</text>
           <text style="color: red"> {{ count }}</text>
         </uni-col>
-        <uni-col :span="7"
+        <uni-col :span="5"
                  style="text-align: left">
           <button class="mini-btn"
                   style="background-color: #409eff"
@@ -98,6 +104,7 @@
       </view>
     </uni-popup>
 
+    <!-- 扫码 -->
     <uni-popup ref="popupItems"
                type="bottom"
                background-color="#f5f5f">
@@ -165,28 +172,58 @@
                type="center">
       <view class="popupSum">
         <uni-row>
-          <uni-col :offset="2"
-                   :span="24">
-            <text>张三</text>
+          <uni-col class="popupSum-nav"
+                   :offset="3"
+                   :span="21">
+            <text>{{name}}</text>
           </uni-col>
-          <uni-col :offset="2"
-                   :span="24">
-            <text>共计：100件</text>
+          <uni-col class="popupSum-nav"
+                   :offset="3"
+                   :span="21">
+            <text>共计：{{sumTo}} 件</text>
           </uni-col>
-          <uni-col :offset="2"
-                   :span="24">
-            <text>合计：132133231元</text>
+          <uni-col class="popupSum-nav"
+                   :offset="3"
+                   :span="21">
+            <text>合计：{{count}} 元</text>
           </uni-col>
+          <uni-col></uni-col>
           <uni-col :offset="2"
-                   :span="8">
-            <button size="mini">暂存退出</button>
+                   :span="8"
+                   class="btn-storage">
+            <button size="mini"
+                    style="float:right"
+                    @click="temporaryStore">暂存退出</button>
           </uni-col>
           <uni-col :offset="4"
-                   :span="8">
+                   :span="8"
+                   class="btn-delivery">
             <button size="mini">确定出库</button>
           </uni-col>
         </uni-row>
       </view>
+    </uni-popup>
+    <!-- 暂存 -->
+    <uni-popup ref="popupClient"
+               type="right">
+      <uni-row class="popupClient">
+        <uni-col :span="24"
+                 class="popupClient-title">
+          暂存区
+        </uni-col>
+        <uni-col :span="24">
+          <view class="popipClient-content"
+                v-for="(item,index) in clientItems"
+                :key="index">
+            <view @click="optItem(item.list)">
+              <view style="font-size:14px">{{item.name}}</view>
+              <view style="font-size:12px">{{item.createTime}}</view>
+              <view class="iconfont icon-delete"
+                    @click.stop="removeClientItem(item.id)">&#xe62f;</view>
+            </view>
+          </view>
+        </uni-col>
+      </uni-row>
     </uni-popup>
   </view>
 </template>
@@ -201,6 +238,7 @@ export default {
   components: { preOrderItem },
   data () {
     return {
+      name: "张三",
       search: '',
       userType: '普通',
       index: 0,
@@ -214,6 +252,7 @@ export default {
       },
       cartItems: [],
       popupItems: [],
+      clientItems: [],
       univalences: {
         普通: 'sellingPrice',
         会员: 'vipPrice',
@@ -222,7 +261,7 @@ export default {
     }
   },
   computed: {
-    count: function () {
+    count () {
       let sumdata = 0
       this.cartItems.forEach((item) => {
         console.log(item.sum, item.num, item.univalence);
@@ -230,6 +269,13 @@ export default {
       })
       return sumdata.toFixed(2);
     },
+    sumTo () {
+      let numTodata = 0
+      this.cartItems.forEach((item) => {
+        numTodata += Number(item.num)
+      })
+      return numTodata
+    }
   },
   watch: {
     search: function () {
@@ -364,20 +410,53 @@ export default {
         item.univalence = item[this.univalences[this.userType]]
       })
     },
-    deleteItem (id) {
+    removeItem (id) {
+      this.deleteItem(id, this.cartItems)
+    },
+    deleteItem (id, items) {
       let deleteIndex
-      this.cartItems.forEach((element, index) => {
+      items.forEach((element, index) => {
         if (element.id === id) {
           deleteIndex = index
           return
         }
       })
-      this.cartItems.splice(deleteIndex, 1)
+      items.splice(deleteIndex, 1)
     },
     addCart (item) {
       this.addItemToItems(item)
       this.$refs.popupItems.close()
     },
+    temporaryStore () {
+      if (this.cartItems.length === 0) {
+        uni.showToast({
+          title: "目前没有商品可暂存",
+          icon: "none"
+        })
+        return null
+      }
+      let id = Math.round(Math.random() * (10000 - 1)) + 1;
+      let data = {
+        id: id,
+        name: this.name,
+        createTime: new Date().toLocaleString(),
+        list: this.cartItems
+      }
+      this.clientItems.push(data)
+      this.cartItems = []
+      this.$refs.popupSum.close()
+      uni.showToast({
+        title: "暂存成功"
+      })
+    },
+    optItem (item) {
+      console.log("冒泡了")
+      this.cartItems = item
+      this.$refs.popupClient.close()
+    },
+    removeClientItem (id) {
+      this.deleteItem(id, this.clientItems)
+    }
   },
 }
 </script>
@@ -408,9 +487,9 @@ page {
   bottom: 0;
   width: 100%;
   height: 40px;
+  line-height: 40px;
   padding: 0 10px;
   box-sizing: border-box;
-  line-height: 40px;
   background-color: #fff;
   z-index: 9;
 }
@@ -474,6 +553,8 @@ page {
 }
 .popupSum {
   width: 300px;
+  border-radius: 5px;
+  padding: 10px;
   background-color: #fff;
 }
 .popupSum-item {
@@ -481,5 +562,42 @@ page {
   height: 500px;
   overflow: auto;
   background-color: #fff;
+}
+.btn-storage button {
+  background-color: #f5f5f5;
+}
+.btn-delivery button {
+  background-color: #409eff;
+  color: #fff;
+}
+.btn-storage,
+.btn-delivery {
+  padding-top: 10px;
+}
+.popupSum-nav {
+  padding-bottom: 5px;
+}
+.popupClient {
+  width: 140px;
+  height: 100%;
+  background-color: #f5f5f5;
+}
+.popupClient-title {
+  padding: 10px 0;
+  font-size: 16px;
+  text-align: center;
+}
+.popipClient-content {
+  position: relative;
+  background: #fff;
+  padding: 10px;
+  margin: 2px;
+}
+.icon-delete {
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  font-size: 15px;
+  color: rgb(212, 76, 76);
 }
 </style>
