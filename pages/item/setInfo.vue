@@ -10,10 +10,10 @@
                          placeholder="请输入内容"></uni-easyinput>
         </view>
       </uni-col>
-      <uni-col :span="6"
-               style="text-align: left">
-        <button v-if="!isUpdate" class="mini-btn"
-                style="background-color: #409eff; float: right; margin-top: 3px"
+      <uni-col :span="8"
+               style="padding-left: 10px ;margin-top: 3px">
+        <button class="mini-btn"
+                style="background-color: #409eff;"
                 type="primary"
                 size="mini"
                 @click="scanBarcode">
@@ -21,8 +21,9 @@
         </button>
       </uni-col>
     </uni-row>
+
     <view class="row-class">
-      <uni-row :gutter="20">
+      <uni-row>
         <uni-col :span="4"
                  class="title"> 品名： </uni-col>
         <uni-col :span="12">
@@ -30,7 +31,7 @@
                          style="background-color: #fff"
                          placeholder="请输入品名"></uni-easyinput>
         </uni-col>
-        <uni-col :span="6"
+        <uni-col :span="8"
                  class="title">
           <view v-if="showUpdate"
                 style="font-size: 10px; color: red; padding-left: 10px">
@@ -67,7 +68,7 @@
     <uni-row class="row-class">
       <uni-col :span="4"
                class="title"> 效期： </uni-col>
-      <uni-col :span="8"
+      <uni-col :span="10"
                class="title">
         <picker mode="date"
                 :value="itemEndDate"
@@ -81,33 +82,35 @@
       </uni-col>
       <uni-col :span="4"
                class="title"
-               style="padding-left: 10px">
+               :push="1">
         剩余：
       </uni-col>
-      <uni-col :span="4">
+      <uni-col :span="5"
+               :push="1">
         <picker @change="bindPickerChangeTime"
                 :value="itemSurplusDays"
                 :range="timeArray"
                 class="title">
           <view style="font-size: 14px">{{ itemSurplusDays }}天</view>
-          <text class="iconfont popup-icon">&#xe603;</text>
+          <text class="iconfont popup-icon-surplus">&#xe603;</text>
         </picker>
       </uni-col>
     </uni-row>
     <uni-row class="row-class">
       <uni-col :span="4"
                class="title"> 库存： </uni-col>
-      <uni-col :span="8">
+      <uni-col :span="10">
         <uni-easyinput v-model="item.surplusStock"
                        style="background-color: #fff"
                        placeholder="请输入库存"></uni-easyinput>
       </uni-col>
       <uni-col :span="4"
-               class="title"
-               style="padding-left: 10px">
+               :push="1"
+               class="title">
         单位：
       </uni-col>
-      <uni-col :span="4">
+      <uni-col :span="5"
+               :push="1">
         <uni-easyinput v-model="item.unit"
                        style="background-color: #fff"
                        placeholder="请输入单位"></uni-easyinput>
@@ -237,7 +240,7 @@ export default {
       surplusTime: '',
       search: '',
       id: -1,
-      item: {barcode:'',endTime:currentDate},
+      item: { barcode: '', endTime: currentDate },
       index: '',
       array: ['上架', '下架'],
       arrays: {
@@ -262,7 +265,7 @@ export default {
       console.log("endTime")
       this.itemEndDate = formatTime(this.item.endTime).slice(0, 10)
       this.itemSurplusDays = this.surplusDays(new Date(this.item.endTime))
-      if(!this.isUpdate){
+      if (!this.isUpdate) {
         for (let index = 0; index < this.allEndTimes.length; index++) {
           console.log(this.item.endTime, this.allEndTimes[index])
           this.showUpdate = false;
@@ -366,7 +369,7 @@ export default {
       }).then((res) => {
         uni.hideLoading()
         const { message, code, data } = res.data
-        if (code === 200&&data) {
+        if (code === 200 && data) {
           this.index = data.status
           this.item = data
         }
@@ -450,7 +453,7 @@ export default {
           })
           setTimeout(function () {
             uni.reLaunch({
-              url: '/pages/item/items?barcode='+item.barcode,
+              url: '/pages/item/items?barcode=' + item.barcode,
             })
           }, 300)
         }
@@ -461,8 +464,8 @@ export default {
     },
     bindPickerChangeTime (e) {
       // formatTime(this.item.endTime).slice(0, 10)
-      let endDate = new Date(new Date(formatTime(new Date()).slice(0, 10)).getTime() 
-      + e.target.value * 24 * 3600 * 1000)
+      let endDate = new Date(new Date(formatTime(new Date()).slice(0, 10)).getTime()
+        + e.target.value * 24 * 3600 * 1000)
       this.item.endTime = formatTime(endDate);
     },
   },
@@ -480,6 +483,14 @@ export default {
 .popup-icon {
   position: absolute;
   right: 10px;
+  top: 0px;
+  transform: rotate(90deg);
+  font-size: 12px;
+  color: #848484;
+}
+.popup-icon-surplus {
+  position: absolute;
+  left: 30px;
   top: 0px;
   transform: rotate(90deg);
   font-size: 12px;

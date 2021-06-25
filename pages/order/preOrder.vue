@@ -5,7 +5,7 @@
       <uni-row :gutter="20">
         <uni-col :span='4'
                  class="bade-name">
-          <text>客户：</text>
+          <text>客户 :</text>
         </uni-col>
         <uni-col :span="20">
           <uni-easyinput v-model="cart.user.code"
@@ -15,7 +15,8 @@
       </uni-row>
     </view>
     <view v-if="cartItems.length>0"
-          class="contnet">
+          class="contnet"
+          :style="cart.user.code?'padding-top:66px ':''">
       <uni-row v-for="item,index in  cartItems"
                :key="index">
         <uni-col>
@@ -73,7 +74,7 @@
               style="text-align: center"> 设置出库单</view>
         <uni-row class="popup-row">
           <uni-col :span="5"
-                   style="text-align:right">
+                   style="text-align:center">
             <text style="height:36px;line-height:36px;">
               客户：
             </text>
@@ -84,7 +85,7 @@
                            placeholder="请输入客户代码或者会员号"></uni-easyinput>
           </uni-col>
         </uni-row>
-        <uni-row class="popup-row">
+        <uni-row>
           <uni-col :span="6"
                    :offset="18">
             <button size="mini"
@@ -225,7 +226,7 @@ export default {
         console.log(item.sum, item.num, item.univalence);
         sumdata += Number(item.num * item.univalence)
       })
-      return sumdata;
+      return sumdata.toFixed(2);
     },
   },
   watch: {
@@ -390,11 +391,11 @@ page {
   z-index: 99;
 }
 .bade-name {
-  text-align: right;
+  text-align: center;
   line-height: 36px;
 }
 .contnet {
-  padding: 66px 0 40px 0;
+  padding: 1 0 40px 0;
 }
 .fiex-bottom {
   position: fixed;
