@@ -227,6 +227,7 @@
 import { request } from '../../server/request.js'
 import { formatTime } from '../../utils/format.js'
 import isWx  from '../../utils/weixinCheck'
+import  weixinService  from '../../server/weixinService.js'
 export default {
   data () {
     const currentDate = this.getDate({
@@ -298,23 +299,31 @@ export default {
       let item = this.allItems[e.target.value]
       this.item = item
     },
-    scanBarcode () {
+    initWeixin(){
+     let jssdk =   weixinService.setWxJsdk(encodeURIComponent(location.href.split('#')[0]));
+      console.log(jssdk);
+    },
+    scanBarcode() {
       console.log(jssdk)
       if (isWx()) {
-        let _this = this;
+       let _this =this; 
         jssdk.scanQRCode({
           needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-          scanType: ['qrCode', 'barCode'], // 可以指定扫二维码还是一维码，默认二者都有
+          scanType: ['barCode'], // 可以指定扫二维码还是一维码，默认二者都有
           success: function (res) {
             var result = res.resultStr // 当needResult 为 1 时，扫码返回的结果
-            _this.item.barcode = result;
+              let  results =  result.split(',');
+              if(results.length>1){
+                result = results[1];
+              }
+            _this.search =result; 
           },
           fail: function (error) {
             uni.showToast({ title: error, icon: 'none' })
           },
         })
       } else {
-        this.item.barcode = '2'
+        this.search = '123'
       }
     },
     loadItems () {
