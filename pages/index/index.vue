@@ -126,8 +126,7 @@ export default {
     getSign () {
       axios
         .get(
-          'http://xcx.ar01.cn/tx/gzh/wx3f4bf3f856017bd4/jssdkSignature?url=' +
-          encodeURIComponent(location.href.split('#')[0])
+          'http://xcx.ar01.cn/tx/gzh/wx3f4bf3f856017bd4/jssdkSignature?url=' +encodeURIComponent(location.href.split('#')[0])
         )
         .then((res) => {
           if (res.data.code === '0') {

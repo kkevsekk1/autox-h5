@@ -20,15 +20,13 @@
                :key="index">
         <uni-col>
           <pre-order-item :item="item"
-                          :num='item.num'
                           @deleteItem="deleteItem"
                           @subtotal="subtotal"></pre-order-item>
-
         </uni-col>
       </uni-row>
     </view>
-    <view v-if="cartItems.length==0">
-      <view style="text-align:center;padding-top:20px;">暂无内容</view>
+    <view v-if="cartItems.length == 0">
+      <view style="text-align: center; padding-top: 20px">暂无内容</view>
     </view>
     <view class="fiex-bottom">
       <uni-row>
@@ -36,15 +34,15 @@
           <picker @change="bindPickerChange"
                   :value="index"
                   :range="array"
-                  class="picker ">
-            <view style="font-size:14px">{{array[index]}}</view>
+                  class="picker">
+            <view style="font-size: 14px">{{ array[index] }}</view>
             <text class="iconfont popup-icon">&#xe603;</text>
           </picker>
         </uni-col>
         <uni-col :span="8"
-                 style="font-size:14px">
+                 style="font-size: 14px">
           <text>共计：</text>
-          <text style="color:red;"> {{sum}}</text>
+          <text style="color: red"> {{ sum }}</text>
         </uni-col>
         <uni-col :span="7"
                  style="text-align: left">
@@ -73,7 +71,7 @@
                type="center">
       <view class="popup-out">
         <view class="popup-row"
-              style="text-align:center"> 设置出库单</view>
+              style="text-align: center"> 设置出库单</view>
         <uni-row class="popup-row">
           <uni-col :span="5"
                    style="text-align:right">
@@ -91,7 +89,7 @@
           <uni-col :span="6"
                    :offset="18">
             <button size="mini"
-                    style="background-color:#409eff;color:#fff;margin-top:10px;"
+                    style="background-color: #409eff; color: #fff; margin-top: 10px"
                     @click="callBackSetting">
               确定
             </button>
@@ -99,57 +97,61 @@
         </uni-row>
       </view>
     </uni-popup>
-    <!-- 添加商品 -->
+
     <uni-popup ref="popupItems"
                type="bottom"
                background-color="#f5f5f">
       <view class="popup-items">
         <view class="popup-item-search">
           <uni-easyinput v-model="search"
-                         style="background-color: #fff;height:25px;margin-bottom:10px"
+                         style="background-color: #fff; height: 25px; margin-bottom: 10px"
                          placeholder="请输入搜索内容"></uni-easyinput>
         </view>
         <uni-row class="popup-iten-conten">
-          <uni-col v-if="popupItems.length>0"
+          <uni-col v-if="popupItems.length > 0"
                    :span="24">
-            <view v-for="( item, index ) in popupItems"
+            <view v-for="(item, index) in popupItems"
                   :key="index"
                   @click="addCart(item)"
-                  style="margin-bottom:10px;background:#fff;padding:10px;">
+                  style="margin-bottom: 10px; background: #fff; padding: 10px">
               <uni-row :gutter="20">
                 <uni-col :span="6"
                          class="popup-item-img">
                   <img src="../../static/logo.png"
-                       alt="">
+                       alt="" />
                 </uni-col>
                 <uni-col :span="18"
-                         style="font-size:14px">
-                  <view style="font-size: 16px;font-weight:700">{{item.title}} </view>
+                         style="font-size: 14px">
+                  <view style="font-size: 16px; font-weight: 700">{{ item.title }}
+                  </view>
                   <uni-row class="popup-item-nav">
                     <uni-col :span="24">
-                      <view> {{item.subTitle}} </view>
+                      <view> {{ item.subTitle }} </view>
                     </uni-col>
                     <uni-col :span="24">
-                      <view>剩余：{{item.surplusDays}} 天</view>
+                      <view>剩余：{{ item.surplusDays }} 天</view>
                     </uni-col>
                     <uni-col :span="24">
-                      <text>库存：{{item.surplusStock}} {{item.unit}} </text>
-                      <text style="float:right;color:red">单价： {{ item.univalence}} 元</text>
+                      <text>库存：{{ item.surplusStock }} {{ item.unit }}
+                      </text>
+                      <text style="float: right; color: red">单价： {{ item.univalence }} 元</text>
                     </uni-col>
                   </uni-row>
                 </uni-col>
               </uni-row>
             </view>
           </uni-col>
-          <uni-col v-if="popupItems.length==0"
+          <uni-col v-if="popupItems.length == 0"
                    :span="24">
             <view class="popupItems-false">暂无内容</view>
           </uni-col>
         </uni-row>
         <view class="popup-item-btn">
           <button size="mini"
-                  style="float:right;"
-                  @click="$refs.popupItems.close()">取消</button>
+                  style="float: right"
+                  @click="$refs.popupItems.close()">
+            取消
+          </button>
         </view>
       </view>
     </uni-popup>
@@ -188,6 +190,8 @@
 import { request } from '../../server/request.js'
 import preOrderItem from './preOrderItem.vue'
 import UUID from '@/utils/uuid'
+import isWx from '../../utils/weixinCheck'
+import weixinService from '../../server/weixinService.js'
 export default {
   components: { preOrderItem },
   data () {
@@ -201,78 +205,101 @@ export default {
         uuid: '',
         user: {
           code: '',
-        }
+        },
       },
       cartItems: [],
-      popupItems: "",
+      popupItems: [],
       univalences: {
         普通: 'sellingPrice',
         会员: 'vipPrice',
         代理: 'proxyPrice',
-      }
+      },
     }
   },
+  mounted () {
+    this.initWeixin()
+  },
   methods: {
+    initWeixin () {
+      let jssdk = weixinService.setWxJsdk(encodeURIComponent(location.href.split('#')[0]));
+      console.log(jssdk);
+    },
     async scanBarcode () {
       if (!this.cart.user.code) {
         this.$refs.popup.open()
         return
       }
-      this.search = '2'
+      if (isWx()) {
+        let _this = this;
+        jssdk.scanQRCode({
+          needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+          scanType: ['barCode'], // 可以指定扫二维码还是一维码，默认二者都有
+          success: function (res) {
+            var result = res.resultStr // 当needResult 为 1 时，扫码返回的结果
+            let results = result.split(',');
+            if (results.length > 1) {
+              result = results[1];
+            }
+            _this.search = result;
+          },
+          fail: function (error) {
+            uni.showToast({ title: error, icon: 'none' })
+          },
+        })
+      } else {
+        this.search = '123'
+      }
       //加载商品信息
-      let rs = await this.loadInfoByBarcode();
-      //如果扫码查询结果 大于1 提供选择界面
-
+      let rs = await this.loadInfoByBarcode()
       this.popupItems = rs
-      console.log(rs, '123')
-
+      //如果扫码查询结果 大于1 提供选择界面
       if (rs.length > 1) {
         this.$refs.popupItems.open()
       } else if (rs.length == 1) {
         //只有1条，加入列表
-        this.addItemToItems(rs[0]);
+        this.addItemToItems(rs[0])
       } else {
         //商品不存在或没有库存，请先调整库存或入库
         this.$refs.popupItems.open()
       }
     },
-    addItemToItems (item) {//添加商品到商品列表
+    addItemToItems (item) {
+      //添加商品到商品列表
       //如果列表中存在 者增加数量
-
-      let index = this.cartItems.findIndex(tmpItem => tmpItem.id == item.id);
+      let index = this.cartItems.findIndex((tmpItem) => tmpItem.id == item.id)
       //初始化数量
-      item.num = 1;
+      item.num = 1
       if (index != -1) {
-        let targetItems = this.cartItems.filter(tmpItem => tmpItem.id == item.id);
-        let targetItem = targetItems[0];
-        targetItem.num += item.num;
-        this.$set(this.cartItems, index, targetItem);
-        // console.log(this.cartItems, index, targetItem);
-        this.$forceUpdate()
+        let targetItems = this.cartItems.filter(
+          (tmpItem) => tmpItem.id == item.id
+        )
+        let targetItem = targetItems[0]
+        targetItem.num += item.num
+        this.$set(this.cartItems, index, targetItem)
       } else {
-        this.cartItems.push(item);
+        this.cartItems.push(item)
       }
       uni.showToast({
-        title: "添加成功"
+        title: '添加成功',
       })
       //添加进购物车
     },
-    callBackSetting () {//确定设置
+    callBackSetting () {
+      //确定设置
       if (this.cart.user.code == '' || !this.cart.user.code) {
         uni.showToast({
-          title: "请将内容填写完毕",
-          icon: "none"
+          title: '请将内容填写完毕',
+          icon: 'none',
         })
         return
       }
-      this.cart.uuid = UUID();
+      this.cart.uuid = UUID()
       console.log(this.cart.uuid)
       this.$refs.popup.close()
       //初始化购物车
 
       //继续扫码
-      this.scanBarcode();
-
+      this.scanBarcode()
     },
     async loadInfoByBarcode () {
       uni.showLoading({
@@ -281,15 +308,16 @@ export default {
       let rs = await request({
         url: '/item/findItems?search=' + this.search,
         method: 'get',
-      });
+      })
       uni.hideLoading()
       //处理rs 转换为商品列表
       rs = rs.data.data
-      rs.forEach(item => {
+      rs.forEach((item) => {
         item.surplusDays = this.surplusDays(item.endTime)
         item.univalence = item[this.univalences[this.userType]]
+        item.num = -1
       })
-      return rs;
+      return rs
     },
     surplusDays (date) {
       let now = new Date()
@@ -301,7 +329,7 @@ export default {
     bindPickerChange: function (e) {
       this.index = e.target.value
       this.userType = this.array[e.target.value]
-      this.cartItems.forEach(item => {
+      this.cartItems.forEach((item) => {
         item.univalence = item[this.univalences[this.userType]]
       })
     },
@@ -312,7 +340,7 @@ export default {
           deleteIndex = index
           return
         }
-      });
+      })
       this.cartItems.splice(deleteIndex, 1)
       this.count()
     },
@@ -323,13 +351,13 @@ export default {
       let sumdata = 0
       this.cartItems.forEach((element) => {
         sumdata += Number(element.sum)
-      });
+      })
       this.sum = sumdata
     },
     addCart (item) {
       this.addItemToItems(item)
       this.$refs.popupItems.close()
-    }
+    },
   },
 }
 </script>
