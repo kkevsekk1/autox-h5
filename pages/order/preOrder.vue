@@ -107,48 +107,50 @@
                          style="background-color: #fff; height: 25px; margin-bottom: 10px"
                          placeholder="请输入搜索内容"></uni-easyinput>
         </view>
-        <scroll-view class="popup-iten-conten"
-                     scroll-y="true">
-          <uni-row>
-            <uni-col v-if="popupItems.length > 0"
-                     :span="24">
-              <view v-for="(item, index) in popupItems"
-                    :key="index"
-                    @click="addCart(item)"
-                    style="margin: 10px 0; background: #fff; padding: 10px">
-                <uni-row :gutter="20">
-                  <uni-col :span="6"
-                           class="popup-item-img">
-                    <img src="../../static/logo.png"
-                         alt="" />
-                  </uni-col>
-                  <uni-col :span="18"
-                           style="font-size: 14px">
-                    <view style="font-size: 16px; font-weight: 700">{{ item.title }}
-                    </view>
-                    <uni-row class="popup-item-nav">
-                      <uni-col :span="24">
-                        <view> {{ item.subTitle }} </view>
-                      </uni-col>
-                      <uni-col :span="24">
-                        <view>剩余：{{ item.surplusDays }} 天</view>
-                      </uni-col>
-                      <uni-col :span="24">
-                        <text>库存：{{ item.surplusStock }} {{ item.unit }}
-                        </text>
-                        <text style="float: right; color: red">单价： {{ item.univalence }} 元</text>
-                      </uni-col>
-                    </uni-row>
-                  </uni-col>
-                </uni-row>
-              </view>
-            </uni-col>
-            <uni-col v-if="popupItems.length == 0"
-                     :span="24">
-              <view class="popupItems-false">没有该品种，请先入库</view>
-            </uni-col>
-          </uni-row>
-        </scroll-view>
+        <view style="padding-top:55px">
+          <scroll-view class="popup-iten-conten"
+                       scroll-y="true">
+            <uni-row>
+              <uni-col v-if="popupItems.length > 0"
+                       :span="24">
+                <view v-for="(item, index) in popupItems"
+                      :key="index"
+                      @click="addCart(item)"
+                      style="margin: 10px 0; background: #fff; padding: 10px">
+                  <uni-row :gutter="20">
+                    <uni-col :span="6"
+                             class="popup-item-img">
+                      <img src="../../static/logo.png"
+                           alt="" />
+                    </uni-col>
+                    <uni-col :span="18"
+                             style="font-size: 14px">
+                      <view style="font-size: 16px; font-weight: 700">{{ item.title }}
+                      </view>
+                      <uni-row class="popup-item-nav">
+                        <uni-col :span="24">
+                          <view> {{ item.subTitle }} </view>
+                        </uni-col>
+                        <uni-col :span="24">
+                          <view>剩余：{{ item.surplusDays }} 天</view>
+                        </uni-col>
+                        <uni-col :span="24">
+                          <text>库存：{{ item.surplusStock }} {{ item.unit }}
+                          </text>
+                          <text style="float: right; color: red">单价： {{ item.univalence }} 元</text>
+                        </uni-col>
+                      </uni-row>
+                    </uni-col>
+                  </uni-row>
+                </view>
+              </uni-col>
+              <uni-col v-if="popupItems.length == 0"
+                       :span="24">
+                <view class="popupItems-false">没有该品种，请先入库</view>
+              </uni-col>
+            </uni-row>
+          </scroll-view>
+        </view>
         <view class="popup-item-btn">
           <button size="mini"
                   style="float: right"
@@ -395,7 +397,7 @@ page {
   line-height: 36px;
 }
 .contnet {
-  padding: 1 0 40px 0;
+  padding: 0 0 40px 0;
 }
 .fiex-bottom {
   position: fixed;
@@ -455,11 +457,10 @@ page {
   padding: 10px;
 }
 .popup-items {
-  height: 500px;
+  height: 505px;
 }
 .popup-iten-conten {
-  height: 100%;
-  padding: 56px 0 30px 0;
+  height: 400px;
   background-color: #f5f5f5;
 }
 .popupItems-false {
