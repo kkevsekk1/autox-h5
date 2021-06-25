@@ -92,6 +92,7 @@ import { request } from '../../server/request.js'
 import itemSingle from './itemSingle '
 import { formatTime } from '../../utils/format.js'
 import isWx  from '../../utils/weixinCheck'
+import  weixinService  from '../../server/weixinService.js'
 export default {
   components: { itemSingle },
   data() {
@@ -121,7 +122,14 @@ export default {
       this.debounce(300, this.loadData)
     },
   },
+mounted() {
+  this.initWeixin()
+},
   methods: {
+    initWeixin(){
+     let jssdk =   weixinService.setWxJsdk(encodeURIComponent(location.href.split('#')[0]));
+      console.log(jssdk);
+    },
     scanBarcode() {
       console.log(jssdk)
       if (isWx()) {

@@ -73,7 +73,7 @@
             //填写你的线上地址（如http://m.shop.com/mall/webiste/，线上根目录是http://m.shop.com,取得是根目录后的mall/website， 注意本地开发时需要隐藏这行
             "mode" : "history"
         },
-        "title" : "扫码支付",
+        "title" : "特价品",
         "domain" : "http://xcx.ar01.cn",
         "template" : "html/index.html"
     }
