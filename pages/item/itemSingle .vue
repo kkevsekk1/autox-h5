@@ -14,8 +14,10 @@
         <uni-row style="margin-top:10px">
           <uni-col :span="16"
                    style="font-size: 14px;">
-            <view> {{ item.subtitle}} / {{item.unit}} </view>
+            <view> {{ item.subTitle}}  </view>
             <view>库存：{{item.surplusStock}}{{item.unit}}</view>
+              <view style="font-size: 10px;">货号：{{item.id}}</view>
+              <view style="font-size: 10px;">条码：{{item.barcode}}</view>
           </uni-col>
           <uni-col :span="8">
             <button size='mini'

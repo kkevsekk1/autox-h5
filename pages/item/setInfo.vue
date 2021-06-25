@@ -238,7 +238,7 @@ export default {
       date: currentDate,
       search: '',
       id: -1,
-      item: {barcode:''},
+      item: {barcode:'',endTime:currentDate},
       index: '',
       array: ['上架', '下架'],
       arrays: {
@@ -260,8 +260,10 @@ export default {
       this.debounce(300, this.loadItems)
     },
     'item.endTime' () {
+      console.log("endTime")
       this.itemEndDate = formatTime(this.item.endTime).slice(0, 10)
       this.itemSurplusDays = this.surplusDays(new Date(this.item.endTime))
+
       for (let index = 0; index < this.allEndTimes.length; index++) {
         console.log(this.item.endTime, this.allEndTimes[index])
         this.showUpdate = false;
@@ -364,7 +366,7 @@ export default {
       }).then((res) => {
         uni.hideLoading()
         const { message, code, data } = res.data
-        if (code === 200) {
+        if (code === 200&&data) {
           this.index = data.status
           this.item = data
         }
@@ -448,7 +450,7 @@ export default {
           })
           setTimeout(function () {
             uni.reLaunch({
-              url: '/pages/item/items',
+              url: '/pages/item/items?barcode='+item.barcode,
             })
           }, 300)
         }
@@ -459,8 +461,8 @@ export default {
     },
     bindPickerChangeTime (e) {
       // formatTime(this.item.endTime).slice(0, 10)
-      let endDate = new Date(new Date(formatTime(new Date()).slice(0, 10)).getTime() + e.target.value * 24 * 3600 * 1000
-      )
+      let endDate = new Date(new Date(formatTime(new Date()).slice(0, 10)).getTime() 
+      + e.target.value * 24 * 3600 * 1000)
       this.item.endTime = formatTime(endDate);
     },
   },
