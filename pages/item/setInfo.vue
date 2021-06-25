@@ -235,7 +235,6 @@ export default {
     })
     return {
       surplusTime: '',
-      date: currentDate,
       search: '',
       id: -1,
       item: {barcode:'',endTime:currentDate},
@@ -426,7 +425,7 @@ export default {
         barcode: item.barcode,
         title: item.title,
         subTitle: item.subTitle,
-        endTime: this.date,
+        endTime: item.endTime,
         totalStock: Number(item.surplusStock),
         unit: item.unit,
         sellingPrice: Number(item.sellingPrice),

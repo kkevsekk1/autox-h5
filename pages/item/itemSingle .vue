@@ -8,7 +8,7 @@
       </uni-col>
       <uni-col :span="16">
         <view>
-          <text class="title">{{item.title}}</text>
+          <text class="title">{{item.title}}</text> <text style="font-size:10px;color:orange;" >--{{itemSurplusDays}}天</text>
           <text style="float:right;margin-right:8px;"> {{item.status}} </text>
         </view>
         <uni-row style="margin-top:10px">
@@ -52,7 +52,19 @@
 <script>
 export default {
   props: ['item'],
+   computed: {
+    itemSurplusDays () {
+      return this.surplusDays(this.item.endTime);
+    }
+  },
   methods: {
+     surplusDays (date) {
+      let now = new Date()
+      let until = new Date(date)
+      let days = (until - now) / 1000 / 3600 / 24 + 1
+      let surplusTime = Math.floor(days)
+      return surplusTime
+    },   
     setItem (id) {
       this.$emit("setItem", id)
     },
