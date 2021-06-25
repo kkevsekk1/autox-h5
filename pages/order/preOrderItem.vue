@@ -80,7 +80,7 @@ export default {
   },
   computed: {
     sum: function () {
-      return this.item.univalence * this.item.num;;
+      return (this.item.univalence * this.item.num).toFixed(2)
     }
   },
   watch: {

@@ -10,10 +10,10 @@
                          placeholder="请输入内容"></uni-easyinput>
         </view>
       </uni-col>
-      <uni-col :span="6"
-               style="text-align: left">
+      <uni-col :span="8"
+               style="padding-left: 10px ;margin-top: 3px">
         <button class="mini-btn"
-                style="background-color: #409eff; float: right; margin-top: 3px"
+                style="background-color: #409eff;"
                 type="primary"
                 size="mini"
                 @click="scanBarcode">
@@ -22,7 +22,7 @@
       </uni-col>
     </uni-row>
     <view class="row-class">
-      <uni-row :gutter="20">
+      <uni-row>
         <uni-col :span="4"
                  class="title"> 品名： </uni-col>
         <uni-col :span="12">
@@ -30,7 +30,7 @@
                          style="background-color: #fff"
                          placeholder="请输入品名"></uni-easyinput>
         </uni-col>
-        <uni-col :span="6"
+        <uni-col :span="8"
                  class="title">
           <view v-if="showUpdate"
                 style="font-size: 10px; color: red; padding-left: 10px">
@@ -67,7 +67,7 @@
     <uni-row class="row-class">
       <uni-col :span="4"
                class="title"> 效期： </uni-col>
-      <uni-col :span="8"
+      <uni-col :span="10"
                class="title">
         <picker mode="date"
                 :value="itemEndDate"
@@ -81,33 +81,35 @@
       </uni-col>
       <uni-col :span="4"
                class="title"
-               style="padding-left: 10px">
+               :push="1">
         剩余：
       </uni-col>
-      <uni-col :span="4">
+      <uni-col :span="5"
+               :push="1">
         <picker @change="bindPickerChangeTime"
                 :value="itemSurplusDays"
                 :range="timeArray"
                 class="title">
           <view style="font-size: 14px">{{ itemSurplusDays }}天</view>
-          <text class="iconfont popup-icon">&#xe603;</text>
+          <text class="iconfont popup-icon-surplus">&#xe603;</text>
         </picker>
       </uni-col>
     </uni-row>
     <uni-row class="row-class">
       <uni-col :span="4"
                class="title"> 库存： </uni-col>
-      <uni-col :span="8">
+      <uni-col :span="10">
         <uni-easyinput v-model="item.surplusStock"
                        style="background-color: #fff"
                        placeholder="请输入库存"></uni-easyinput>
       </uni-col>
       <uni-col :span="4"
-               class="title"
-               style="padding-left: 10px">
+               :push="1"
+               class="title">
         单位：
       </uni-col>
-      <uni-col :span="4">
+      <uni-col :span="5"
+               :push="1">
         <uni-easyinput v-model="item.unit"
                        style="background-color: #fff"
                        placeholder="请输入单位"></uni-easyinput>
@@ -478,6 +480,14 @@ export default {
 .popup-icon {
   position: absolute;
   right: 10px;
+  top: 0px;
+  transform: rotate(90deg);
+  font-size: 12px;
+  color: #848484;
+}
+.popup-icon-surplus {
+  position: absolute;
+  left: 30px;
   top: 0px;
   transform: rotate(90deg);
   font-size: 12px;
