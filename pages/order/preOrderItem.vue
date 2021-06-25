@@ -69,8 +69,8 @@ export default {
     num () {
       this.handleCountClick(this.num)
     },
-    sum () {
-      console.log("999")
+    'item.univalence' () {
+      this.countSum()
     }
   },
   methods: {
@@ -79,6 +79,10 @@ export default {
     },
     handleCountClick (val) {
       this.item.num = val
+      this.countSum()
+
+    },
+    countSum () {
       this.sum = this.item.num * this.item.univalence
       this.item.sum = this.sum
       this.$emit("subtotal")

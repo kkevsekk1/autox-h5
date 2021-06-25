@@ -22,7 +22,7 @@
       </uni-col>
     </uni-row>
     <view class="row-class">
-      <uni-row>
+      <uni-row :gutter="20">
         <uni-col :span="4"
                  class="title"> 品名： </uni-col>
         <uni-col :span="12">
@@ -226,7 +226,7 @@
 //进入界面1.根据id 加载商品，--不选规格
 import { request } from '../../server/request.js'
 import { formatTime } from '../../utils/format.js'
-import isWx  from '../../utils/weixinCheck'
+import isWx from '../../utils/weixinCheck'
 export default {
   data () {
     const currentDate = this.getDate({

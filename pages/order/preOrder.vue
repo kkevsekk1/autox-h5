@@ -1,17 +1,21 @@
 <template>
   <view class="preOrder-box">
-    <uni-row v-if="cart.user.code">
-      <uni-col :span='6'>
-        <text>客户</text>
-      </uni-col>
-      <uni-col :span="18">
-        <uni-easyinput v-model="cart.user.code"
-                       style="background-color: #fff"
-                       placeholder="请输入客户代码或者会员号"></uni-easyinput>
-      </uni-col>
-    </uni-row>
+    <view v-if="cart.user.code"
+          class="bead">
+      <uni-row :gutter="20">
+        <uni-col :span='4'
+                 class="bade-name">
+          <text>客户：</text>
+        </uni-col>
+        <uni-col :span="20">
+          <uni-easyinput v-model="cart.user.code"
+                         style="background-color: #fff"
+                         placeholder="请输入客户代码或者会员号"></uni-easyinput>
+        </uni-col>
+      </uni-row>
+    </view>
     <view v-if="cartItems.length>0"
-          style="padding-bottom:40px;">
+          class="contnet">
       <uni-row v-for="item,index in  cartItems"
                :key="index">
         <uni-col>
@@ -48,8 +52,8 @@
                   style="background-color: #409eff"
                   type="primary"
                   size="mini"
-                  @click="scanBarcode">
-            确认出库
+                  @click="$refs.popupSum.open()">
+            完成
           </button>
         </uni-col>
         <uni-col :span="5"
@@ -71,13 +75,13 @@
         <view class="popup-row"
               style="text-align:center"> 设置出库单</view>
         <uni-row class="popup-row">
-          <uni-col :span="6"
+          <uni-col :span="5"
                    style="text-align:right">
             <text style="height:36px;line-height:36px;">
               客户：
             </text>
           </uni-col>
-          <uni-col :span="18">
+          <uni-col :span="19">
             <uni-easyinput v-model="cart.user.code"
                            style="background-color: #fff"
                            placeholder="请输入客户代码或者会员号"></uni-easyinput>
@@ -95,7 +99,7 @@
         </uni-row>
       </view>
     </uni-popup>
-
+    <!-- 添加商品 -->
     <uni-popup ref="popupItems"
                type="bottom"
                background-color="#f5f5f">
@@ -149,6 +153,34 @@
         </view>
       </view>
     </uni-popup>
+    <!-- 确认出库 -->
+    <uni-popup ref="popupSum"
+               type="center">
+      <view class="popupSum">
+        <uni-row>
+          <uni-col :offset="2"
+                   :span="24">
+            <text>张三</text>
+          </uni-col>
+          <uni-col :offset="2"
+                   :span="24">
+            <text>共计：100件</text>
+          </uni-col>
+          <uni-col :offset="2"
+                   :span="24">
+            <text>合计：132133231元</text>
+          </uni-col>
+          <uni-col :offset="2"
+                   :span="8">
+            <button size="mini">暂存退出</button>
+          </uni-col>
+          <uni-col :offset="4"
+                   :span="8">
+            <button size="mini">确定出库</button>
+          </uni-col>
+        </uni-row>
+      </view>
+    </uni-popup>
   </view>
 </template>
 
@@ -160,7 +192,7 @@ export default {
   components: { preOrderItem },
   data () {
     return {
-      sum: "",
+      sum: 0,
       search: '',
       userType: '普通',
       index: 0,
@@ -306,6 +338,23 @@ export default {
 page {
   background-color: #f5f5f5;
 }
+.bead {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #fff;
+  padding: 10px;
+  z-index: 99;
+}
+.bade-name {
+  text-align: right;
+  line-height: 36px;
+}
+.contnet {
+  padding: 66px 0 40px 0;
+}
 .fiex-bottom {
   position: fixed;
   bottom: 0;
@@ -351,6 +400,7 @@ page {
   position: fixed;
   width: 100%;
   background-color: #fff;
+  box-sizing: border-box;
   z-index: 99;
   padding: 10px;
 }
@@ -374,5 +424,9 @@ page {
 .popupItems-false {
   text-align: center;
   padding-top: 20px;
+}
+.popupSum {
+  width: 300px;
+  background-color: #fff;
 }
 </style>
