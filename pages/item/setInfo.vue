@@ -263,13 +263,14 @@ export default {
       console.log("endTime")
       this.itemEndDate = formatTime(this.item.endTime).slice(0, 10)
       this.itemSurplusDays = this.surplusDays(new Date(this.item.endTime))
-
-      for (let index = 0; index < this.allEndTimes.length; index++) {
-        console.log(this.item.endTime, this.allEndTimes[index])
-        this.showUpdate = false;
-        if (!this.isUpdate && formatTime(this.item.endTime).slice(0, 10) == formatTime(this.allEndTimes[index]).slice(0, 10)) {
-          this.showUpdate = true;
-          break;
+      if(!this.isUpdate){
+        for (let index = 0; index < this.allEndTimes.length; index++) {
+          console.log(this.item.endTime, this.allEndTimes[index])
+          this.showUpdate = false;
+          if (formatTime(this.item.endTime).slice(0, 10) == formatTime(this.allEndTimes[index]).slice(0, 10)) {
+            this.showUpdate = true;
+            break;
+          }
         }
       }
     },
