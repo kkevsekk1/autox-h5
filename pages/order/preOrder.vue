@@ -17,9 +17,7 @@
         <uni-col>
           <pre-order-item
             :item="item"
-            @deleteItem="deleteItem"
-            @subtotal="subtotal"
-          ></pre-order-item>
+            @deleteItem="deleteItem"></pre-order-item>
         </uni-col>
       </uni-row>
     </view>
@@ -41,7 +39,7 @@
         </uni-col>
         <uni-col :span="8" style="font-size: 14px">
           <text>共计：</text>
-          <text style="color: red"> {{ sum }}</text>
+          <text style="color: red"> {{ count }}</text>
         </uni-col>
         <uni-col :span="7" style="text-align: left">
           <button
@@ -164,17 +162,17 @@
 import { request } from '../../server/request.js'
 import preOrderItem from './preOrderItem.vue'
 import UUID from '@/utils/uuid'
-import isWx  from '../../utils/weixinCheck'
-import  weixinService  from '../../server/weixinService.js'
+import isWx from '../../utils/weixinCheck'
+import weixinService from '../../server/weixinService.js'
 export default {
   components: { preOrderItem },
   data() {
     return {
-      sum: '',
       search: '',
       userType: '普通',
       index: 0,
       array: ['普通', '会员', '代理'],
+
       cart: {
         uuid: '',
         user: {
@@ -190,52 +188,65 @@ export default {
       },
     }
   },
+   computed:{
+    count:function() {
+      let sumdata = 0
+      this.cartItems.forEach((item) => {
+        console.log(item.sum,item.num,item.univalence);
+        sumdata += Number(item.num*item.univalence)
+      })
+      return sumdata;
+    },
+  },
+  watch: {
+    search: function () {
+      this.debounce(300, this.loadInfoByBarcode)
+    },
+  },
   mounted() {
-  this.initWeixin()
+    this.initWeixin()
   },
   methods: {
-    initWeixin(){
-     let jssdk =   weixinService.setWxJsdk(encodeURIComponent(location.href.split('#')[0]));
-      console.log(jssdk);
+    initWeixin() {
+      let jssdk = weixinService.setWxJsdk(
+        encodeURIComponent(location.href.split('#')[0])
+      )
+      console.log(jssdk)
     },
     async scanBarcode() {
       if (!this.cart.user.code) {
         this.$refs.popup.open()
         return
       }
-    if (isWx()) {
-       let _this =this; 
+      if (isWx()) {
+        let _this = this
         jssdk.scanQRCode({
           needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
           scanType: ['barCode'], // 可以指定扫二维码还是一维码，默认二者都有
           success: function (res) {
             var result = res.resultStr // 当needResult 为 1 时，扫码返回的结果
-              let  results =  result.split(',');
-              if(results.length>1){
-                result = results[1];
-              }
-            _this.search =result; 
+            let results = result.split(',')
+            if (results.length > 1) {
+              result = results[1]
+            }
+            _this.search = result
           },
           fail: function (error) {
             uni.showToast({ title: error, icon: 'none' })
           },
         })
       } else {
-        this.search = '123'
+        this.search = Math.ceil(Math.random() * 100)
       }
       //加载商品信息
-      let rs = await this.loadInfoByBarcode()
-      this.popupItems = rs
-      //如果扫码查询结果 大于1 提供选择界面
-      if (rs.length > 1) {
-        this.$refs.popupItems.open()
-      } else if (rs.length == 1) {
-        //只有1条，加入列表
-        this.addItemToItems(rs[0])
-      } else {
-        //商品不存在或没有库存，请先调整库存或入库
-        this.$refs.popupItems.open()
+    },
+    debounce(wait, fun) {
+      if (this.timer) {
+        clearInterval(this.timer)
       }
+      this.timer = setTimeout(() => {
+        fun()
+      }, wait)
     },
     addItemToItems(item) {
       //添加商品到商品列表
@@ -271,7 +282,6 @@ export default {
       console.log(this.cart.uuid)
       this.$refs.popup.close()
       //初始化购物车
-
       //继续扫码
       this.scanBarcode()
     },
@@ -291,7 +301,17 @@ export default {
         item.univalence = item[this.univalences[this.userType]]
         item.num = -1
       })
-      return rs
+      this.popupItems = rs
+      //如果扫码查询结果 大于1 提供选择界面
+      if (rs.length > 1) {
+        this.$refs.popupItems.open()
+      } else if (rs.length == 1) {
+        //只有1条，加入列表
+        this.addItemToItems(rs[0])
+      } else {
+        //商品不存在或没有库存，请先调整库存或入库
+        this.$refs.popupItems.open()
+      }
     },
     surplusDays(date) {
       let now = new Date()
@@ -316,17 +336,6 @@ export default {
         }
       })
       this.cartItems.splice(deleteIndex, 1)
-      this.count()
-    },
-    subtotal() {
-      this.count()
-    },
-    count() {
-      let sumdata = 0
-      this.cartItems.forEach((element) => {
-        sumdata += Number(element.sum)
-      })
-      this.sum = sumdata
     },
     addCart(item) {
       this.addItemToItems(item)
