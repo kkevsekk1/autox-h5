@@ -143,7 +143,7 @@
           </uni-col>
           <uni-col v-if="popupItems.length == 0"
                    :span="24">
-            <view class="popupItems-false">暂无内容</view>
+            <view class="popupItems-false">没有该品种，请先入库</view>
           </uni-col>
         </uni-row>
         <view class="popup-item-btn">
@@ -158,7 +158,7 @@
     <!-- 确认出库 -->
     <uni-popup ref="popupSum"
                type="center">
-      <view class="popupSum">
+      <!-- <view class="popupSum">
         <uni-row>
           <uni-col :offset="2"
                    :span="24">
@@ -181,7 +181,7 @@
             <button size="mini">确定出库</button>
           </uni-col>
         </uni-row>
-      </view>
+      </view> -->
     </uni-popup>
   </view>
 </template>
@@ -252,6 +252,7 @@ export default {
       //加载商品信息
       let rs = await this.loadInfoByBarcode()
       this.popupItems = rs
+      // this.popupItems = []
       //如果扫码查询结果 大于1 提供选择界面
       if (rs.length > 1) {
         this.$refs.popupItems.open()
@@ -415,9 +416,6 @@ page {
 .popup-row {
   margin-bottom: 10px;
 }
-.popup-items {
-  position: relative;
-}
 .popup-item-img img {
   width: 100%;
 }
@@ -433,7 +431,7 @@ page {
   padding: 10px;
 }
 .popup-item-btn {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   right: 0;
   height: 30px;
@@ -443,8 +441,11 @@ page {
   z-index: 99;
   padding: 10px;
 }
-.popup-iten-conten {
+.popup-items {
   height: 500px;
+}
+.popup-iten-conten {
+  height: 100%;
   overflow: auto;
   padding: 66px 0 30px 0;
   background-color: #f5f5f5;
@@ -455,6 +456,12 @@ page {
 }
 .popupSum {
   width: 300px;
+  background-color: #fff;
+}
+.popupSum-item {
+  width: 300px;
+  height: 500px;
+  overflow: auto;
   background-color: #fff;
 }
 </style>
