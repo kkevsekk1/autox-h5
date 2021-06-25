@@ -300,7 +300,7 @@ export default {
       uni.showToast({
         title: '添加成功',
       })
-      this.search="";
+      this.search = "";
       //添加进购物车
     },
     callBackSetting () {
@@ -320,7 +320,7 @@ export default {
       this.scanBarcode()
     },
     async loadInfoByBarcode () {
-      if(!this.search){
+      if (!this.search) {
         return;
       }
       uni.showLoading({
@@ -463,6 +463,7 @@ page {
 .popup-items {
   height: 505px;
 }
+
 .popup-iten-conten {
   height: 400px;
   background-color: #f5f5f5;
