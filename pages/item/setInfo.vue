@@ -319,14 +319,14 @@ export default {
               if(results.length>1){
                 result = results[1];
               }
-            _this.search =result; 
+            _this.item.barcode =result; 
           },
           fail: function (error) {
             uni.showToast({ title: error, icon: 'none' })
           },
         })
       } else {
-        this.search = '123'
+        this.item.barcode =123; 
       }
     },
     loadItems () {
