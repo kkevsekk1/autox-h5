@@ -12,7 +12,7 @@
       </uni-col>
       <uni-col :span="6"
                style="text-align: left">
-        <button v-if="isUpdate" class="mini-btn"
+        <button v-if="!isUpdate" class="mini-btn"
                 style="background-color: #409eff; float: right; margin-top: 3px"
                 type="primary"
                 size="mini"
