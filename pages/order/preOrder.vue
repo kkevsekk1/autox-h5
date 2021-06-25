@@ -300,6 +300,7 @@ export default {
       uni.showToast({
         title: '添加成功',
       })
+      this.search="";
       //添加进购物车
     },
     callBackSetting () {
@@ -319,6 +320,9 @@ export default {
       this.scanBarcode()
     },
     async loadInfoByBarcode () {
+      if(!this.search){
+        return;
+      }
       uni.showLoading({
         title: '加载中',
       })
