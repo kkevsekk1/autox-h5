@@ -1,18 +1,29 @@
 <template>
   <view class="preOrder-box">
-    <view v-if="cart.items.length>1"
+    <uni-row v-if="cart.user.code">
+      <uni-col :span='6'>
+        <text>客户</text>
+      </uni-col>
+      <uni-col :span="18">
+        <uni-easyinput v-model="cart.user.code"
+                       style="background-color: #fff"
+                       placeholder="请输入客户代码或者会员号"></uni-easyinput>
+      </uni-col>
+    </uni-row>
+    <view v-if="cartItems.length>0"
           style="padding-bottom:40px;">
-      <uni-row v-for="item,index in  cart.items"
+      <uni-row v-for="item,index in  cartItems"
                :key="index">
         <uni-col>
           <pre-order-item :item="item"
-                          :userType="userType"
+                          :num='item.num'
                           @deleteItem="deleteItem"
                           @subtotal="subtotal"></pre-order-item>
+
         </uni-col>
       </uni-row>
     </view>
-    <view v-if="cart.items.length<=1">
+    <view v-if="cartItems.length==0">
       <view style="text-align:center;padding-top:20px;">暂无内容</view>
     </view>
     <view class="fiex-bottom">
@@ -53,32 +64,90 @@
         </uni-col>
       </uni-row>
     </view>
-    <!-- 弹窗 -->
+    <!-- 弹窗会员码 -->
     <uni-popup ref="popup"
                type="center">
-      <view>
-        <uni-easyinput v-model="search"
-                       style="background-color: #fff"
-                       placeholder="请输入内容"></uni-easyinput>
-      </view>
-      <view>
-        <uni-row v-for="item,index in  cart.items"
-                 :key="index">
-
-          <uni-col :span="6">
-            <img src=""
-                 alt="">
+      <view class="popup-out">
+        <view class="popup-row"
+              style="text-align:center"> 设置出库单</view>
+        <uni-row class="popup-row">
+          <uni-col :span="6"
+                   style="text-align:right">
+            <text style="height:36px;line-height:36px;">
+              客户：
+            </text>
           </uni-col>
           <uni-col :span="18">
-            <view> {{item.title}} </view>
-            <view>{{item.subTitle}}</view>
-            <view>剩余：{{ surplusTime }} 天</view>
-            <view> 库存： {{ item.surplusStock }}{{ item.unit }}</view>
-            <text style="color: red">单价：{{ univalence }}</text>
+            <uni-easyinput v-model="cart.user.code"
+                           style="background-color: #fff"
+                           placeholder="请输入客户代码或者会员号"></uni-easyinput>
+          </uni-col>
+        </uni-row>
+        <uni-row class="popup-row">
+          <uni-col :span="6"
+                   :offset="18">
+            <button size="mini"
+                    style="background-color:#409eff;color:#fff;margin-top:10px;"
+                    @click="callBackSetting">
+              确定
+            </button>
           </uni-col>
         </uni-row>
       </view>
-      <button @click="$refs.popup.close()">取消</button>
+    </uni-popup>
+
+    <uni-popup ref="popupItems"
+               type="bottom"
+               background-color="#f5f5f">
+      <view class="popup-items">
+        <view class="popup-item-search">
+          <uni-easyinput v-model="search"
+                         style="background-color: #fff;height:25px;margin-bottom:10px"
+                         placeholder="请输入搜索内容"></uni-easyinput>
+        </view>
+        <uni-row class="popup-iten-conten">
+          <uni-col v-if="popupItems.length>0"
+                   :span="24">
+            <view v-for="( item, index ) in popupItems"
+                  :key="index"
+                  @click="addCart(item)"
+                  style="margin-bottom:10px;background:#fff;padding:10px;">
+              <uni-row :gutter="20">
+                <uni-col :span="6"
+                         class="popup-item-img">
+                  <img src="../../static/logo.png"
+                       alt="">
+                </uni-col>
+                <uni-col :span="18"
+                         style="font-size:14px">
+                  <view style="font-size: 16px;font-weight:700">{{item.title}} </view>
+                  <uni-row class="popup-item-nav">
+                    <uni-col :span="24">
+                      <view> {{item.subTitle}} </view>
+                    </uni-col>
+                    <uni-col :span="24">
+                      <view>剩余：{{item.surplusDays}} 天</view>
+                    </uni-col>
+                    <uni-col :span="24">
+                      <text>库存：{{item.surplusStock}} {{item.unit}} </text>
+                      <text style="float:right;color:red">单价： {{ item.univalence}} 元</text>
+                    </uni-col>
+                  </uni-row>
+                </uni-col>
+              </uni-row>
+            </view>
+          </uni-col>
+          <uni-col v-if="popupItems.length==0"
+                   :span="24">
+            <view class="popupItems-false">暂无内容</view>
+          </uni-col>
+        </uni-row>
+        <view class="popup-item-btn">
+          <button size="mini"
+                  style="float:right;"
+                  @click="$refs.popupItems.close()">取消</button>
+        </view>
+      </view>
     </uni-popup>
   </view>
 </template>
@@ -92,7 +161,6 @@ export default {
   data () {
     return {
       sum: "",
-      surplusTime: "",
       search: '',
       userType: '普通',
       index: 0,
@@ -101,75 +169,73 @@ export default {
         uuid: '',
         user: {
           code: '',
-        },
-        items: [{}],
+        }
       },
+      cartItems: [],
+      popupItems: "",
+      univalences: {
+        普通: 'sellingPrice',
+        会员: 'vipPrice',
+        代理: 'proxyPrice',
+      }
     }
   },
-  computed: {
-    surplusTime () {
-      if (!this.item.endTime) {
-        return
-      }
-      let now = new Date()
-      let date = this.item.endTime.slice(0, 10)
-      let until = new Date(date)
-      let days = (until - now) / 1000 / 3600 / 24 + 1
-      return Math.floor(days)
-    },
-  },
-  created () {
-    this.datas()
-  },
   methods: {
-    datas () {
-      request({
-        url: '/item/findItems?search=2',
-        method: 'get',
-      })
-        .then(res => {
-          res.data.data.forEach(element => {
-            element.num = 0
-          })
-          this.cart.items = res.data.data
-        })
-    },
-    scanBarcode () {
+    async scanBarcode () {
       if (!this.cart.user.code) {
         this.$refs.popup.open()
-
-        // alert('弹出出库单，设置信息')
         return
       }
       this.search = '2'
       //加载商品信息
-      let rs = this.loadInfoByBarcode();
+      let rs = await this.loadInfoByBarcode();
       //如果扫码查询结果 大于1 提供选择界面
-      console.log(rs)
-      if (rs.length > 1) {
 
+      this.popupItems = rs
+      console.log(rs, '123')
+
+      if (rs.length > 1) {
+        this.$refs.popupItems.open()
       } else if (rs.length == 1) {
         //只有1条，加入列表
         this.addItemToItems(rs[0]);
       } else {
         //商品不存在或没有库存，请先调整库存或入库
+        this.$refs.popupItems.open()
       }
     },
     addItemToItems (item) {//添加商品到商品列表
       //如果列表中存在 者增加数量
-      let barItem = this.cart.items.filter(tmpItem => tmpItem.id == time.id);
-      if (barItem && barItem.length > 0) {
-        barItem.num += item.num;
+
+      let index = this.cartItems.findIndex(tmpItem => tmpItem.id == item.id);
+      //初始化数量
+      item.num = 1;
+      if (index != -1) {
+        let targetItems = this.cartItems.filter(tmpItem => tmpItem.id == item.id);
+        let targetItem = targetItems[0];
+        targetItem.num += item.num;
+        this.$set(this.cartItems, index, targetItem);
+        // console.log(this.cartItems, index, targetItem);
+        this.$forceUpdate()
       } else {
-        console.log(item, "item")
-        this.item.push(item);
+        this.cartItems.push(item);
       }
+      uni.showToast({
+        title: "添加成功"
+      })
       //添加进购物车
     },
     callBackSetting () {//确定设置
-      this.cart.user.code = '客户代码'
+      if (this.cart.user.code == '' || !this.cart.user.code) {
+        uni.showToast({
+          title: "请将内容填写完毕",
+          icon: "none"
+        })
+        return
+      }
       this.cart.uuid = UUID();
       console.log(this.cart.uuid)
+      this.$refs.popup.close()
       //初始化购物车
 
       //继续扫码
@@ -177,46 +243,60 @@ export default {
 
     },
     async loadInfoByBarcode () {
-      // uni.showLoading({
-      //   title: '加载中',
-      // })
+      uni.showLoading({
+        title: '加载中',
+      })
       let rs = await request({
         url: '/item/findItems?search=' + this.search,
         method: 'get',
       });
+      uni.hideLoading()
       //处理rs 转换为商品列表
+      rs = rs.data.data
+      rs.forEach(item => {
+        item.surplusDays = this.surplusDays(item.endTime)
+        item.univalence = item[this.univalences[this.userType]]
+      })
       return rs;
+    },
+    surplusDays (date) {
+      let now = new Date()
+      let until = new Date(date)
+      let days = (until - now) / 1000 / 3600 / 24 + 1
+      let surplusTime = Math.floor(days)
+      return surplusTime
     },
     bindPickerChange: function (e) {
       this.index = e.target.value
       this.userType = this.array[e.target.value]
+      this.cartItems.forEach(item => {
+        item.univalence = item[this.univalences[this.userType]]
+      })
     },
     deleteItem (id) {
       let deleteIndex
-      this.cart.items.forEach((element, index) => {
+      this.cartItems.forEach((element, index) => {
         if (element.id === id) {
           deleteIndex = index
           return
         }
       });
-      this.cart.items.splice(deleteIndex, 1)
+      this.cartItems.splice(deleteIndex, 1)
       this.count()
     },
-    subtotal (data) {
-      let { id, sum } = data
-      this.cart.items.forEach((element) => {
-        if (element.id === id) {
-          element.sum = sum
-        }
-      });
+    subtotal () {
       this.count()
     },
     count () {
       let sumdata = 0
-      this.cart.items.forEach((element) => {
+      this.cartItems.forEach((element) => {
         sumdata += Number(element.sum)
       });
       this.sum = sumdata
+    },
+    addCart (item) {
+      this.addItemToItems(item)
+      this.$refs.popupItems.close()
     }
   },
 }
@@ -235,7 +315,7 @@ page {
   box-sizing: border-box;
   line-height: 40px;
   background-color: #fff;
-  z-index: 999;
+  z-index: 9;
 }
 .popup-icon {
   position: absolute;
@@ -248,5 +328,51 @@ page {
 .mini-btn {
   float: right;
   transform: translateY(6px);
+}
+.popup-out {
+  width: 260px;
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 10px;
+}
+.popup-row {
+  margin-bottom: 10px;
+}
+.popup-items {
+  position: relative;
+}
+.popup-item-img img {
+  width: 100%;
+}
+.popup-item-nav {
+  margin-bottom: 10px;
+}
+.popup-item-search {
+  position: fixed;
+  width: 100%;
+  background-color: #fff;
+  z-index: 99;
+  padding: 10px;
+}
+.popup-item-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 30px;
+  width: 100%;
+  padding-right: 10px;
+  background-color: #fff;
+  z-index: 99;
+  padding: 10px;
+}
+.popup-iten-conten {
+  height: 500px;
+  overflow: auto;
+  padding: 66px 0 30px 0;
+  background-color: #f5f5f5;
+}
+.popupItems-false {
+  text-align: center;
+  padding-top: 20px;
 }
 </style>
