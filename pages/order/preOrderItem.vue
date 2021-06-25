@@ -75,7 +75,12 @@ export default {
   },
   data () {
     return {
-      sum: this.item.univalence
+
+    }
+  },
+  computed: {
+    sum: function () {
+      return this.item.univalence * this.item.num;;
     }
   },
   watch: {
@@ -92,13 +97,6 @@ export default {
     },
     handleCountClick (val) {
       this.item.num = val
-      this.countSum()
-
-    },
-    countSum () {
-      this.sum = this.item.num * this.item.univalence
-      this.item.sum = this.sum
-      this.$emit("subtotal")
     }
   }
 }

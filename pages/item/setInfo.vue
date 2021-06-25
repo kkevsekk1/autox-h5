@@ -238,7 +238,7 @@ export default {
       date: currentDate,
       search: '',
       id: -1,
-      item: {},
+      item: { barcode: '' },
       index: '',
       array: ['上架', '下架'],
       arrays: {
@@ -307,7 +307,7 @@ export default {
       console.log(jssdk);
     },
     scanBarcode () {
-      console.log(jssdk)
+      console.log(this.item.barcode)
       if (isWx()) {
         let _this = this;
         jssdk.scanQRCode({
@@ -319,14 +319,15 @@ export default {
             if (results.length > 1) {
               result = results[1];
             }
-            _this.search = result;
+            _this.item.barcode = result;
           },
           fail: function (error) {
             uni.showToast({ title: error, icon: 'none' })
           },
         })
       } else {
-        this.search = '123'
+        this.item.barcode = '123';
+        console.log(this.item.barcode);
       }
     },
     loadItems () {
