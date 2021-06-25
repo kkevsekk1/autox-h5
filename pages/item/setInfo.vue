@@ -21,6 +21,7 @@
         </button>
       </uni-col>
     </uni-row>
+
     <view class="row-class">
       <uni-row>
         <uni-col :span="4"
