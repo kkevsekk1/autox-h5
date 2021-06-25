@@ -60,31 +60,35 @@ export default {
     lxcCount
   },
   props: {
-    item:{type:Object,
-          num:{type:Number,
-              default:1
-          },
-          univalence:null,
-          title:null,
-          surplusStock:null,
-          unit:null,
-          subTitle:null
-  }},
-  data () {
-    return {
-      
+    item: {
+      type: Object,
+      num: {
+        type: Number,
+        default: 1
+      },
+      univalence: null,
+      title: null,
+      surplusStock: null,
+      unit: null,
+      subTitle: null
     }
   },
-  computed:{
-    sum:function(){
-      return this.item.univalence* this.item.num;;
+  data () {
+    return {
+
+    }
+  },
+  computed: {
+    sum: function () {
+      return this.item.univalence * this.item.num;;
     }
   },
   watch: {
-    'item.num': {
-      handler(nv,ov){
-        this.handleCountClick(nv);
-      },
+    num () {
+      this.handleCountClick(this.num)
+    },
+    'item.univalence' () {
+      this.countSum()
     }
   },
   methods: {
