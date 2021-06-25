@@ -59,18 +59,27 @@ export default {
   components: {
     lxcCount
   },
-  props: ['item', 'num'],
+  props: {
+    item:{type:Object,
+          num:{type:Number,
+              default:1
+          },
+          univalence:null,
+          title:null,
+          surplusStock:null,
+          unit:null,
+          subTitle:null
+  }},
   data () {
     return {
       sum: this.item.univalence
     }
   },
   watch: {
-    num () {
-      this.handleCountClick(this.num)
-    },
-    sum () {
-      console.log("999")
+    'item.num': {
+      handler(nv,ov){
+        this.handleCountClick(nv);
+      },
     }
   },
   methods: {

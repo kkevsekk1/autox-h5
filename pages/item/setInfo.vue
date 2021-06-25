@@ -286,6 +286,9 @@ export default {
     }
     this.loadData()
   },
+  mounted() {
+    this.initWeixin()
+  },
   computed: {
     startDate () {
       return this.getDate('start')
