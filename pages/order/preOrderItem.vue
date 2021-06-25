@@ -84,11 +84,10 @@ export default {
     }
   },
   watch: {
-    num () {
-      this.handleCountClick(this.num)
-    },
-    'item.univalence' () {
-      this.countSum()
+      'item.num': {
+      handler(nv,ov){
+        this.handleCountClick(nv);
+      },
     }
   },
   methods: {
