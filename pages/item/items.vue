@@ -168,8 +168,9 @@ export default {
     },
     loadData() {
       if (!this.search) {
+        this.search=""
         console.log('不允许搜索词为空', this.search, '333')
-        return
+       // return
       }
       uni.showLoading({
         title: '加载中',
