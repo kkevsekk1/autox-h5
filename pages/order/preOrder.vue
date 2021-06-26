@@ -30,25 +30,33 @@
     </view>
     <view class="fiex-bottom">
       <uni-row>
-        <uni-col :span="3"
-                 style="text-align:center"
-                 v-if="clientItems.length>0">
+         <uni-col :span="4">
           <view @click="$refs.popupClient.open()"
                 style="font-size: 14px;">历史</view>
         </uni-col>
-        <uni-col :span="4">
+      
+         <uni-col :span="10">
+          <text style="font-size: 10px" >普通价：</text>
+          <text style="color: red;font-size: 14px"> ￥{{ countP }}</text>
+        </uni-col>
+        <uni-col :span="10">
+          <text style="font-size: 10px">会员价：</text>
+          <text style="color: red;font-size: 14px"> ￥{{ countH }}</text>
+        </uni-col>
+      </uni-row>
+      <uni-row>
+       <uni-col :span="7" >
           <picker @change="bindPickerChange"
                   :value="index"
                   :range="array"
                   class="picker">
-            <view style="font-size: 14px">{{ array[index] }}</view>
+            <view style="font-size: 10px">以  <text style="color: green;">{{ array[index] }}</text> 结算</view>
             <text class="iconfont popup-icon">&#xe603;</text>
           </picker>
         </uni-col>
-        <uni-col :span="clientItems.length>0 ? 7 : 10"
-                 style="font-size: 14px">
-          <text>共计：</text>
-          <text style="color: red"> {{ count }}</text>
+          <uni-col :span="7">
+          <text style="font-size: 10px">共：</text>
+          <text style="color: red;font-size: 14px"> ￥{{ count }}</text>
         </uni-col>
         <uni-col :span="5"
                  style="text-align: left">
@@ -269,6 +277,22 @@ export default {
       })
       return sumdata.toFixed(2);
     },
+    countP () {
+      let sumdata = 0
+      this.cartItems.forEach((item) => {
+        console.log(item.sum, item.num, item.sellingPrice);
+        sumdata += Number(item.num * item.sellingPrice)
+      })
+      return sumdata.toFixed(2);
+    },
+  countH () {
+      let sumdata = 0
+      this.cartItems.forEach((item) => {
+        console.log(item.sum, item.num, item.vipPrice);
+        sumdata += Number(item.num * item.vipPrice)
+      })
+      return sumdata.toFixed(2);
+    },
     sumTo () {
       let numTodata = 0
       this.cartItems.forEach((item) => {
@@ -480,13 +504,13 @@ page {
   line-height: 36px;
 }
 .contnet {
-  padding: 0 0 40px 0;
+  padding: 0 0 80px 0;
 }
 .fiex-bottom {
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: 40px;
+  height: 80px;
   line-height: 40px;
   padding: 0 10px;
   box-sizing: border-box;

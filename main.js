@@ -11,4 +11,23 @@ App.mpType = 'app'
 const app = new Vue({
     ...App
 })
+Vue.filter("formatDate",(data)=>{
+	const nDate=new Date(data);
+	const year = nDate.getFullYear();
+	const month = nDate.getMonth()+1;
+	const day = nDate.getDay();
+	return year +'-'+ month +'-'+ day
+})
+Vue.filter("formatTotal",(data)=>{
+  if(Number(data)>1000000){
+    return  (data/1000000.0).toFixed(2)+'m'
+  }
+	if(Number(data)>10000){
+    return  (data/1000.0).toFixed(2)+'w'
+  }
+  if(Number(data)>1000){
+    return  (data/100.0).toFixed(2)+'k'
+  }
+  return data;
+})
 app.$mount()

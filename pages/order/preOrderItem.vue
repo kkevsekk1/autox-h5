@@ -1,53 +1,61 @@
 <template>
   <view class="preOrderItem">
-    <uni-row :gutter="20"
-             class="content">
-      <uni-col :span="24"
-               class="col-class">
+    <uni-row :gutter="20" class="content">
+      <uni-col :span="24" class="col-class">
         <view class="title">
           <text>{{ item.title }}</text>
           <text>（{{ item.surplusDays }}天）</text>
-          <view class="iconfont icon-delete"
-                @click="deleteItem">&#xe62f;</view>
+          <view class="iconfont icon-delete" @click="deleteItem">&#xe62f;</view>
         </view>
       </uni-col>
     </uni-row>
-    <uni-row :gutter="20"
-             class="content">
-      <uni-col :span="8"
-               class="col-class">
+    <uni-row :gutter="0" class="content">
+      <uni-col :span="4" class="col-class">
         <text>{{ item.subTitle }}</text>
       </uni-col>
-      <uni-col :span="8"
-               class="col-class">
-        <text> 库存： {{ item.surplusStock }}{{ item.unit }}</text>
+      <uni-col :span="6" class="col-class">
+        <text style="font-size: 12px">
+          存：{{ item.surplusStock | formatTotal }}{{ item.unit }}</text
+        >
       </uni-col>
-      <uni-col :span="8"
-               class="col-class">
-        <text style="color: red">单价：{{ item.univalence }}</text>
+      <uni-col :span="7" class="col-class">
+        <text style="font: 10px sans-serif">普通：</text>
+        <text style="color: red">￥{{ item.sellingPrice}}</text>
+      </uni-col>
+      <uni-col :span="7" class="col-class">
+        <text style="font: 10px sans-serif">会员：</text>
+        <text style="color: red">￥{{ item.vipPrice }}</text>
       </uni-col>
     </uni-row>
     <uni-row>
-      <uni-col :span="16"
-               class="col-class"
-               style="margin-top:5px">
+      <uni-col :span="10" class="col-class" style="margin-top: 5px">
         <uni-row>
-          <uni-col :span="10"> 数量： </uni-col>
-          <uni-col :span="14"
-                   style="  position: relative">
-            <lxc-count @handleCount="handleCountClick"
-                       class="lxc-count"
-                       :max="item.surplusStock"
-                       :value="item.num"
-                       :delayed="100">
+          <uni-col :span="12"> 数量</uni-col>
+          <uni-col :span="12" style="position: relative">
+            <lxc-count
+              @handleCount="handleCountClick"
+              class="lxc-count"
+              :max="item.surplusStock"
+              :value="item.num"
+              :delayed="100"
+            >
             </lxc-count>
           </uni-col>
         </uni-row>
       </uni-col>
-      <uni-col :span="8"
-               class="col-class"
-               style="padding-left: 5px;margin-top:5px">
-        <text>小计：{{ sum }} 元</text>
+      <uni-col
+        :span="7"
+        class="col-class"
+        style="padding-left: 5px; margin-top: 5px"
+      ><text style="font-size: 10px">普合：</text>
+        <text>{{ sumP }}</text>
+      </uni-col>
+      <uni-col
+        :span="7"
+        class="col-class"
+        style="padding-left: 5px; margin-top: 5px"
+         ><text style="font-size: 10px">会合：</text>
+        <text>{{ sumH }}</text>
       </uni-col>
     </uni-row>
   </view>
@@ -57,47 +65,48 @@
 import lxcCount from '@/components/lxc-count/lxc-count.vue'
 export default {
   components: {
-    lxcCount
+    lxcCount,
   },
   props: {
     item: {
       type: Object,
       num: {
         type: Number,
-        default: 1
+        default: 1,
       },
       univalence: null,
       title: null,
       surplusStock: null,
       unit: null,
-      subTitle: null
-    }
+      subTitle: null,
+    },
   },
-  data () {
-    return {
-
-    }
+  data() {
+    return {}
   },
   computed: {
-    sum: function () {
-      return (this.item.univalence * this.item.num).toFixed(2)
-    }
+    sumP: function () {
+      return (this.item.sellingPrice * this.item.num).toFixed(2)
+    },
+    sumH: function () {
+      return (this.item.vipPrice * this.item.num).toFixed(2)
+    },
   },
   watch: {
-      'item.num': {
-      handler(nv,ov){
-        this.handleCountClick(nv);
+    'item.num': {
+      handler(nv, ov) {
+        this.handleCountClick(nv)
       },
-    }
+    },
   },
   methods: {
-    deleteItem () {
+    deleteItem() {
       this.$emit('deleteItem', this.item.id)
     },
-    handleCountClick (val) {
+    handleCountClick(val) {
       this.item.num = val
-    }
-  }
+    },
+  },
 }
 </script>
 
