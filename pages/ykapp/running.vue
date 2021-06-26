@@ -55,13 +55,24 @@ export default {
   methods: {
     next () {
       if (this.stepIndex == 2) {
-        if (this.$refs.choiceDevice.getCheckedDevices().length == 0) {
-          alert("至少选一个设备");
+        let devices =this.$refs.choiceDevice.getCheckedDevices();
+        if (devices.length == 0) {
+           this.toast('至少选一个设备');
+           return;
         } else {
-          this.running(this.$refs.setParams.scriptParams, this.$refs.choiceDevice.getCheckedDevices(), this.$refs.setParams.scriptName);
+
+          if(this.$refs.setParams.chargeWay==3&&devices.length>this.$refs.setParams.deviceCount){
+          this.toast('共'+devices.length+'台,超过授权设备数');
+           return ;
+          }
+          this.running(this.$refs.setParams.scriptParams,devices, this.$refs.setParams.scriptName);
         }
       }
       if (this.stepIndex == 1) {
+        if( (new Date(this.$refs.setParams.endTime).getTime())-(new Date().getTime())<0){
+           this.toast('授权过期,请联系授权人员');
+           return ;
+        }
         let rs = this.checkParams(this.$refs.setParams.scriptParams);
         if (rs == 0) {
           this.stepIndex++;

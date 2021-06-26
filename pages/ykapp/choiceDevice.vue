@@ -69,7 +69,7 @@ export default {
         show: true,
         rotate: false,
       },
-      equipmentIemi: ""
+      equipmentIemi: "",
     }
   },
   watch: {

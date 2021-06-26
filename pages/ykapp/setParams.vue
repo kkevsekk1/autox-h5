@@ -1,9 +1,12 @@
 <template>
   <view class="setParameter">
     <view class="title">
-      <text>{{ scriptName }}（{{ scriptId }}）</text>
+      <text style="text-align: left;font-size: 16px;font-weight: 300;" >{{ scriptName }}</text>
+      <text style="font-size: 12px" >（{{ scriptId }}）</text>
+      <text v-if="remark" style="font-size: 12px" >----</text>
+      <text v-if="remark" style="color:red;font-size: 12px" >{{ remark }}</text>
     </view>
-    <view style="margin-top:20px"
+    <view style="margin-top:20px;font-size:12px;"
           v-if="scriptParams&&scriptParams.length==0">
       无需设置参数，点击下一步
     </view>
@@ -74,10 +77,14 @@ export default {
   },
   data () {
     return {
+      remark:"免费",
       rememberParams: null,
       scriptParams: null,
       materials: null,
       scriptName: '加载...',
+      chargeWay :-1,
+      deviceCount:0,
+      endTime:''
     }
   },
   async created () {
@@ -85,7 +92,7 @@ export default {
     await this.loadMaterials()
     let rememberParamsStr = await this.loadRemember()
     this.rememberParams = JSON.parse(rememberParamsStr)
-    await this.loadScript()
+    await this.loadUserScript();
     this.convertParams(this.rememberParams)
     this.convertLayout()
     uni.hideLoading()
@@ -94,25 +101,63 @@ export default {
   methods: {
     checkBoxChange (e) {
       e.defaultValue = !e.defaultValue;
-      // console.log(e.defaultValue,e.name)
     },
-    loadScript () {
+    loadUserScript () {
+      let reqData={scriptId:this.scriptId}
       return new Promise((resolve, reject) => {
         request({
-          url: '/script/getScript?id=' + this.scriptId,
-          method: 'ge7t',
+          url: '/userscript/seleteUserScript',
+          method: 'POST',
+          data:reqData
         }).then((res) => {
+          console.log(res.data)
           let {
-            data: { name: scriptName, taskParameter: scriptParams },
+            data: {chargeWay,unitPrice,endTime,deviceCount,script:{name: scriptName, taskParameter: scriptParams} },
             code,
           } = res.data
           if (code === 200) {
-            this.scriptParams = scriptParams
+           this.scriptParams = JSON.parse(scriptParams)
             this.scriptName = scriptName
+            this.chargeWay =chargeWay;
+            this.deviceCount =deviceCount;
+            this.endTime =endTime;
+            if(chargeWay==1){
+               this.remark='免费使用 '+this.getLeftTime(new Date(endTime))
+            }
+            if(chargeWay==2){
+              this.remark =''+unitPrice+' A币/台/次 '+this.getLeftTime(new Date(endTime))
+            }
+            if(chargeWay==3){
+              this.remark ='包月'+deviceCount+'台 ' +this.getLeftTime(new Date(endTime))
+            }
             resolve(code)
+           
           }
         })
       })
+    },
+getLeftTime(endTime){
+      console.log(endTime)
+    var nowtime = new Date();  //获取当前时间
+    var lefttime = endTime.getTime() - nowtime.getTime(),  //距离结束时间的毫秒数
+        leftd = Math.floor(lefttime/(1000*60*60*24)),  //计算天数
+        lefth = Math.floor(lefttime/(1000*60*60)%24),  //计算小时数
+        leftm = Math.floor(lefttime/(1000*60)%60),  //计算分钟数
+        lefts = Math.floor(lefttime/1000%60);  //计算秒数
+        var rs ="";
+
+        if(leftd){
+           return leftd + "天";
+        }
+        if(lefth){
+           return lefth + "小时";
+        }
+        if(leftm){
+           return leftm + "分钟";
+        }
+        if(lefts){
+           return lefts + "秒";
+        }
     },
     loadRemember () {
       return new Promise((resolve, reject) => {
@@ -250,11 +295,7 @@ export default {
   margin: 0 10px;
   color: #606266;
 }
-.setParameter .title {
-  text-align: center;
-  font-size: 20px;
-  font-weight: 300;
-}
+
 .pull-down-menu {
   height: 36px;
   line-height: 36px;
