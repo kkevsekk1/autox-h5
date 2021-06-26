@@ -8,7 +8,7 @@
       </uni-col>
       <uni-col :span="16">
         <view>
-          <text class="title">{{item.title}}</text> <text style="font-size:10px;color:orange;" >--{{itemSurplusDays}}天</text>
+          <text class="title">{{item.title}}</text> <text style="font-size:10px;color:orange;" >剩{{itemSurplusDays}}天</text>
           <text style="float:right;margin-right:8px;"> {{item.status}} </text>
         </view>
         <uni-row style="margin-top:10px">
