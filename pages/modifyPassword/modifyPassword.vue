@@ -1,9 +1,10 @@
 <template>
   <view class="modifypassword_box">
+    <view class="titel"> 修改密码 </view>
     <uni-forms :modelValue="Password"
                :rules="rules"
                ref="form"
-               calss="password-forms">
+               class="password-forms">
       <uni-forms-item name="firstPassword">
         <uni-easyinput type="text"
                        v-model="Password.firstPassword"
@@ -58,7 +59,7 @@ export default {
               icon: "none"
             })
           })
-      })
+      }).catch(err => { })
     },
   }
 }
@@ -69,6 +70,15 @@ export default {
   margin: 0 auto;
   background-color: #f5f5f5;
   padding: 0 18px;
+}
+.titel {
+  font-size: 16px;
+  font-weight: 700;
+  height: 44px;
+  line-height: 44px;
+  text-align: center;
+}
+.password-forms {
   padding-top: 20px;
 }
 .easyinput {
