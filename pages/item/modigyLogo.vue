@@ -3,10 +3,10 @@
     <view class="head">图片：</view>
     <uni-row class="content">
       <uni-col :span="24">
-        <uni-file-picker  ref="files" 
-                          v-model="imageValue" 
-                          :disable-preview='false'
+        <uni-file-picker ref="files"
+                         v-model="imageValue"
                          :autoUpload="false"
+                         title="最多上传9张图片"
                          fileMediatype="image"
                          mode="grid"
                          @select="select"
@@ -24,7 +24,7 @@
         <uni-col :span="8"
                  :push="5">
           <button style="background-color: #409eff;color:#fff;"
-                  @click="saveLogo">保存</button>
+                  @click="saveLogo">保存 </button>
         </uni-col>
       </uni-row>
     </view>
@@ -36,63 +36,70 @@ import { request } from '../../server/request.js'
 export default {
   data () {
     return {
-      signal:{},
-      images:[],
-      imageValue: [
-        {
-
-          "url": "../../static/logo.png",
-
-        },
-        {
-
-          "url": "../../static/logo.png",
-
-        },
-        {
-
-          "url": "../../static/buy.png",
-
-        }
-      ],
+      ifSave: 1,
+      id: '',
+      signal: {},
+      images: [],
+      imageValue: [],
     }
   },
- async mounted(){
-    let x = await this.getSign(); 
-    this.signal =x;
+  created () {
+    this.id = this.$route.query.id
+    this.getByIdAPP()
+  },
+  async mounted () {
+    let x = await this.getSign();
+    this.signal = x;
   },
   methods: {
-    console (e) {
-      console.log(e)
+    getByIdAPP () {
+      request({
+        url: "/item/getByIdAPP?id=" + this.id,
+        method: "get"
+      })
+        .then(res => {
+          let { code, data } = res.data
+          if (code == 200) {
+            if (data.picture) {
+              data.picture = JSON.parse(data.picture)
+              data.picture.forEach(item => {
+                this.imageValue.push({
+                  url: item
+                })
+              })
+            }
+          }
+        })
     },
     // 文件点击
     select (e) {
-      console.log(e,'select');
-       let element  = e.tempFiles[0];
-      let data={};
-      data["key"]= 'tjpimg/'+element.uuid+'.'+element.extname;
-      data["policy"]= this.signal.policyBase64;
-      data["OSSAccessKeyId"]= this.signal.accessid;
-      data["success_action_status"]= 200;
-      data["signature"]= this.signal.signature;
-      data["name"]= element.name;
+      this.ifSave = 0
+      let element = e.tempFiles[0];
+      let data = {};
+      data["key"] = 'tjpimg/' + element.uuid + '.' + element.extname;
+      data["policy"] = this.signal.policyBase64;
+      data["OSSAccessKeyId"] = this.signal.accessid;
+      data["success_action_status"] = 200;
+      data["signature"] = this.signal.signature;
+      data["name"] = element.name;
       uni.uploadFile({
-        url:this.signal.host,
+        url: this.signal.host,
         filePath: element.path,
-        formData:data,
-          success: () => {
-              const url = this.signal.host+'/'+data.key;
-                console.log(url);
-          }
+        formData: data,
+        success: () => {
+          const url = this.signal.host + '/' + data.key;
+          this.imageValue.push({ url: url })
+          this.ifSave = 1
+          console.log(this.imageValue)
+        },
       })
-      console.log()
     },
-    async getSign() {
+    async getSign () {
       let signal = await request({
         url: "/activity/getuploadSign",
         method: "get",
       });
-      signal =signal.data
+      signal = signal.data
       console.log('signal_____', signal);
       const result = {};
       result.policyBase64 = signal.data.policy;
@@ -104,13 +111,45 @@ export default {
     // 删除文件
     deleteLogo (e) {
       this.imageValue.forEach((element, index) => {
-        if (element.uuid === e.tempFile.uuid) {
+        if (element.url === e.tempFile.url) {
           this.imageValue.splice(index, 1)
         }
       })
     },
     saveLogo () {
-      console.log(this.imageValue)
+      if (this.ifSave == 0) {
+        uni.showToast({
+          title: "图片正在上传中，请稍等",
+          icon: "none"
+        })
+        return
+      }
+      let images = []
+      this.imageValue.forEach(res => {
+        images.push(res.url)
+      })
+      images = JSON.stringify(images)
+      let data = {
+        id: this.id,
+        images: images
+      }
+      request({
+        url: "/item/updateImages",
+        method: "post",
+        data,
+      })
+        .then(res => {
+          let { code, message } = res.data
+          console.log(code, message)
+          if (code == 200) {
+            uni.navigateTo({
+              url: "/pages/item/items"
+            })
+            uni.showToast({
+              title: message,
+            })
+          }
+        })
     }
   }
 }

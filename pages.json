@@ -98,7 +98,10 @@
       "path": "pages/modifyPassword/modifyPassword",
       "style": {
         "navigationBarTitleText": "修改密码",
-        "enablePullDownRefresh": false
+        "enablePullDownRefresh": false,
+        "app-plus": {
+          "titleNView": false
+        }
       }
     },
     {

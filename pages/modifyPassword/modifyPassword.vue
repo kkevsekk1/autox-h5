@@ -1,18 +1,18 @@
 <template>
   <view class="modifypassword_box">
-    <uni-forms :value="Password"
+    <view class="titel"> 修改密码 </view>
+    <uni-forms :modelValue="Password"
                :rules="rules"
                ref="form"
-               calss="password-forms">
-      <uni-forms-item name="firstPassword"
-                      required>
+               class="password-forms">
+      <uni-forms-item name="firstPassword">
         <uni-easyinput type="text"
                        v-model="Password.firstPassword"
                        class="easyinput"
                        placeholder="请输入新密码" />
       </uni-forms-item>
       <button class="button-modify "
-              @click="getPassword"
+              @click="submit"
               type="primary">确认修改</button>
     </uni-forms>
   </view>
@@ -28,27 +28,38 @@ export default {
       },
       rules: {
         firstPassword: {
-          rules: [{
-            minLength: 6,
-            errorMessage: '密码不得少于6位数',
-          }]
+          rules: [
+            {
+              minLength: 6,
+              errorMessage: '密码长度不得少于 {minLength}位',
+            }
+          ]
         },
       }
     }
   },
   methods: {
-    getPassword (form) {
-      request({
-        url: '/auth/password',
-        method: 'post',
-        data: { password: this.Password.firstPassword },
-      })
-        .then((loadresult) => {
+    submit () {
+      this.$refs.form.submit().then(res => {
+        if (!res.firstPassword) {
           uni.showToast({
-            title: "密码修改成功",
+            title: "请输入新密码",
             icon: "none"
           })
+          return
+        }
+        request({
+          url: '/auth/password',
+          method: 'post',
+          data: { password: res.firstPassword },
         })
+          .then((loadresult) => {
+            uni.showToast({
+              title: "密码修改成功",
+              icon: "none"
+            })
+          })
+      }).catch(err => { })
     },
   }
 }
@@ -59,6 +70,15 @@ export default {
   margin: 0 auto;
   background-color: #f5f5f5;
   padding: 0 18px;
+}
+.titel {
+  font-size: 16px;
+  font-weight: 700;
+  height: 44px;
+  line-height: 44px;
+  text-align: center;
+}
+.password-forms {
   padding-top: 20px;
 }
 .easyinput {

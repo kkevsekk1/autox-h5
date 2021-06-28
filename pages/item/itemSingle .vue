@@ -3,14 +3,15 @@
     <uni-row>
       <uni-col :span="8">
         <view @click="modigyLogo(item.id)">
-          <img src="../../static/logo.png"
+          <img :src="item.commodityLogo"
                class="title-img"
                alt="">
         </view>
       </uni-col>
       <uni-col :span="16">
         <view>
-          <text class="title">{{item.title}}</text> <text style="font-size:10px;color:orange;">剩{{itemSurplusDays}}天</text>
+          <text class="title">{{item.title}}</text>
+          <text style="font-size:10px;color:orange;padding-left:3px;">剩{{itemSurplusDays}}天</text>
           <text style="float:right;margin-right:8px;"> {{item.status}} </text>
         </view>
         <uni-row style="margin-top:10px">
