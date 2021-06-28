@@ -39,7 +39,7 @@
       </uni-col>
       <uni-col :span="8">
         <view>代理价：{{item.proxyPrice}}</view>
-        <view>进货价：{{item.jinPrice}} </view>
+        <view>进货价：*** </view>
       </uni-col>
       <uni-col :span="8">
         <view>正价：{{item.originalPrice}}</view>
