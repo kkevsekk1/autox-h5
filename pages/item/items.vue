@@ -1,67 +1,64 @@
 <template>
   <view>
     <view class="head">
-      <uni-row class="demo-uni-row" :gutter="20">
+      <uni-row class="demo-uni-row"
+               :gutter="20">
         <uni-col :span="18">
           <view>
-            <uni-easyinput
-              v-model="search"
-              style="background-color: #fff"
-              placeholder="请输入内容"
-            ></uni-easyinput>
+            <uni-easyinput v-model="search"
+                           style="background-color: #fff"
+                           placeholder="请输入内容"></uni-easyinput>
           </view>
         </uni-col>
-        <uni-col :span="6" style="text-align: left">
-          <button
-            class="mini-btn"
-            style="background-color: #409eff; float: right; margin-top: 5px"
-            type="primary"
-            size="mini"
-            @click="scanBarcode"
-          >
+        <uni-col :span="6"
+                 style="text-align: left">
+          <button class="mini-btn"
+                  style="background-color: #409eff; float: right; margin-top: 5px"
+                  type="primary"
+                  size="mini"
+                  @click="scanBarcode">
             扫码
           </button>
         </uni-col>
       </uni-row>
     </view>
     <uni-row class="demo-uni-row content">
-      <uni-col :span="24" v-if="datas.length > 0">
-        <view v-for="(item, index) in datas" :key="index">
-          <item-single
-            :item="item"
-            class="item-single"
-            @popupRepertory="popupRepertory"
-            @setItem="setItem"
-          ></item-single>
+      <uni-col :span="24"
+               v-if="datas.length > 0">
+        <view v-for="(item, index) in datas"
+              :key="index">
+          <item-single :item="item"
+                       class="item-single"
+                       @popupRepertory="popupRepertory"
+                       @setItem="setItem"
+                       @modigyLogo="modigyLogo"></item-single>
         </view>
       </uni-col>
-      <uni-col :span="24" v-if="datas.length == 0">
+      <uni-col :span="24"
+               v-if="datas.length == 0">
         <view style="text-align: center; padding-top: 20px">暂无内容</view>
       </uni-col>
     </uni-row>
     <!-- 库存弹窗 -->
-    <uni-popup ref="popup" type="center">
+    <uni-popup ref="popup"
+               type="center">
       <view class="popupRepertory">
         <view class="popup-title">库存设置</view>
         <view class="popup-content">
           <view class="popup-nav">
             <text>库存：</text>
-            <input
-              type="number"
-              v-model="itemSingle.surplusStock"
-              placeholder-style="font-size:14px"
-              placeholder="请输入数量"
-            />
+            <input type="number"
+                   v-model="itemSingle.surplusStock"
+                   placeholder-style="font-size:14px"
+                   placeholder="请输入数量" />
             <text style="margin-left: 5px"> {{ itemSingle.unit }} </text>
           </view>
           <view class="popup-nav">
             <text>状态：</text>
-            <picker
-              @change="bindPickerChange"
-              :value="index"
-              :range="array"
-              class="picker"
-            >
+            <picker @change="bindPickerChange"
+                    :value="index"
+                    :range="array"
+                    class="picker">
               <view style="font-size: 14px">{{ array[index] }}</view>
               <text class="iconfont popup-icon">&#xe603;</text>
             </picker>
@@ -69,16 +66,16 @@
         </view>
         <uni-row>
           <uni-col :span="12">
-            <button
-              size="mini"
-              style="float: right; margin-right: 10px"
-              @click="$refs.popup.close()"
-            >
+            <button size="mini"
+                    style="float: right; margin-right: 10px"
+                    @click="$refs.popup.close()">
               取消
             </button>
           </uni-col>
           <uni-col :span="12">
-            <button size="mini" class="popup-save" @click="saveRepertory">
+            <button size="mini"
+                    class="popup-save"
+                    @click="saveRepertory">
               保存
             </button>
           </uni-col>
@@ -95,7 +92,7 @@ import isWx from '../../utils/weixinCheck'
 import weixinService from '../../server/weixinService.js'
 export default {
   components: { itemSingle },
-  data() {
+  data () {
     return {
       search: '',
       datas: [],
@@ -118,24 +115,24 @@ export default {
     }
   },
   watch: {
-    search() {
+    search () {
       this.debounce(300, this.loadData)
     },
   },
-    created () {
+  created () {
     this.search = this.$route.query.barcode;
   },
-  mounted() {
+  mounted () {
     this.initWeixin()
   },
   methods: {
-    initWeixin() {
+    initWeixin () {
       let jssdk = weixinService.setWxJsdk(
         encodeURIComponent(location.href.split('#')[0])
       )
       console.log(jssdk)
     },
-    scanBarcode() {
+    scanBarcode () {
       console.log(jssdk)
       if (isWx()) {
         let _this = this
@@ -158,7 +155,7 @@ export default {
         this.search = '123'
       }
     },
-    debounce(wait, fun) {
+    debounce (wait, fun) {
       if (this.timer) {
         clearInterval(this.timer)
       }
@@ -166,11 +163,11 @@ export default {
         fun()
       }, wait)
     },
-    loadData() {
+    loadData () {
       if (!this.search) {
-        this.search=""
+        this.search = ""
         console.log('不允许搜索词为空', this.search, '333')
-       // return
+        // return
       }
       uni.showLoading({
         title: '加载中',
@@ -193,12 +190,12 @@ export default {
     bindPickerChange: function (e) {
       this.index = e.target.value
     },
-    popupRepertory(data) {
+    popupRepertory (data) {
       this.itemSingle = data
       this.index = data.status === '已上架' ? 0 : 1
       this.$refs.popup.open()
     },
-    saveRepertory() {
+    saveRepertory () {
       let data = {
         id: this.itemSingle.id,
         status: this.arrays[this.array[this.index]],
@@ -224,11 +221,16 @@ export default {
         }
       })
     },
-    setItem(id) {
+    setItem (id) {
       uni.navigateTo({
         url: '/pages/item/setInfo?id=' + id,
       })
     },
+    modigyLogo (id) {
+      uni.navigateTo({
+        url: "/pages/item/modigyLogo?id=" + id
+      })
+    }
   },
 }
 </script>
