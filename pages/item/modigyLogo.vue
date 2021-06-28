@@ -1,6 +1,6 @@
 <template>
   <view class="modigyLogo-box">
-    <view class="head">图片：</view>
+    <view class="head"></view>
     <uni-row class="content">
       <uni-col :span="24">
         <uni-file-picker ref="files"
@@ -74,24 +74,27 @@ export default {
     // 文件点击
     select (e) {
       this.ifSave = 0
-      let element = e.tempFiles[0];
-      let data = {};
-      data["key"] = 'tjpimg/' + element.uuid + '.' + element.extname;
-      data["policy"] = this.signal.policyBase64;
-      data["OSSAccessKeyId"] = this.signal.accessid;
-      data["success_action_status"] = 200;
-      data["signature"] = this.signal.signature;
-      data["name"] = element.name;
-      uni.uploadFile({
-        url: this.signal.host,
-        filePath: element.path,
-        formData: data,
-        success: () => {
-          const url = this.signal.host + '/' + data.key;
-          this.imageValue.push({ url: url })
-          this.ifSave = 1
-          console.log(this.imageValue)
-        },
+      e.tempFiles.forEach((logoPath, index) => {
+        let element = logoPath;
+        let data = {};
+        data["key"] = 'tjpimg/' + element.uuid + '.' + element.extname;
+        data["policy"] = this.signal.policyBase64;
+        data["OSSAccessKeyId"] = this.signal.accessid;
+        data["success_action_status"] = 200;
+        data["signature"] = this.signal.signature;
+        data["name"] = element.name;
+        uni.uploadFile({
+          url: this.signal.host,
+          filePath: element.path,
+          formData: data,
+          success: () => {
+            const url = this.signal.host + '/' + data.key;
+            this.imageValue.push({ url: url })
+            if (index + 1 === e.tempFiles.length) {
+              this.ifSave = 1
+            }
+          },
+        })
       })
     },
     async getSign () {
@@ -140,7 +143,6 @@ export default {
       })
         .then(res => {
           let { code, message } = res.data
-          console.log(code, message)
           if (code == 200) {
             uni.navigateTo({
               url: "/pages/item/items"
