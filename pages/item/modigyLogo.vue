@@ -70,6 +70,7 @@ page {
   top: 0;
   left: 0;
   padding: 10px;
+  background-color: #f5f5f5;
 }
 .footer {
   position: fixed;
@@ -77,6 +78,7 @@ page {
   left: 0;
   width: 100%;
   padding: 10px 0;
+  background-color: #f5f5f5;
 }
 .footer button {
   height: 30px;
