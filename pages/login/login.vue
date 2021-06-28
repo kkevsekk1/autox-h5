@@ -70,6 +70,7 @@ export default {
   },
   created () {
     uni.removeStorageSync('token')
+    
     this.getStorageSyncData()
   },
   onLoad (option) {
@@ -112,6 +113,10 @@ export default {
       }
     },
     getStorageSyncData () {
+      if(uni.getStorageSync("inviteCode")){
+        console.log(uni.getStorageSync("inviteCode"));
+        this.user.inviteCode =uni.getStorageSync("inviteCode");
+      }
       if (uni.getStorageSync("userData")) {
         let userList = JSON.parse(uni.getStorageSync("userData"))
         let { phone, verifyCode } = userList
