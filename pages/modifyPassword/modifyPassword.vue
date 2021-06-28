@@ -13,7 +13,7 @@
       </uni-forms-item>
       <button class="button-modify "
               @click="getPassword"
-              type="primary">确认修改 {{Password.firstPassword}}</button>
+              type="primary">确认修改</button>
     </uni-forms>
   </view>
 </template>
@@ -67,5 +67,6 @@ export default {
 }
 .button-modify {
   margin-top: 22px;
+  background-color: #409eff;
 }
 </style>
