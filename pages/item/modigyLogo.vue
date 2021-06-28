@@ -3,9 +3,10 @@
     <view class="head">图片：</view>
     <uni-row class="content">
       <uni-col :span="24">
-        <uni-file-picker v-model="imageValue"
-                         disable-preview
-                         :auto-upload="false"
+        <uni-file-picker  ref="files" 
+                          v-model="imageValue" 
+                          :disable-preview='false'
+                         :autoUpload="false"
                          fileMediatype="image"
                          mode="grid"
                          @select="select"
@@ -31,9 +32,12 @@
 </template>
 
 <script>
+import { request } from '../../server/request.js'
 export default {
   data () {
     return {
+      signal:{},
+      images:[],
       imageValue: [
         {
           "name": "logo.png",
@@ -56,22 +60,49 @@ export default {
       ],
     }
   },
+ async mounted(){
+    let x = await this.getSign(); 
+    this.signal =x;
+  },
   methods: {
     console (e) {
       console.log(e)
     },
     // 文件点击
     select (e) {
-      e.tempFiles.forEach(element => {
-        let imageData = {
-          "name": element.name,
-          "extname": element.extname,
-          "url": element.path,
-          'uuid': element.uuid
-        }
-        this.imageValue.push(imageData)
+      console.log(e,'select');
+       let element  = e.tempFiles[0];
+      let data={};
+      data["key"]= 'tjpimg/'+element.uuid+'.'+element.extname;
+      data["policy"]= this.signal.policyBase64;
+      data["OSSAccessKeyId"]= this.signal.accessid;
+      data["success_action_status"]= 200;
+      data["signature"]= this.signal.signature;
+      data["name"]= element.name;
+      uni.uploadFile({
+        url:this.signal.host,
+        filePath: element.path,
+        formData:data,
+          success: () => {
+              const url = this.signal.host+'/'+data.key;
+                console.log(url);
+          }
+      })
+      console.log()
+    },
+    async getSign() {
+      let signal = await request({
+        url: "/activity/getuploadSign",
+        method: "get",
       });
-      console.log(e)
+      signal =signal.data
+      console.log('signal_____', signal);
+      const result = {};
+      result.policyBase64 = signal.data.policy;
+      result.accessid = signal.data.accessid;
+      result.signature = signal.data.signature;
+      result.host = signal.data.host;
+      return result;
     },
     // 删除文件
     deleteLogo (e) {
