@@ -37,6 +37,16 @@
       }
     },
     {
+      "path": "pages/item/modigyLogo",
+      "style": {
+        "navigationBarTitleText": "添加图片",
+        "enablePullDownRefresh": false,
+        "app-plus": {
+          "titleNView": false
+        }
+      }
+    },
+    {
       "path": "pages/order/orders",
       "style": {
         "navigationBarTitleText": "订单",
