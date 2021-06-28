@@ -40,22 +40,19 @@ export default {
       images:[],
       imageValue: [
         {
-          "name": "logo.png",
-          "extname": "txt",
+
           "url": "../../static/logo.png",
-          "uuid": "1313214"
+
         },
         {
-          "name": "logo.png",
-          "extname": "png",
+
           "url": "../../static/logo.png",
-          "uuid": "1313216"
+
         },
         {
-          "name": "buy.png",
-          "extname": "png",
+
           "url": "../../static/buy.png",
-          "uuid": "131321"
+
         }
       ],
     }
