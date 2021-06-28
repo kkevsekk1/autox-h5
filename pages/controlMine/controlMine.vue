@@ -88,7 +88,7 @@ export default {
       })
     },
     convertContent(content) {
-      content = content.replace('{{code}}', this.mineData.code)
+      content = content.replace( new RegExp("{{code}}","gm"), this.mineData.code)
       return content
     },
     getColumn(name) {

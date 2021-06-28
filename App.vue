@@ -1,12 +1,21 @@
 <script>
 export default {
   onLaunch: function () {
+    try {
+      let code = this._router.history.current.query.code
+      if(code){
+        uni.setStorageSync("inviteCode",code)
+      }
+    } catch (error) {
+        console.log('获取邀请码失败',error)      
+    }
     // if (!(uni.getStorageSync('token'))) {
     //   uni.showToast({ title: '未登录', icon: 'none' })
     //   setTimeout(() => {
     //     uni.reLaunch({ url: '/pages/login/login' })
     //   }, 2000)
     // }
+
   },
   onShow: function () {
   },

@@ -17,8 +17,15 @@ export function formatTime (time) {
 
   return `${t1} ${t2}`
 }
-
+export function surplusDays (date) {
+  let now = new Date()
+  let until = new Date(date)
+  let days = (until - now) / 1000 / 3600 / 24 + 1
+  let surplusTime = Math.floor(days)
+  return surplusTime
+}   
 export default {
   formatNumber,
-  formatTime
+  formatTime,
+  surplusDays
 }

@@ -50,8 +50,7 @@
                   :value="index"
                   :range="array"
                   class="picker">
-            <view style="font-size: 10px">以  <text style="color: green;">{{ array[index] }}</text> 结算</view>
-            <text class="iconfont popup-icon">&#xe603;</text>
+            <view style="font-size: 10px">以  <text style="color: blue;">{{ array[index] }}</text> 结算</view>
           </picker>
         </uni-col>
           <uni-col :span="7">
