@@ -1,14 +1,14 @@
 <template>
   <view>
     <uni-row>
-      <uni-col :span="8">
+      <uni-col :span="7">
         <view @click="modigyLogo(item.id)">
           <img :src="item.commodityLogo"
                class="title-img"
                alt="">
         </view>
       </uni-col>
-      <uni-col :span="16">
+      <uni-col :span="17">
         <view>
           <text class="title">{{item.title}}</text>
           <text style="font-size:10px;color:orange;padding-left:3px;">剩{{itemSurplusDays}}天</text>
