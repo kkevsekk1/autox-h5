@@ -21,6 +21,7 @@
                :key="index">
         <uni-col>
           <pre-order-item :item="item"
+                          @itemNumChange="itemNumChange"
                           @deleteItem="removeItem"></pre-order-item>
         </uni-col>
       </uni-row>
@@ -31,7 +32,7 @@
     <view class="fiex-bottom">
       <uni-row>
          <uni-col :span="4">
-          <view @click="$refs.popupClient.open()"
+          <view @click="openHistory()"
                 style="font-size: 14px;">历史</view>
         </uni-col>
       
@@ -220,13 +221,13 @@
         </uni-col>
         <uni-col :span="24">
           <view class="popipClient-content"
-                v-for="(item,index) in clientItems"
+                v-for="(cart,index) in histroyCarts"
                 :key="index">
-            <view @click="optItem(item.list)">
-              <view style="font-size:14px">{{item.name}}</view>
-              <view style="font-size:12px">{{item.createTime}}</view>
+            <view @click="toHistoryCart(cart)">
+              <view style="font-size:14px">{{cart.name}}</view>
+              <view style="font-size:12px">{{cart.createTime | formatTime}}</view>
               <view class="iconfont icon-delete"
-                    @click.stop="removeClientItem(item.id)">&#xe62f;</view>
+                    @click.stop="clearHistoryCart(cart.uuid)">&#xe62f;</view>
             </view>
           </view>
         </uni-col>
@@ -241,6 +242,8 @@ import preOrderItem from './preOrderItem.vue'
 import UUID from '@/utils/uuid'
 import isWx from '../../utils/weixinCheck'
 import weixinService from '../../server/weixinService.js'
+import shoppingCartService from '../../server/ShoppingCartService'
+
 export default {
   components: { preOrderItem },
   data () {
@@ -259,7 +262,7 @@ export default {
       },
       cartItems: [],
       popupItems: [],
-      clientItems: [],
+      histroyCarts: [],
       univalences: {
         普通: 'sellingPrice',
         会员: 'vipPrice',
@@ -309,6 +312,20 @@ export default {
     this.initWeixin()
   },
   methods: {
+    openHistory(){
+      this.$refs.popupClient.open();
+      shoppingCartService.getShoppingCarts().then((res)=>{
+        let data  =res.data.data;
+        console.log(data);
+        if(data){
+          this.histroyCarts=[];
+          data.forEach(item=>{
+             this.histroyCarts.push(item); 
+          }
+          );
+        }
+      })
+    },
     initWeixin () {
       let jssdk = weixinService.setWxJsdk(
         encodeURIComponent(location.href.split('#')[0])
@@ -363,14 +380,19 @@ export default {
         let targetItem = targetItems[0]
         targetItem.num += item.num
         this.$set(this.cartItems, index, targetItem)
+            shoppingCartService.updateSCartItems(this.cart.uuid,targetItem.id,targetItem.num);
       } else {
         this.cartItems.push(item)
+       shoppingCartService.updateSCartItems(this.cart.uuid,item.id,item.num);
       }
       uni.showToast({
         title: '添加成功',
       })
       this.search = "";
       //添加进购物车
+    },
+    itemNumChange(item){
+      shoppingCartService.updateSCartItems(this.cart.uuid,item.id,item.num);
     },
     callBackSetting () {
       //确定设置
@@ -385,6 +407,7 @@ export default {
       console.log(this.cart.uuid)
       this.$refs.popup.close()
       //初始化购物车
+      shoppingCartService.initShoppingCart(this.cart.uuid,this.cart.user.code,this.cart.user.code);
       //继续扫码
       this.scanBarcode()
     },
@@ -396,7 +419,7 @@ export default {
         title: '加载中',
       })
       let rs = await request({
-        url: '/item/findItems?search=' + this.search,
+        url: '/item/findItems?search=' + this.search+"&status="+0,
         method: 'get',
       })
       uni.hideLoading()
@@ -405,7 +428,7 @@ export default {
       rs.forEach((item) => {
         item.surplusDays = this.surplusDays(item.endTime)
         item.univalence = item[this.univalences[this.userType]]
-        item.num = -1
+       item.num =Number(item.num||-1);
       })
       this.popupItems = rs
       //如果扫码查询结果 大于1 提供选择界面
@@ -458,27 +481,41 @@ export default {
         })
         return null
       }
-      let id = Math.round(Math.random() * (10000 - 1)) + 1;
-      let data = {
-        id: id,
-        name: this.name,
-        createTime: new Date().toLocaleString(),
-        list: this.cartItems
-      }
-      this.clientItems.push(data)
-      this.cartItems = []
+      this.cartItems = [];
+      this.cart={user:{code:""}};
+     this.$forceUpdate();
       this.$refs.popupSum.close()
       uni.showToast({
         title: "暂存成功"
       })
     },
-    optItem (item) {
-      console.log("冒泡了")
-      this.cartItems = item
-      this.$refs.popupClient.close()
+    clearHistoryCart (uuid) {
+      shoppingCartService.deleteSCart(uuid);
+      this.histroyCarts =this.histroyCarts.filter(cart=>{
+        return cart.uuid!=uuid;
+      })
     },
-    removeClientItem (id) {
-      this.deleteItem(id, this.clientItems)
+    toHistoryCart (cart) {
+    this.cart={user:{code:""}};
+    this.cart.uuid =cart.uuid;
+    this.cart.user.code=cart.code;
+    //1 查询出， 购物车的商品和数量，
+    shoppingCartService.getSCartItems(cart.uuid).then(res=>{
+      res =res.data;
+      uni.showToast({
+        title: res.message
+      })
+      this.cartItems=[];
+      if(res.code==200){
+         res.data.forEach(item=>{
+              item.surplusDays = this.surplusDays(item.endTime)
+              item.univalence = item[this.univalences[this.userType]]
+              item.num =Number(item.num||-1);
+           this.cartItems.push(item);
+         });
+      }
+    });
+    this.$refs.popupClient.close();
     }
   },
 }

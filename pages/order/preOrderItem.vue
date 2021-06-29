@@ -105,6 +105,7 @@ export default {
     },
     handleCountClick(val) {
       this.item.num = val
+      this.$emit("itemNumChange",this.item);
     },
   },
 }
