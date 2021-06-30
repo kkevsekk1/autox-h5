@@ -462,17 +462,10 @@ export default {
       })
     },
     removeItem(id) {
-      this.deleteItem(id, this.cartItems)
-    },
-    deleteItem(id, items) {
-      let deleteIndex
-      items.forEach((element, index) => {
-        if (element.id === id) {
-          deleteIndex = index
-          return
-        }
+     this.cartItems = this.cartItems.filter((item) => {
+          return item.id!=id;
       })
-      items.splice(deleteIndex, 1)
+      shoppingCartService.deleteSCartItem(this.cart.uuid,id);
     },
     addCart(item) {
       this.addItemToItems(item)

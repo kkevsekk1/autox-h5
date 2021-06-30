@@ -40,6 +40,14 @@ export class ShoppingCartService{
       console.log(res);
     });
  }
+deleteSCartItem(uuid,itemId){
+  return request({
+      url: '/item/deleteSCartItem?uuid='+uuid+'&itemId='+itemId,
+      method: 'get',
+    }).then((res)=>{
+      console.log(res);
+    });
+ }
  getSCartItems(uuid){
   return request({
     url: '/item/getSCartItems?uuid='+uuid,
