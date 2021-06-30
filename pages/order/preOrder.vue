@@ -1,28 +1,31 @@
 <template>
   <view class="preOrder-box">
-    <view v-if="cart.user.code"
-          class="bead">
+    <view v-if="cart.user.code" class="bead">
       <uni-row :gutter="20">
-        <uni-col :span='4'
-                 class="bade-name">
+        <uni-col :span="4" class="bade-name">
           <text>客户 :</text>
         </uni-col>
         <uni-col :span="20">
-          <uni-easyinput v-model="cart.user.code"
-                         style="background-color: #fff"
-                         placeholder="请输入客户代码或者会员号"></uni-easyinput>
+          <uni-easyinput
+            v-model="cart.user.code"
+            style="background-color: #fff"
+            placeholder="请输入客户代码或者会员号"
+          ></uni-easyinput>
         </uni-col>
       </uni-row>
     </view>
-    <view v-if="cartItems.length>0"
-          class="contnet"
-          :style="cart.user.code?'padding-top:66px ':''">
-      <uni-row v-for="item,index in  cartItems"
-               :key="index">
+    <view
+      v-if="cartItems.length > 0"
+      class="contnet"
+      :style="cart.user.code ? 'padding-top:66px ' : ''"
+    >
+      <uni-row v-for="(item, index) in cartItems" :key="index">
         <uni-col>
-          <pre-order-item :item="item"
-                          @itemNumChange="itemNumChange"
-                          @deleteItem="removeItem"></pre-order-item>
+          <pre-order-item
+            :item="item"
+            @itemNumChange="itemNumChange"
+            @deleteItem="removeItem"
+          ></pre-order-item>
         </uni-col>
       </uni-row>
     </view>
@@ -31,80 +34,83 @@
     </view>
     <view class="fiex-bottom">
       <uni-row>
-         <uni-col :span="4">
-          <view @click="openHistory()"
-                style="font-size: 14px;">历史</view>
+        <uni-col :span="4">
+          <view @click="openHistory()" style="font-size: 14px">历史</view>
         </uni-col>
-      
-         <uni-col :span="10">
-          <text style="font-size: 10px" >普通价：</text>
-          <text style="color: red;font-size: 14px"> ￥{{ countP }}</text>
+
+        <uni-col :span="10">
+          <text style="font-size: 10px">普通价：</text>
+          <text style="color: red; font-size: 14px"> ￥{{ countP }}</text>
         </uni-col>
         <uni-col :span="10">
           <text style="font-size: 10px">会员价：</text>
-          <text style="color: red;font-size: 14px"> ￥{{ countH }}</text>
+          <text style="color: red; font-size: 14px"> ￥{{ countH }}</text>
         </uni-col>
       </uni-row>
       <uni-row>
-       <uni-col :span="7" >
-          <picker @change="bindPickerChange"
-                  :value="index"
-                  :range="array"
-                  class="picker">
-            <view style="font-size: 10px">以  <text style="color: blue;">{{ array[index] }}</text> 结算</view>
+        <uni-col :span="7">
+          <picker
+            @change="bindPickerChange"
+            :value="index"
+            :range="array"
+            class="picker"
+          >
+            <view style="font-size: 10px"
+              >以 <text style="color: blue">{{ array[index] }}</text> 结算</view
+            >
           </picker>
         </uni-col>
-          <uni-col :span="7">
+        <uni-col :span="7">
           <text style="font-size: 10px">共：</text>
-          <text style="color: red;font-size: 14px"> ￥{{ count }}</text>
+          <text style="color: red; font-size: 14px"> ￥{{ count }}</text>
         </uni-col>
-        <uni-col :span="5"
-                 style="text-align: left">
-          <button class="mini-btn"
-                  style="background-color: #409eff"
-                  type="primary"
-                  size="mini"
-                  @click="$refs.popupSum.open()">
+        <uni-col :span="5" style="text-align: left">
+          <button
+            class="mini-btn"
+            style="background-color: #409eff"
+            type="primary"
+            size="mini"
+            @click="$refs.popupSum.open()"
+          >
             完成
           </button>
         </uni-col>
-        <uni-col :span="5"
-                 style="text-align: left">
-          <button class="mini-btn"
-                  style="background-color: #409eff"
-                  type="primary"
-                  size="mini"
-                  @click="scanBarcode">
+        <uni-col :span="5" style="text-align: left">
+          <button
+            class="mini-btn"
+            style="background-color: #409eff"
+            type="primary"
+            size="mini"
+            @click="scanBarcode"
+          >
             扫码
           </button>
         </uni-col>
       </uni-row>
     </view>
     <!-- 弹窗会员码 -->
-    <uni-popup ref="popup"
-               type="center">
+    <uni-popup ref="popup" type="center">
       <view class="popup-out">
-        <view class="popup-row"
-              style="text-align: center"> 设置出库单</view>
+        <view class="popup-row" style="text-align: center"> 设置出库单</view>
         <uni-row class="popup-row">
-          <uni-col :span="5"
-                   style="text-align:center">
-            <text style="height:36px;line-height:36px;">
-              客户：
-            </text>
+          <uni-col :span="5" style="text-align: center">
+            <text style="height: 36px; line-height: 36px"> 客户： </text>
           </uni-col>
           <uni-col :span="19">
-            <uni-easyinput v-model="cart.user.code"
-                           style="background-color: #fff"
-                           placeholder="请输入客户代码或者会员号"></uni-easyinput>
+            <uni-easyinput
+              v-model="cart.user.code"
+              style="background-color: #fff"
+              placeholder="请输入客户代码或者会员号"
+            ></uni-easyinput>
           </uni-col>
         </uni-row>
         <uni-row>
-          <uni-col :span="6"
-                   :offset="18">
-            <button size="mini"
-                    style="background-color: #409eff; color: #fff; margin-top: 10px"
-                    @click="callBackSetting">
+          <uni-col :span="6" :offset="18">
+            <button
+              size="mini"
+              style="background-color: #409eff; color: #fff; margin-top: 10px"
+              @click="callBackSetting"
+            >
               确定
             </button>
           </uni-col>
@@ -113,34 +119,32 @@
     </uni-popup>
 
     <!-- 扫码 -->
-    <uni-popup ref="popupItems"
-               type="bottom"
-               background-color="#f5f5f">
+    <uni-popup ref="popupItems" type="bottom" background-color="#f5f5f">
       <view class="popup-items">
         <view class="popup-item-search">
-          <uni-easyinput v-model="search"
-                         style="background-color: #fff; height: 25px; margin-bottom: 10px"
-                         placeholder="请输入搜索内容"></uni-easyinput>
+          <uni-easyinput
+            v-model="search"
+            style="background-color: #fff; height: 25px; margin-bottom: 10px"
+            placeholder="请输入搜索内容"
+          ></uni-easyinput>
         </view>
-        <view style="padding-top:55px">
-          <scroll-view class="popup-iten-conten"
-                       scroll-y="true">
+        <view style="padding-top: 55px">
+          <scroll-view class="popup-iten-conten" scroll-y="true">
             <uni-row>
-              <uni-col v-if="popupItems.length > 0"
-                       :span="24">
-                <view v-for="(item, index) in popupItems"
-                      :key="index"
-                      @click="addCart(item)"
-                      style="margin: 10px 0; background: #fff; padding: 10px">
+              <uni-col v-if="popupItems.length > 0" :span="24">
+                <view
+                  v-for="(item, index) in popupItems"
+                  :key="index"
+                  @click="addCart(item)"
+                  style="margin: 10px 0; background: #fff; padding: 10px"
+                >
                   <uni-row :gutter="20">
-                    <uni-col :span="6"
-                             class="popup-item-img">
-                      <img src="../../static/logo.png"
-                           alt="" />
+                    <uni-col :span="6" class="popup-item-img">
+                      <img src="../../static/logo.png" alt="" />
                     </uni-col>
-                    <uni-col :span="18"
-                             style="font-size: 14px">
-                      <view style="font-size: 16px; font-weight: 700">{{ item.title }}
+                    <uni-col :span="18" style="font-size: 14px">
+                      <view style="font-size: 16px; font-weight: 700"
+                        >{{ item.title }}
                       </view>
                       <uni-row class="popup-item-nav">
                         <uni-col :span="24">
@@ -150,84 +154,74 @@
                           <view>剩余：{{ item.surplusDays }} 天</view>
                         </uni-col>
                         <uni-col :span="24">
-                          <text>库存：{{ item.surplusStock }} {{ item.unit }}
+                          <text
+                            >库存：{{ item.surplusStock }} {{ item.unit }}
                           </text>
-                          <text style="float: right; color: red">单价： {{ item.univalence }} 元</text>
+                          <text style="float: right; color: red"
+                            >单价： {{ item.univalence }} 元</text
+                          >
                         </uni-col>
                       </uni-row>
                     </uni-col>
                   </uni-row>
                 </view>
               </uni-col>
-              <uni-col v-if="popupItems.length == 0"
-                       :span="24">
+              <uni-col v-if="popupItems.length == 0" :span="24">
                 <view class="popupItems-false">没有该品种，请先入库</view>
               </uni-col>
             </uni-row>
           </scroll-view>
         </view>
         <view class="popup-item-btn">
-          <button size="mini"
-                  style="float: right"
-                  @click="$refs.popupItems.close()">
-            取消
-          </button>
+          <button size="mini" style="float: right" @click="cancel">取消</button>
         </view>
       </view>
     </uni-popup>
     <!-- 确认出库 -->
-    <uni-popup ref="popupSum"
-               type="center">
+    <uni-popup ref="popupSum" type="center">
       <view class="popupSum">
         <uni-row>
-          <uni-col class="popupSum-nav"
-                   :offset="3"
-                   :span="21">
-            <text>{{name}}</text>
+          <uni-col class="popupSum-nav" :offset="3" :span="21">
+            <text>{{ name }}</text>
           </uni-col>
-          <uni-col class="popupSum-nav"
-                   :offset="3"
-                   :span="21">
-            <text>共计：{{sumTo}} 件</text>
+          <uni-col class="popupSum-nav" :offset="3" :span="21">
+            <text>共计：{{ sumTo }} 件</text>
           </uni-col>
-          <uni-col class="popupSum-nav"
-                   :offset="3"
-                   :span="21">
-            <text>合计：{{count}} 元</text>
+          <uni-col class="popupSum-nav" :offset="3" :span="21">
+            <text>合计：{{ count }} 元</text>
           </uni-col>
           <uni-col></uni-col>
-          <uni-col :offset="2"
-                   :span="8"
-                   class="btn-storage">
-            <button size="mini"
-                    style="float:right"
-                    @click="temporaryStore">暂存退出</button>
+          <uni-col :offset="2" :span="8" class="btn-storage">
+            <button size="mini" style="float: right" @click="temporaryStore">
+              暂存退出
+            </button>
           </uni-col>
-          <uni-col :offset="4"
-                   :span="8"
-                   class="btn-delivery">
+          <uni-col :offset="4" :span="8" class="btn-delivery">
             <button size="mini">确定出库</button>
           </uni-col>
         </uni-row>
       </view>
     </uni-popup>
     <!-- 暂存 -->
-    <uni-popup ref="popupClient"
-               type="right">
+    <uni-popup ref="popupClient" type="right">
       <uni-row class="popupClient">
-        <uni-col :span="24"
-                 class="popupClient-title">
-          暂存区
-        </uni-col>
+        <uni-col :span="24" class="popupClient-title"> 暂存区 </uni-col>
         <uni-col :span="24">
-          <view class="popipClient-content"
-                v-for="(cart,index) in histroyCarts"
-                :key="index">
+          <view
+            class="popipClient-content"
+            v-for="(cart, index) in histroyCarts"
+            :key="index"
+          >
             <view @click="toHistoryCart(cart)">
-              <view style="font-size:14px">{{cart.name}}</view>
-              <view style="font-size:12px">{{cart.createTime | formatTime}}</view>
-              <view class="iconfont icon-delete"
-                    @click.stop="clearHistoryCart(cart.uuid)">&#xe62f;</view>
+              <view style="font-size: 14px">{{ cart.name }}</view>
+              <view style="font-size: 12px">{{
+                cart.createTime | formatTime
+              }}</view>
+              <view
+                class="iconfont icon-delete"
+                @click.stop="clearHistoryCart(cart.uuid)"
+                >&#xe62f;</view
+              >
             </view>
           </view>
         </uni-col>
@@ -246,9 +240,9 @@ import shoppingCartService from '../../server/ShoppingCartService'
 
 export default {
   components: { preOrderItem },
-  data () {
+  data() {
     return {
-      name: "张三",
+      name: '张三',
       search: '',
       userType: '普通',
       index: 0,
@@ -271,68 +265,71 @@ export default {
     }
   },
   computed: {
-    count () {
+    count() {
       let sumdata = 0
       this.cartItems.forEach((item) => {
-        console.log(item.sum, item.num, item.univalence);
+        console.log(item.sum, item.num, item.univalence)
         sumdata += Number(item.num * item.univalence)
       })
-      return sumdata.toFixed(2);
+      return sumdata.toFixed(2)
     },
-    countP () {
+    countP() {
       let sumdata = 0
       this.cartItems.forEach((item) => {
-        console.log(item.sum, item.num, item.sellingPrice);
+        console.log(item.sum, item.num, item.sellingPrice)
         sumdata += Number(item.num * item.sellingPrice)
       })
-      return sumdata.toFixed(2);
+      return sumdata.toFixed(2)
     },
-  countH () {
+    countH() {
       let sumdata = 0
       this.cartItems.forEach((item) => {
-        console.log(item.sum, item.num, item.vipPrice);
+        console.log(item.sum, item.num, item.vipPrice)
         sumdata += Number(item.num * item.vipPrice)
       })
-      return sumdata.toFixed(2);
+      return sumdata.toFixed(2)
     },
-    sumTo () {
+    sumTo() {
       let numTodata = 0
       this.cartItems.forEach((item) => {
         numTodata += Number(item.num)
       })
       return numTodata
-    }
+    },
   },
   watch: {
     search: function () {
       this.debounce(300, this.loadInfoByBarcode)
     },
   },
-  mounted () {
+  mounted() {
     this.initWeixin()
   },
   methods: {
-    openHistory(){
-      this.$refs.popupClient.open();
-      shoppingCartService.getShoppingCarts().then((res)=>{
-        let data  =res.data.data;
-        console.log(data);
-        if(data){
-          this.histroyCarts=[];
-          data.forEach(item=>{
-             this.histroyCarts.push(item); 
-          }
-          );
+    cancel() {
+      this.$refs.popupItems.close()
+      this.search = ''
+    },
+    openHistory() {
+      this.$refs.popupClient.open()
+      shoppingCartService.getShoppingCarts().then((res) => {
+        let data = res.data.data
+        console.log(data)
+        if (data) {
+          this.histroyCarts = []
+          data.forEach((item) => {
+            this.histroyCarts.push(item)
+          })
         }
       })
     },
-    initWeixin () {
+    initWeixin() {
       let jssdk = weixinService.setWxJsdk(
         encodeURIComponent(location.href.split('#')[0])
       )
       console.log(jssdk)
     },
-    async scanBarcode () {
+    async scanBarcode() {
       if (!this.cart.user.code) {
         this.$refs.popup.open()
         return
@@ -359,7 +356,7 @@ export default {
       }
       //加载商品信息
     },
-    debounce (wait, fun) {
+    debounce(wait, fun) {
       if (this.timer) {
         clearInterval(this.timer)
       }
@@ -367,7 +364,7 @@ export default {
         fun()
       }, wait)
     },
-    addItemToItems (item) {
+    addItemToItems(item) {
       //添加商品到商品列表
       //如果列表中存在 者增加数量
       let index = this.cartItems.findIndex((tmpItem) => tmpItem.id == item.id)
@@ -380,21 +377,25 @@ export default {
         let targetItem = targetItems[0]
         targetItem.num += item.num
         this.$set(this.cartItems, index, targetItem)
-            shoppingCartService.updateSCartItems(this.cart.uuid,targetItem.id,targetItem.num);
+        shoppingCartService.updateSCartItems(
+          this.cart.uuid,
+          targetItem.id,
+          targetItem.num
+        )
       } else {
         this.cartItems.push(item)
-       shoppingCartService.updateSCartItems(this.cart.uuid,item.id,item.num);
+        shoppingCartService.updateSCartItems(this.cart.uuid, item.id, item.num)
       }
       uni.showToast({
         title: '添加成功',
       })
-      this.search = "";
+      this.search = ''
       //添加进购物车
     },
-    itemNumChange(item){
-      shoppingCartService.updateSCartItems(this.cart.uuid,item.id,item.num);
+    itemNumChange(item) {
+      shoppingCartService.updateSCartItems(this.cart.uuid, item.id, item.num)
     },
-    callBackSetting () {
+    callBackSetting() {
       //确定设置
       if (this.cart.user.code == '' || !this.cart.user.code) {
         uni.showToast({
@@ -407,19 +408,23 @@ export default {
       console.log(this.cart.uuid)
       this.$refs.popup.close()
       //初始化购物车
-      shoppingCartService.initShoppingCart(this.cart.uuid,this.cart.user.code,this.cart.user.code);
+      shoppingCartService.initShoppingCart(
+        this.cart.uuid,
+        this.cart.user.code,
+        this.cart.user.code
+      )
       //继续扫码
       this.scanBarcode()
     },
-    async loadInfoByBarcode () {
+    async loadInfoByBarcode() {
       if (!this.search) {
-        return;
+        return
       }
       uni.showLoading({
         title: '加载中',
       })
       let rs = await request({
-        url: '/item/findItems?search=' + this.search+"&status="+0,
+        url: '/item/findItems?search=' + this.search + '&status=' + 0,
         method: 'get',
       })
       uni.hideLoading()
@@ -428,7 +433,7 @@ export default {
       rs.forEach((item) => {
         item.surplusDays = this.surplusDays(item.endTime)
         item.univalence = item[this.univalences[this.userType]]
-       item.num =Number(item.num||-1);
+        item.num = Number(item.num || -1)
       })
       this.popupItems = rs
       //如果扫码查询结果 大于1 提供选择界面
@@ -442,7 +447,7 @@ export default {
         this.$refs.popupItems.open()
       }
     },
-    surplusDays (date) {
+    surplusDays(date) {
       let now = new Date()
       let until = new Date(date)
       let days = (until - now) / 1000 / 3600 / 24 + 1
@@ -456,10 +461,10 @@ export default {
         item.univalence = item[this.univalences[this.userType]]
       })
     },
-    removeItem (id) {
+    removeItem(id) {
       this.deleteItem(id, this.cartItems)
     },
-    deleteItem (id, items) {
+    deleteItem(id, items) {
       let deleteIndex
       items.forEach((element, index) => {
         if (element.id === id) {
@@ -469,54 +474,54 @@ export default {
       })
       items.splice(deleteIndex, 1)
     },
-    addCart (item) {
+    addCart(item) {
       this.addItemToItems(item)
       this.$refs.popupItems.close()
     },
-    temporaryStore () {
+    temporaryStore() {
       if (this.cartItems.length === 0) {
         uni.showToast({
-          title: "目前没有商品可暂存",
-          icon: "none"
+          title: '目前没有商品可暂存',
+          icon: 'none',
         })
         return null
       }
-      this.cartItems = [];
-      this.cart={user:{code:""}};
-     this.$forceUpdate();
+      this.cartItems = []
+      this.cart = { user: { code: '' } }
+      this.$forceUpdate()
       this.$refs.popupSum.close()
       uni.showToast({
-        title: "暂存成功"
+        title: '暂存成功',
       })
     },
-    clearHistoryCart (uuid) {
-      shoppingCartService.deleteSCart(uuid);
-      this.histroyCarts =this.histroyCarts.filter(cart=>{
-        return cart.uuid!=uuid;
+    clearHistoryCart(uuid) {
+      shoppingCartService.deleteSCart(uuid)
+      this.histroyCarts = this.histroyCarts.filter((cart) => {
+        return cart.uuid != uuid
       })
     },
-    toHistoryCart (cart) {
-    this.cart={user:{code:""}};
-    this.cart.uuid =cart.uuid;
-    this.cart.user.code=cart.code;
-    //1 查询出， 购物车的商品和数量，
-    shoppingCartService.getSCartItems(cart.uuid).then(res=>{
-      res =res.data;
-      uni.showToast({
-        title: res.message
+    toHistoryCart(cart) {
+      this.cart = { user: { code: '' } }
+      this.cart.uuid = cart.uuid
+      this.cart.user.code = cart.code
+      //1 查询出， 购物车的商品和数量，
+      shoppingCartService.getSCartItems(cart.uuid).then((res) => {
+        res = res.data
+        uni.showToast({
+          title: res.message,
+        })
+        this.cartItems = []
+        if (res.code == 200) {
+          res.data.forEach((item) => {
+            item.surplusDays = this.surplusDays(item.endTime)
+            item.univalence = item[this.univalences[this.userType]]
+            item.num = Number(item.num || -1)
+            this.cartItems.push(item)
+          })
+        }
       })
-      this.cartItems=[];
-      if(res.code==200){
-         res.data.forEach(item=>{
-              item.surplusDays = this.surplusDays(item.endTime)
-              item.univalence = item[this.univalences[this.userType]]
-              item.num =Number(item.num||-1);
-           this.cartItems.push(item);
-         });
-      }
-    });
-    this.$refs.popupClient.close();
-    }
+      this.$refs.popupClient.close()
+    },
   },
 }
 </script>
