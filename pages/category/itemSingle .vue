@@ -18,14 +18,25 @@
         <view>剩余：{{item.surplusStock}} {{item.unit}}</view>
       </view>
       <view class="price">
-        <text class="iconfont">&#xe657;</text>
-        <text>{{item.sellingPrice}}</text>
+        <text class="iconfont priceText-icon">&#xe657;</text>
+        <text class="priceText">{{item.sellingPrice}}</text>
         <text class="vipPrice">
           <text class="iconfont  subTitle-icon-vip">&#xe601;</text>
-          <text class="iconfont">&#xe657;</text>
-          <text>{{item.vipPrice}}</text>
+          <text class="iconfont priceText-icon">&#xe657;</text>
+          <text class="priceText">{{item.vipPrice}}</text>
         </text>
-        <text class="iconfont subTitle-icon-gouwuche  ">&#xe615;</text>
+        <view class="subTitle-icon-gouwuche">
+          <text class="iconfont  "
+                v-show="clickbBuy=='1'"
+                @click="item.buyNunber--">&#xeb41;</text>
+          <input type="number"
+                 v-show="clickbBuy=='1'"
+                 v-model="item.buyNunber"
+                 maxlength="3">
+          <text class="iconfont "
+                :class="{subTitleTranslateY:clickbBuy=='1'}"
+                @click="item.buyNunber++">&#xe615;</text>
+        </view>
       </view>
     </uni-col>
   </uni-row>
@@ -34,6 +45,16 @@
 <script>
 export default {
   props: ['item'],
+  data () {
+    return {
+      clickbBuy: "0"
+    }
+  },
+  watch: {
+    'item.buyNunber' () {
+      this.shopBuy()
+    }
+  },
   computed: {
     itemSurplusDays () {
       return this.surplusDays(this.item.endTime);
@@ -47,6 +68,16 @@ export default {
       let surplusTime = Math.floor(days)
       return surplusTime
     },
+    shopBuy () {
+      this.clickbBuy = '1'
+      if (this.item.buyNunber < 0) {
+        this.item.buyNunber = 0
+        return
+      }
+      if (this.item.buyNunber == 1000) {
+        this.item.buyNunber = 999
+      }
+    }
   }
 }
 </script>
@@ -84,21 +115,47 @@ export default {
 }
 .price {
   padding-top: 10px;
-  font-size: 16px;
-  color: #7425db;
+  color: #9266f9;
 }
 .vipPrice {
   padding-left: 5px;
-  color: #fa2209;
+  color: #ff4b36;
 }
 .subTitle-icon-vip {
   display: inline-block;
-  font-size: 26px;
+  font-size: 22px;
   transform: translateY(3px);
 }
 .subTitle-icon-gouwuche {
   float: right;
-  font-size: 20px;
   transform: translateY(5px);
+}
+.subTitle-icon-gouwuche text:nth-child(1) {
+  display: inline-block;
+  font-size: 20px;
+  transform: translateY(-2px);
+}
+.subTitle-icon-gouwuche input:nth-child(2) {
+  display: inline-block;
+  width: 25px;
+  text-align: center;
+  font-size: 14px;
+  padding: 0 5px;
+  color: #000;
+}
+.subTitle-icon-gouwuche text:nth-child(3) {
+  display: inline-block;
+  font-size: 18px;
+}
+.subTitleTranslateY {
+  transform: translateY(-3px);
+}
+.priceText {
+  font-size: 16px;
+  font-weight: 700;
+}
+.priceText-icon {
+  font-size: 12px;
+  font-weight: 700;
 }
 </style>
