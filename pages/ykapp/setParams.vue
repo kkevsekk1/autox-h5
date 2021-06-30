@@ -91,7 +91,11 @@ export default {
     uni.showLoading({ title: '加载中' })
     await this.loadMaterials()
     let rememberParamsStr = await this.loadRemember()
-    this.rememberParams = JSON.parse(rememberParamsStr)
+    try {
+      this.rememberParams = JSON.parse(rememberParamsStr)
+    } catch (error) {
+    }
+    await this.loadScript();
     await this.loadUserScript();
     this.convertParams(this.rememberParams)
     this.convertLayout()
@@ -102,6 +106,24 @@ export default {
     checkBoxChange (e) {
       e.defaultValue = !e.defaultValue;
     },
+    loadScript () {
+      return new Promise((resolve, reject) => {
+        request({
+          url: '/script/getScript?id=' + this.scriptId,
+          method: 'get',
+        }).then((res) => {
+          let {
+            data: { name: scriptName, taskParameter: scriptParams },
+            code,
+          } = res.data
+          if (code === 200) {
+            this.scriptParams = scriptParams
+            resolve(code)           
+          }
+        })
+      })
+    },
+
     loadUserScript () {
       let reqData={scriptId:this.scriptId}
       return new Promise((resolve, reject) => {
@@ -111,11 +133,12 @@ export default {
           data:reqData
         }).then((res) => {
           console.log(res.data)
-          let {
-            data: {chargeWay,unitPrice,endTime,deviceCount,script:{name: scriptName, taskParameter: scriptParams} },
-            code,
+         let {  code,
           } = res.data
           if (code === 200) {
+          let {
+            data: {chargeWay,unitPrice,endTime,deviceCount,script:{name: scriptName, taskParameter: scriptParams} },
+          } = res.data
            this.scriptParams = JSON.parse(scriptParams)
             this.scriptName = scriptName
             this.chargeWay =chargeWay;
@@ -130,9 +153,8 @@ export default {
             if(chargeWay==3){
               this.remark ='包月'+deviceCount+'台 ' +this.getLeftTime(new Date(endTime))
             }
-            resolve(code)
-           
           }
+          resolve(code)
         })
       })
     },
@@ -168,6 +190,8 @@ getLeftTime(endTime){
           let { data, code } = res.data
           if (code === 200) {
             resolve(data)
+          }else{
+            resolve({code:122})
           }
         })
       })
