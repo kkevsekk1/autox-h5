@@ -8,14 +8,16 @@
       <text class="iconfont popupPicture-icon"
             @click="$refs.popupPicture.close()">&#xe62f;</text>
     </view>
-    <scroll-view scroll-y="true"
-                 style="height:500px;">
+    <scroll-view scroll-y="true" 
+                 style="height:500px; padding:">
+        <view style="padding:70px 0px">
       <view v-for="(picture,index) in popupPicture.pictures"
             :key="index">
         <img class="popupPicture-img"
              :src="picture"
              alt="">
       </view>
+        </view>
     </scroll-view>
   </uni-popup>
 
