@@ -35,25 +35,25 @@
       <view>
         <view class="typeOrderBy" v-if="items.length != 0">
           <text
-            v-for="(orderBy, index) in typeOrderBys"
+            v-for="(sortType, index) in sortTypes"
             :key="index"
-            @click="typeOrderBy(index, orderBy.type, priceOrderBy)"
+            @click="changeSort(sortType)"
           >
-            <text :class="{ orderByRed: typeIndex === index }">{{
-              orderBy.name
+            <text :class="{ orderByRed: curSort.type === sortType.type }">{{
+              sortType.name
             }}</text>
-            <text v-show="orderBy.type == 'price'" class="typeOrderBy-name">
+            <text v-show="sortType.type == 'price'" class="typeOrderBy-name">
               <text
                 class="iconfont typeOrderBy-name-before"
                 :class="{
-                  orderByRed: priceOrderBy == 'asc' && typeIndex === index,
+                  orderByRed: curSort.vector == 'asc' && curSort.type == 'price',
                 }"
                 >&#xea4c;</text
               >
               <text
                 class="iconfont typeOrderBy-name-after"
                 :class="{
-                  orderByRed: priceOrderBy == 'desc' && typeIndex === index,
+                  orderByRed: curSort.vector == 'desc' && curSort.type == 'price',
                 }"
                 >&#xea4d;</text
               >
@@ -158,7 +158,6 @@ export default {
   },
   data() {
     return {
-   
       popupPicture: {
         itemId: '',
         itemTitle: '',
@@ -169,18 +168,22 @@ export default {
         showCart: false,
         items: [],
       },
+      curSort: {
+        type: 'id',
+        vector: 'desc',
+      },
+      //
       search: '',
-      priceOrderBy: 'asc',
-      orderBy: 'id desc',
       type: '',
-      page: { index: 1, size: 999 },
+      page: { index: 1, size: 15, orderBy: 'id desc', count: 1000 },
+      //
       curIndex: -1,
       navList: [],
       items: [],
       timer: '',
       typeIndex: 0,
-      fid:-1,
-      typeOrderBys: [
+      fid: -1,
+      sortTypes: [
         {
           name: '综合',
           type: 'id',
@@ -193,15 +196,15 @@ export default {
     }
   },
   async created() {
-    this.fid =uni.getStorageSync('fid'); 
+    this.fid = uni.getStorageSync('fid')
     this.getCategoryType('商品类型')
     await this.loadShoppingCart()
-    this.gatItems()
+    this.loadItems()
   },
   onPullDownRefresh() {
     this.page.index = 1
     this.items = []
-    this.gatItems()
+    this.loadItems()
     setTimeout(() => {
       uni.stopPullDownRefresh()
     }, 1000)
@@ -210,18 +213,24 @@ export default {
     async loadShoppingCart() {
       if (uni.getStorageSync('token')) {
         let res = await shoppingCartService.getSCartItems(this.cart.uuid)
-        res =res.data;
-        if(res.code==200){
-           res.data.forEach(item=>{
-            item.buyNunber =   item.num;
-            this.cart.items.push(item);
-           });
+        res = res.data
+        if (res.code == 200) {
+          res.data.forEach((item) => {
+            item.buyNunber = item.num
+            this.cart.items.push(item)
+          })
         }
         // console.log(res, '加载购车')
       }
     },
     reachBottom() {
-      uni.showToast({ title: '到底了', iccon: 'none' })
+      console.log(this.page.index*this.page.size,this.page.count,'-----')
+      if(this.page.index*this.page.size<this.page.count){
+        this.page.index++;
+        this.loadItems();
+      }else{
+        uni.showToast({ title: '没有更多了', iccon: 'none' })
+      }
     },
     debounce(wait) {
       if (this.timer) {
@@ -230,15 +239,15 @@ export default {
       this.timer = setTimeout(() => {
         this.page.index = 1
         this.items = []
-        this.gatItems()
+        this.loadItems()
       }, wait)
     },
-    gatItems() {
+    loadItems() {
       uni.showLoading({ title: '加载中' })
       let data = {
         search: this.search,
         fid: this.fid,
-        orderBy: this.orderBy,
+        orderby: this.page.orderBy,
         index: this.page.index,
         size: this.page.size,
         type: this.type,
@@ -252,15 +261,13 @@ export default {
         uni.hideLoading()
         let {
           code,
-          data: { count, index, list, size },
+          data: { count, index, list },
         } = res.data
+
         if (code == 200) {
-          this.page = {
-            index: index,
-            size: size,
-            count: count,
-          }
-          list.forEach((item) => {
+          this.page.index = index
+          this.page.count = count
+         list.forEach((item) => {
             item.buyNunber = 0
             if (this.cart.items.length > 0) {
               this.cart.items.forEach((res) => {
@@ -289,17 +296,16 @@ export default {
       this.curIndex = index
       this.type = type
       this.items = []
-      this.gatItems()
+      this.loadItems()
     },
     showImgs(id) {
       this.popupPicture.itemId = id
       this.popupPicture.pictures = []
-      let item = this.items.find((res) => res.id == id);
+      let item = this.items.find((res) => res.id == id)
       this.popupPicture.itemTitle = item.title
       try {
-        item.pictures = JSON.parse(item.picture);
-      } catch (error) {
-      }
+        item.pictures = JSON.parse(item.picture)
+      } catch (error) {}
       if (item.pictures && item.pictures.length !== 0) {
         item.pictures.forEach((res) => {
           this.popupPicture.pictures.push(res)
@@ -307,19 +313,25 @@ export default {
         this.$refs.popupPicture.open()
       }
     },
-    typeOrderBy(index, type, priceOrderBy) {
-      let order
-      this.typeIndex = index
-      if (type == 'price') {
-        this.priceOrderBy = priceOrderBy === 'asc' ? 'desc' : 'asc'
-        order = this.priceOrderBy
-      } else {
-        this.priceOrderBy = 'desc'
-        order = 'desc'
+    changeSort(sortType) {
+      if(this.curSort.type==sortType.type&&sortType.type=='id'){
+        return;
       }
-      this.orderBy = type + ' ' + order
+      this.curSort.type= sortType.type; 
+      if (sortType.type == 'price') {
+        this.curSort.vector = this.curSort.vector === 'asc' ? 'desc' : 'asc'
+      } 
+       if (sortType.type == 'id') {
+           this.curSort.vector='desc';
+       }
+       let type = this.curSort.type;
+       if(type=='price'){
+          type='vipPrice'; 
+       }
+      this.page.orderBy = type + ' ' + this.curSort.vector;
+      this.page.index=1;
       this.items = []
-      this.gatItems()
+      this.loadItems()
     },
 
     toChangeCart(data) {
