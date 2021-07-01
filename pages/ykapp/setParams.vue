@@ -1,7 +1,7 @@
 <template>
   <view class="setParameter">
-    <view class="title">
-      <text style="text-align: left;font-size: 16px;font-weight: 300;" >{{ scriptName }}</text>
+    <view class="title" style="padding:20px 0" >
+      <text style="text-align: left;font-size: 16px;font-weight: 600;" >{{ scriptName }}</text>
       <text style="font-size: 12px" >（{{ scriptId }}）</text>
       <text v-if="remark" style="font-size: 12px" >----</text>
       <text v-if="remark" style="color:red;font-size: 12px" >{{ remark }}</text>
@@ -77,7 +77,7 @@ export default {
   },
   data () {
     return {
-      remark:"免费",
+      remark:"免费试用",
       rememberParams: null,
       scriptParams: null,
       materials: null,

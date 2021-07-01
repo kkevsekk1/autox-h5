@@ -7,7 +7,7 @@
               :class="{classGreen:index<stepIndex}">{{step}}</text>
       </view>
     </view>
-    <set-params style="margin-top: 60px;" v-show="stepIndex==1"
+    <set-params style="padding: 60px 0px 100px 0px;" v-show="stepIndex==1"
                 :scriptId="scriptId"
                 ref="setParams"></set-params>
     <choice-device v-show="stepIndex==2"

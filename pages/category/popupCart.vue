@@ -14,8 +14,8 @@
         <scroll-view scroll-y="true"
                      style="height:500px">
           <view class="content"
-                v-for="item,index in items"
-                :key="index">
+                v-for="item in items"
+                :key="item.id">
             <item-single class="item-single"
                          :item="item"
                          @handleCount=" handleCount" />

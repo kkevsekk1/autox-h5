@@ -24,7 +24,7 @@ export default {
   },
   computed: {
     showHidden () {
-      console.log(this.localityNum, typeof (this.localityNum))
+      // console.log(this.localityNum, typeof (this.localityNum))
       if (this.localityNum > 0 || typeof (this.localityNum) == "string") {
         console.log(this.localityNum)
         return true
@@ -37,7 +37,7 @@ export default {
   watch: {
     num (val, oldval) {
       this.localityNum = val
-      console.log(val, "watch")
+      // console.log(val, "watch")
     },
     localityNum (val, oldval) {
       this.handleCount(val)

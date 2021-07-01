@@ -2,7 +2,7 @@
   <uni-row class="itemSingle-box">
     <uni-col :span="8"
              class="logo">
-      <view @click="$emit('openLogo',item.id)">
+      <view @click="$emit('imgClick',item.id)">
         <img :src="item.commodityLogo"
              alt="">
       </view>
@@ -15,7 +15,7 @@
             style="padding-right:44px;">{{item.title}}</view>
       <view class="subTitle">
         <view>{{item.subTitle}}</view>
-        <view>剩余：{{item.surplusStock}} {{item.unit}}</view>
+        <view>剩余：{{item.surplusStock | formatTotal }} {{item.unit}}</view>
       </view>
       <view class="price">
         <text class="iconfont priceText-icon">&#xe657;</text>

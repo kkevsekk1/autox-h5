@@ -15,6 +15,9 @@ export class ShoppingCartService{
  }
  //更新某个购车商品信息
  updateSCartItems(uuid,itemId,num){
+   if(num==0){
+     return;
+   }
   let data ={uuid,items:[{id:itemId,num:num}]};  
   request({
     url: '/item/updateSCartItems',

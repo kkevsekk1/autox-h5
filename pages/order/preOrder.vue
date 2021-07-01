@@ -273,7 +273,7 @@ export default {
     count () {
       let sumdata = 0
       this.cartItems.forEach((item) => {
-        console.log(item.sum, item.num, item.univalence)
+        // console.log(item.sum, item.num, item.univalence)
         sumdata += Number(item.num * item.univalence)
       })
       return sumdata.toFixed(2)
@@ -281,7 +281,7 @@ export default {
     countP () {
       let sumdata = 0
       this.cartItems.forEach((item) => {
-        console.log(item.sum, item.num, item.sellingPrice)
+        // console.log(item.sum, item.num, item.sellingPrice)
         sumdata += Number(item.num * item.sellingPrice)
       })
       return sumdata.toFixed(2)
@@ -517,13 +517,49 @@ export default {
             item.num = Number(item.num || -1)
             this.cartItems.push(item)
           })
+          console.log(this.cartItems)
         }
       })
       this.$refs.popupClient.close()
     },
     createOrder () {
-      let priceType = this.univalences[this.array[this.index]]
-      console.log(this.cartItems, this.cart.uuid)
+      if (this.cartItems.length == 0) {
+        uni.showToast({
+          title: "暂无商品，无法出库"
+        })
+      } else {
+        let orderItems = []
+        this.cartItems.forEach(item => {
+          orderItems.push({
+            id: item.id,
+            quantity: item.num
+          })
+        })
+        let data = {
+          address: '',
+          name: '',
+          phone: '',
+          priceType: 1,
+          orderType: 2,
+          items: orderItems
+        }
+        console.log(data)
+        request({
+          url: "/itemOrder/buyItems",
+          method: "post",
+          data,
+        })
+          .then(res => {
+            let { code, message } = res.data
+            if (code == 200) {
+              uni.showToast({
+                title: message,
+              })
+              this.cartItems = []
+              this.$refs.popupSum.close()
+            }
+          })
+      }
     }
   },
 }

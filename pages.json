@@ -57,6 +57,16 @@
       }
     },
     {
+      "path": "pages/createOrder/selectuser",
+      "style": {
+        "navigationBarTitleText": "用户地址",
+        "enablePullDownRefresh": false,
+        "app-plus": {
+          "titleNView": false
+        }
+      }
+    },
+    {
       "path": "pages/order/orders",
       "style": {
         "navigationBarTitleText": "订单",

@@ -1,29 +1,8 @@
 <template>
   <view class="index-box">
-    <view class="header">
-      <uni-forms :modelValue="formData"
-                 validate-trigger="bind"
-                 ref="form"
-                 :rules="rules">
-        <uni-forms-item label="姓名："
-                        name="name">
-          <uni-easyinput type="text"
-                         v-model="formData.name"
-                         placeholder="请输入姓名" />
-        </uni-forms-item>
-        <uni-forms-item label="电话："
-                        name="phone">
-          <uni-easyinput type="text"
-                         v-model="formData.phone"
-                         placeholder="请输入电话" />
-        </uni-forms-item>
-        <uni-forms-item label="地址："
-                        name="address">
-          <uni-easyinput type="text"
-                         v-model="formData.address"
-                         placeholder="请输入收货地址" />
-        </uni-forms-item>
-      </uni-forms>
+    <view class="header"
+          @click="selectuser">
+      <user-data :userData="userData"></user-data>
     </view>
     <view class="content">
       <view v-for="(item,index) in items"
@@ -46,55 +25,18 @@
 </template>
 
 <script>
+import userData from './userData'
 import itemSingle from './itemSingle'
 import Items from "../../server/Items"
 import { request } from "../../server/request.js"
 export default {
-  components: { itemSingle },
+  components: { itemSingle, userData },
   data () {
     return {
       items: [],
       orderItems: [],
-      formData: {
-        name: '',
-        phone: '',
-        address: '',
-      },
-      rules: {
-        name: {
-          rules: [
-            {
-              required: true,
-              errorMessage: "请输入姓名",
-            }
-          ]
-        },
-        phone: {
-          rules: [
-            {
-              required: true,
-              errorMessage: "请输入电话号码"
-            },
-            {
-              maxLength: 11,
-              minLength: 11,
-              errorMessage: "请填写11位的电话号码"
-            },
-            {
-              pattern: /^1(3|4|5|6|7|8|9)\d{9}$/,
-              errorMessage: "请填写正确的电话号码"
-            }
-          ]
-        },
-        address: {
-          rules: [
-            {
-              required: true,
-              errorMessage: "请输入收获地址"
-            },
-          ]
-        }
-      }
+      userData: '',
+      uuid: "",
     }
   },
   computed: {
@@ -108,6 +50,13 @@ export default {
   },
   created () {
     this.createdItem()
+    let { name = '', phone = '', address = '', } = this.$route.query
+    this.getSCartItems()
+    this.userData = {
+      name: name,
+      phone: phone,
+      address: address,
+    }
   },
   methods: {
     createdItem () {
@@ -121,39 +70,39 @@ export default {
       })
       this.items = items
     },
+    selectuser () {
+      console.log("123")
+      uni.redirectTo({
+        url: '/pages/createOrder/selectuser'
+      })
+    },
     submit () {
-      this.$refs.form.submit().then(res => {
-        if (!res.address || !res.name || !res.phone) {
-          uni.showToast({
-            title: "请将信息填写完毕",
-            icon: "none"
-          })
-          return
-        }
-        let data = {
-          address: res.address,
-          name: res.name,
-          phone: res.phone,
-          priceType: 'sellingPrice',
-          orderType: "id desc",
-          items: this.orderItems
-        }
-        console.log(data)
-        request({
-          url: "/itemOrder/buyItems",
-          method: "post",
-          data,
+      let data = {
+        address: this.userData.address,
+        name: this.userData.name,
+        phone: this.userData.phone,
+        priceType: 1,
+        orderType: 2,
+        items: this.orderItems
+      }
+      console.log(data)
+      request({
+        url: "/itemOrder/buyItems",
+        method: "post",
+        data,
+      })
+        .then(res => {
+          let { code, message } = res.data
+          if (code == 200) {
+            uni.showToast({
+              title: message,
+            })
+          }
         })
-          .then(res => {
-            let { code, message } = res.data
-            if (code == 200) {
-              uni.showToast({
-                title: message,
-              })
-            }
-          })
-      }).catch(err => { })
-    }
+    },
+    selectUser (data) {
+      this.userData = data
+    },
   }
 }
 </script>
@@ -166,7 +115,7 @@ page {
   padding: 10px;
 }
 .header {
-  padding: 20px 40px;
+  padding: 10px;
   border-radius: 10px;
   background-color: #fff;
 }
