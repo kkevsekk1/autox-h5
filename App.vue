@@ -9,6 +9,15 @@ export default {
     } catch (error) {
         console.log('获取邀请码失败',error)      
     }
+    try {
+         let fid = this._router.history.current.query.f
+      if(fid){
+        uni.setStorageSync("fid",fid)
+      }
+    } catch (error) {
+   
+    }
+
     // if (!(uni.getStorageSync('token'))) {
     //   uni.showToast({ title: '未登录', icon: 'none' })
     //   setTimeout(() => {

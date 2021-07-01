@@ -192,6 +192,7 @@ export default {
     }
   },
   async created() {
+    this.fid =uni.getStorageSync('fid'); 
     this.getCategoryType('商品类型')
     await this.loadShoppingCart()
     this.gatItems()
@@ -215,7 +216,7 @@ export default {
             this.cart.items.push(item);
            });
         }
-        console.log(res, '加载购车')
+        // console.log(res, '加载购车')
       }
     },
     reachBottom() {
@@ -235,7 +236,7 @@ export default {
       uni.showLoading({ title: '加载中' })
       let data = {
         search: this.search,
-        fid: '2',
+        fid: this.fid,
         orderBy: this.orderBy,
         index: this.page.index,
         size: this.page.size,
@@ -278,7 +279,7 @@ export default {
     },
     getCategoryType(type) {
       request({
-        url: '/system/getDictByType?shopId=' + this.shopId + '&type=' + type,
+        url: '/system/getDictByType?shopId=' + this.fid + '&type=' + type,
         method: 'get',
       }).then((res) => {
         let { code, data } = res.data
