@@ -2,89 +2,121 @@
   <view class="index-box">
     <view class="header-title">全部分类</view>
     <view class="search">
-      <input type="text"
-             placeholder-style="sont-size:14px"
-             placeholder="搜索商品"
-             v-model="search">
+      <input
+        type="text"
+        placeholder-style="sont-size:14px"
+        placeholder="搜索商品"
+        v-model="search"
+      />
       <text class="iconfont search-iconfon">&#xe617;</text>
     </view>
     <view class="content">
-      <scroll-view class="content-left"
-                   scroll-y="true"
-                   :style="{ height: `${contentLeftHeighe-45}px` }">
-        <text class="content-left-nav"
-              :class="{ selected: curIndex == -1  }"
-              @click="itemType(-1,'')">全部</text>
-        <text class="content-left-nav"
-              v-for="(item,index) in navList"
-              :key="index"
-              :class="{ selected: curIndex == index  }"
-              @click="itemType(index,item.contentVal)">
-          {{item.name}}
+      <scroll-view
+        class="content-left"
+        scroll-y="true"
+        :style="{ height: `${contentLeftHeighe - 45}px` }"
+      >
+        <text
+          class="content-left-nav"
+          :class="{ selected: curIndex == -1 }"
+          @click="itemType(-1, '')"
+          >全部</text
+        >
+        <text
+          class="content-left-nav"
+          v-for="(item, index) in navList"
+          :key="index"
+          :class="{ selected: curIndex == index }"
+          @click="itemType(index, item.contentVal)"
+        >
+          {{ item.name }}
         </text>
       </scroll-view>
       <view>
-        <view class="typeOrderBy"
-              v-if="items.length!=0">
-          <text v-for="orderBy,index in typeOrderBys"
-                :key="index"
-                @click="typeOrderBy(index,orderBy.type,priceOrderBy )">
-            <text :class="{orderByRed:typeIndex === index}">{{orderBy.name}}</text>
-            <text v-show="orderBy.type =='price'"
-                  class="typeOrderBy-name">
-              <text class="iconfont typeOrderBy-name-before"
-                    :class="{orderByRed:priceOrderBy == 'asc' && typeIndex === index}">&#xea4c;</text>
-              <text class="iconfont typeOrderBy-name-after"
-                    :class="{orderByRed:priceOrderBy == 'desc' && typeIndex === index}">&#xea4d;</text>
+        <view class="typeOrderBy" v-if="items.length != 0">
+          <text
+            v-for="(orderBy, index) in typeOrderBys"
+            :key="index"
+            @click="typeOrderBy(index, orderBy.type, priceOrderBy)"
+          >
+            <text :class="{ orderByRed: typeIndex === index }">{{
+              orderBy.name
+            }}</text>
+            <text v-show="orderBy.type == 'price'" class="typeOrderBy-name">
+              <text
+                class="iconfont typeOrderBy-name-before"
+                :class="{
+                  orderByRed: priceOrderBy == 'asc' && typeIndex === index,
+                }"
+                >&#xea4c;</text
+              >
+              <text
+                class="iconfont typeOrderBy-name-after"
+                :class="{
+                  orderByRed: priceOrderBy == 'desc' && typeIndex === index,
+                }"
+                >&#xea4d;</text
+              >
             </text>
           </text>
         </view>
-        <scroll-view class="content-right"
-                     scroll-y="true"
-                     @scrolltolower="reachBottom"
-                     :style="{ height: `${contentLeftHeighe-30-45}px` }">
-          <view class="content-right-nav"
-                v-for="(item) in items"
-                :key="item.id">
-            <item-single class="item-single"
-                         :item="item"
-                         @handleCount="addCart"
-                         @openLogo="openLogo" />
+        <scroll-view
+          class="content-right"
+          scroll-y="true"
+          @scrolltolower="reachBottom"
+          :style="{ height: `${contentLeftHeighe - 30 - 45}px` }"
+        >
+          <view class="content-right-nav" v-for="item in items" :key="item.id">
+            <item-single
+              class="item-single"
+              :item="item"
+              @handleCount="toChangeCart"
+              @imgClick="showImgs"
+            />
           </view>
         </scroll-view>
       </view>
     </view>
-    <view class="footer"
-          @click="showOrHiddenCart">
-      <view class="footer-img"
-            :class="{backgroundGray:cart.items.length ==0}">
+    <view class="footer" @click="showOrHiddenCart">
+      <view
+        class="footer-img"
+        :class="{ backgroundGray: cart.items.length == 0 }"
+      >
         <text class="iconfont">&#xe6ab;</text>
       </view>
       <text class="footer-content">
-        <text class="footer-selling-sum"
-              :class="{colorGray:cart.items.length ==0}">
+        <text
+          class="footer-selling-sum"
+          :class="{ colorGray: cart.items.length == 0 }"
+        >
           <text class="iconfont footer-icon">&#xe657;</text>
-          <text> {{countP}} </text>
+          <text> {{ countP }} </text>
         </text>
-        <text class="footer-vip-sum"
-              :class="{colorGray:cart.items.length ==0}">
-          <text class="iconfont  footer-icon-vip">&#xe601;</text>
+        <text
+          class="footer-vip-sum"
+          :class="{ colorGray: cart.items.length == 0 }"
+        >
+          <text class="iconfont footer-icon-vip">&#xe601;</text>
           <text class="iconfont footer-icon">&#xe657;</text>
-          <text>{{countH}}</text>
+          <text>{{ countH }}</text>
         </text>
       </text>
-      <view class="footer-createOrder"
-            :class="{backgroundGray:cart.items.length ==0}"
-            @click.stop="">去结算</view>
+      <view
+        class="footer-createOrder"
+        :class="{ backgroundGray: cart.items.length == 0 }"
+        @click.stop=""
+        >去结算</view
+      >
     </view>
     <!-- 图片弹窗 -->
-    <popup-picture ref="popupPicture"
-                   :popupPicture="popupPicture" />
+    <popup-picture ref="popupPicture" :popupPicture="popupPicture" />
     <!-- 购物车 -->
-    <popup-cart ref="popupCart"
-                :items="cart.items"
-                @sweepCart="sweepCart"
-                @handleCount="updateItems" />
+    <popup-cart
+      ref="popupCart"
+      :items="cart.items"
+      @sweepCart="cleanCart"
+      @handleCount="toChangeItemsNumber"
+    />
   </view>
 </template>
 
@@ -93,10 +125,11 @@ import itemSingle from './itemSingle '
 import popupPicture from './popupPicture'
 import popupCart from './popupCart'
 import { request } from '../../server/request.js'
+import shoppingCartService from '../../server/ShoppingCartService'
 export default {
   components: { itemSingle, popupPicture, popupCart },
   computed: {
-    contentLeftHeighe () {
+    contentLeftHeighe() {
       let height = document.documentElement.clientHeight - 93
       return height
     },
@@ -108,7 +141,7 @@ export default {
       })
       return sumdata.toFixed(2)
     },
-      countH() {
+    countH() {
       let sumdata = 0
       this.cart.items.forEach((item) => {
         // console.log(item.sum, item.buyNunber, item.vipPrice)
@@ -117,30 +150,30 @@ export default {
       return sumdata.toFixed(2)
     },
   },
-  
+
   watch: {
-    search () {
+    search() {
       this.debounce(300)
-    }
+    },
   },
-  data () {
+  data() {
     return {
       popupPicture: {
-        itemId: "",
-        itemTitle: "",
+        itemId: '',
+        itemTitle: '',
         pictures: [],
       },
       cart: {
-        uuid:'',
+        uuid: 'appuser',
         showCart: false,
         items: [],
       },
-      shopId: "-1",
-      search: "",
-      priceOrderBy: "asc",
-      orderBy: "id desc",
+      shopId: '-1',
+      search: '',
+      priceOrderBy: 'asc',
+      orderBy: 'id desc',
       type: '',
-      page: { index: 1, size: 999, },
+      page: { index: 1, size: 999 },
       curIndex: -1,
       navList: [],
       items: [],
@@ -148,45 +181,66 @@ export default {
       typeIndex: 0,
       typeOrderBys: [
         {
-          name: "综合",
-          type: "id"
+          name: '综合',
+          type: 'id',
         },
         {
-          name: "价格",
-          type: "price"
-        }
-      ]
+          name: '价格',
+          type: 'price',
+        },
+      ],
     }
   },
-  created () {
+  async created() {
     this.getCategoryType('商品类型')
+    await this.loadShoppingCart()
     this.gatItems()
   },
-  onPullDownRefresh () {
-    this.page.index = 1;
-    this.items = [];
-    this.gatItems();
+  onPullDownRefresh() {
+    this.page.index = 1
+    this.items = []
+    this.gatItems()
     setTimeout(() => {
       uni.stopPullDownRefresh()
     }, 1000)
   },
   methods: {
-    reachBottom () {
+    async loadShoppingCart() {
+      if (uni.getStorageSync('token')) {
+        let res = await shoppingCartService.getSCartItems(this.cart.uuid)
+        res =res.data;
+        if(res.code==200){
+           res.data.forEach(item=>{
+            item.buyNunber =   item.num;
+            this.cart.items.push(item);
+           });
+        }
+        console.log(res, '加载购车')
+      }
+    },
+    reachBottom() {
       uni.showToast({ title: '到底了', iccon: 'none' })
     },
-    debounce (wait) {
+    debounce(wait) {
       if (this.timer) {
         clearInterval(this.timer)
       }
       this.timer = setTimeout(() => {
-        this.page.index = 1;
-        this.items = [];
-        this.gatItems();
+        this.page.index = 1
+        this.items = []
+        this.gatItems()
       }, wait)
     },
-    gatItems () {
-      uni.showLoading({ title: '加载中' });
-      let data = { search: this.search, fid: '2', orderBy: this.orderBy, index: this.page.index, size: this.page.size, type: this.type };
+    gatItems() {
+      uni.showLoading({ title: '加载中' })
+      let data = {
+        search: this.search,
+        fid: '2',
+        orderBy: this.orderBy,
+        index: this.page.index,
+        size: this.page.size,
+        type: this.type,
+      }
       console.log(data)
       request({
         url: '/item/items',
@@ -194,114 +248,110 @@ export default {
         data,
       }).then((res) => {
         uni.hideLoading()
-        let { code, data: { count, index, list, size } } = res.data
+        let {
+          code,
+          data: { count, index, list, size },
+        } = res.data
         if (code == 200) {
           this.page = {
             index: index,
             size: size,
-            count: count
+            count: count,
           }
-
-          list.forEach(item => {
+          list.forEach((item) => {
             item.picture = JSON.parse(item.picture)
             if (item.picture) {
               item.commodityLogo = item.picture[0]
             }
             item.buyNunber = 0
             if (this.cart.items.length > 0) {
-              this.cart.items.forEach(res => {
+              this.cart.items.forEach((res) => {
                 if (res.id === item.id) {
                   item.buyNunber = res.buyNunber
-
                 }
               })
             }
             this.items.push(item)
-          });
+          })
         }
       })
     },
-    getCategoryType (type) {
+    getCategoryType(type) {
       request({
         url: '/system/getDictByType?shopId=' + this.shopId + '&type=' + type,
         method: 'get',
+      }).then((res) => {
+        let { code, data } = res.data
+        if (code == 200) {
+          this.navList = data
+        }
       })
-        .then(res => {
-          let { code, data } = res.data
-          if (code == 200) {
-            this.navList = data
-          }
-        })
     },
-    itemType (index, type) {
+    itemType(index, type) {
       this.curIndex = index
       this.type = type
       this.items = []
       this.gatItems()
     },
-    openLogo (id) {
+    showImgs(id) {
       this.popupPicture.itemId = id
       this.popupPicture.pictures = []
-      let item = this.items.filter(res => res.id == id)[0]
+      let item = this.items.filter((res) => res.id == id)[0]
       this.popupPicture.itemTitle = item.title
       if (item.picture && item.picture.length !== 0) {
-        item.picture.forEach(res => {
+        item.picture.forEach((res) => {
           this.popupPicture.pictures.push(res)
         })
         this.$refs.popupPicture.open()
       }
     },
-    typeOrderBy (index, type, priceOrderBy) {
+    typeOrderBy(index, type, priceOrderBy) {
       let order
       this.typeIndex = index
       if (type == 'price') {
-        this.priceOrderBy = priceOrderBy === "asc" ? 'desc' : 'asc';
+        this.priceOrderBy = priceOrderBy === 'asc' ? 'desc' : 'asc'
         order = this.priceOrderBy
       } else {
         this.priceOrderBy = 'desc'
-        order = "desc"
+        order = 'desc'
       }
       this.orderBy = type + ' ' + order
       this.items = []
-      this.gatItems();
+      this.gatItems()
     },
-    addCart (data) {
+
+    toChangeCart(data) {
+      console.log('去修改购车数量')
       let { num, itemId } = data
-      let cartItems = this.cart.items
-      let tmp
-      for (let index = 0; index < cartItems.length; index++) {
-        if (cartItems[index].id === itemId) {
-          tmp = cartItems[index]
-          break
+      if (num != 0) {
+        let item = this.cart.items.find((item) => {
+          return item.id == itemId
+        })
+        if (!item) {
+          item = this.items.find((item) => {
+            return item.id == itemId
+          })
+          this.cart.items.push(item)
         }
-      }
-      if (tmp) {
-        cartItems.forEach(item => {
-          if (item.id == itemId) {
-            item.buyNunber = num
-          }
-        })
+        item.buyNunber = num
+        shoppingCartService.updateSCartItems(this.cart.uuid, itemId, num)
       } else {
-        this.items.forEach(item => {
+        this.cart.items = this.cart.items.filter((item) => {
           if (item.id == itemId) {
-            item.buyNunber = num
-            cartItems.push(item)
+            shoppingCartService.deleteSCartItem(this.cart.uuid, itemId)
+            return false
+          } else {
+            return true
           }
         })
       }
-      if (num == 0) {
-        this.cart.items = this.cart.items.filter(item => {
-          return item.id != itemId
-        });
-      }
-      console.log(data)
     },
-    showOrHiddenCart () {
-      if (this.cart.items.length == 0) {
+    showOrHiddenCart() {
+      if (this.cart.items.length == 0 && !this.showCart) {
         uni.showToast({
-        title: '你还没有挑选商品',
-        icon:'none',
-        duration: 2000
+          title: '你还没有挑选商品',
+          icon: 'none',
+          duration: 2000,
         })
         return
       }
@@ -313,28 +363,40 @@ export default {
       }
       console.log(this.cart.items)
     },
-    sweepCart () {
+    cleanCart() {
+      console.log('情况购物车')
+      shoppingCartService.deleteSCart(this.cart.uuid)
       this.cart.items = []
-      this.items.forEach(item => {
+      this.items.forEach((item) => {
         item.buyNunber = 0
       })
       this.$refs.popupCart.close()
     },
-    updateItems (data) {
+    toChangeItemsNumber(data) {
       let { num, itemId } = data
-      this.items.forEach(item => {
-        if (item.id === itemId) {
-          item.buyNunber = num
+      console.log('去修改items的数量', this.cart.items, num, Number(num) != 0)
+      if (num != 0) {
+        //添加或修改
+        for (let index = 0; index < this.items.length; index++) {
+          const item = this.items[index]
+          if (item.id == itemId) {
+            item.buyNunber = num
+            break
+          }
         }
-      })
-      if (num == 0) {
-        this.cart.items = this.cart.items.filter(item => {
-          return item.id != itemId
-        });
+        shoppingCartService.updateSCartItems(this.cart.uuid, itemId, num)
+      } else {
+        this.cart.items = this.cart.items.filter((item) => {
+          if (item.id == itemId) {
+            console.log(item, itemId, '--------')
+            shoppingCartService.deleteSCartItem(this.cart.uuid, itemId)
+            return false
+          }
+          return true
+        })
       }
-      console.log(this.cart.items)
-    }
-  }
+    },
+  },
 }
 </script>
 

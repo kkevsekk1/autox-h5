@@ -2,7 +2,7 @@
   <uni-row class="itemSingle-box">
     <uni-col :span="8"
              class="logo">
-      <view @click="$emit('openLogo',item.id)">
+      <view @click="$emit('imgClick',item.id)">
         <img :src="item.commodityLogo"
              alt="">
       </view>
