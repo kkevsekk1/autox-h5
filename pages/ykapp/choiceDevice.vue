@@ -2,48 +2,63 @@
   <view class="choiceDevice-box">
     <view class="choiceDevice">
       <view class="script-header">
-        <view class="script-haed"
-              :class="groupAll ? 'pitchOn' : ''"
-              @click="clickGroupAll">全部</view>
-        <view class="list-name"
-              v-show="deviceGroup.show">
-          <swiper class="swiper"
-                  display-multiple-items="3">
-            <swiper-item v-for="(group, index) in deviceGroups"
-                         :key="index"
-                         class="for-list"
-                         @click="clickGroup(group)"
-                         :class="group.isShow ? 'pitchOn' : ''">
+        <view
+          class="script-haed"
+          :class="groupAll ? 'pitchOn' : ''"
+          @click="clickGroupAll"
+          >全部</view
+        >
+        <view class="list-name" v-show="deviceGroup.show">
+          <swiper class="swiper" display-multiple-items="3">
+            <swiper-item
+              v-for="(group, index) in deviceGroups"
+              :key="index"
+              class="for-list"
+              @click="clickGroup(group)"
+              :class="group.isShow ? 'pitchOn' : ''"
+            >
               <view>{{ group.name }}</view>
             </swiper-item>
           </swiper>
         </view>
-        <view class="refresh iconfont"
-              @click="reLoadDevices"
-              :class="deviceGroup.rotate ? 'scriptRotate' : ''">&#xe636;</view>
+        <view
+          class="refresh iconfont"
+          @click="reLoadDevices"
+          :class="deviceGroup.rotate ? 'scriptRotate' : ''"
+          >&#xe636;</view
+        >
       </view>
       <view class="script-main">
         <view class="script-input">
-          <input type="text"
-                 v-model="searchStr"
-                 placeholder="名称，可用空格分隔" />
+          <input
+            type="text"
+            v-model="searchStr"
+            placeholder="名称，可用空格分隔"
+          />
           <view class="iconfont"> &#xe617; </view>
         </view>
-        <uni-table ref="uniTable"
-                   emptyText="暂无数据"
-                   type="selection"
-                   @selection-change="selectionChange">
+        <uni-table
+          ref="uniTable"
+          emptyText="暂无数据"
+          type="selection"
+          @selection-change="selectionChange"
+        >
           <uni-tr>
-            <uni-th width="60%"
-                    :sortable=true
-                    @sort-change="sortDevice('name',$event)">名称</uni-th>
-            <uni-th width="10%"
-                    :sortable=true
-                    @sort-change="sortDevice('name',$event)">分组</uni-th>
+            <uni-th
+              width="60%"
+              :sortable="true"
+              @sort-change="sortDevice('name', $event)"
+              >名称</uni-th
+            >
+            <uni-th
+              width="10%"
+              :sortable="true"
+              @sort-change="sortDevice('name', $event)"
+              >分组</uni-th
+            >
             <uni-th width="30%">状态</uni-th>
           </uni-tr>
-          <uni-tr v-for="device in showDevices"
-                  :key="device.id">
+          <uni-tr v-for="device in showDevices" :key="device.id">
             <uni-td>{{ device.name }}</uni-td>
             <uni-td>{{ device.category }}</uni-td>
             <uni-td :class="device.statusColor">{{ device.showStatus }}</uni-td>
@@ -57,125 +72,115 @@
 <script>
 import { request } from '../../server/request.js'
 export default {
-  props: ["entrance"],
-  data () {
+  props: ['entrance'],
+  data() {
     return {
       deviceGroups: [],
       devices: [],
       checkedGroupName: [],
       groupAll: true,
-      searchStr: "",
+      searchStr: '',
       deviceGroup: {
         show: true,
         rotate: false,
       },
-      equipmentIemi: "",
+      equipmentIemi: '',
     }
   },
   watch: {
-    searchStr () {
-      this.clearSelection();
-    }
+    searchStr() {
+      this.clearSelection()
+    },
   },
   computed: {
     showDevices: {
-      get () {
-        let searchStr = this.searchStr;
-        const checkedGroupName = this.checkedGroupName;
+      get() {
+        let searchStr = this.searchStr
+        const checkedGroupName = this.checkedGroupName
         if (searchStr) {
-          searchStr = searchStr.replace(new RegExp(" ", "gm"), "|");
+          searchStr = searchStr.replace(new RegExp(' ', 'gm'), '|')
           var reg = new RegExp(searchStr, 'ig')
-          return this.filterDeviceByGroupNames(checkedGroupName).filter(function (e) {
-            return e.name.match(reg);
-          })
-        };
-        return this.filterDeviceByGroupNames(checkedGroupName);
+          return this.filterDeviceByGroupNames(checkedGroupName).filter(
+            function (e) {
+              return e.name.match(reg)
+            }
+          )
+        }
+        return this.filterDeviceByGroupNames(checkedGroupName)
       },
-      set () {
-      }
+      set() {},
     },
   },
-  created () {
+  created() {
     this.getDeviceGroups()
     this.equipmentIemiData()
   },
   methods: {
     // 排序
-    sortDevice () {
-      let result = this.showDevices.sort(
-        function compareFuntion (param1, param2) {
-          return param1.localeCompare(param2)
-        }
-      )
+    sortDevice() {
+      let result = this.showDevices.sort(function compareFuntion(
+        param1,
+        param2
+      ) {
+        return param1.localeCompare(param2)
+      })
     },
-    equipmentIemiData () {
+    equipmentIemiData() {
       try {
-        var x = android.getUid();
-        this.equipmentIemi = x;
+        var x = android.getUid()
+        this.equipmentIemi = x
       } catch (error) {
-        this.equipmentIemi = error;
+        this.equipmentIemi = error
       }
     },
-    toggleRowSelection () {
+    toggleRowSelection() {
       this.$nextTick(() => {
-        let entrance = this.$props.entrance
-        let toggleRow = ''
-        if (entrance == "formMenu") {
-          toggleRow = 0
-          let showDevices = this.showDevices[0]
-          showDevices.showStatus = "本机"
-          showDevices.statusColor = "deviceIsPurple"
-        } else
-          if (!entrance) {
-            for (let index = 0; index < this.showDevices.length; index++) {
-              let showDevices = this.showDevices[index]
-              if (showDevices.iemi == this.equipmentIemi) {
-                toggleRow = index
-                showDevices.showStatus = "本机"
-                showDevices.statusColor = "deviceIsPurple"
-              }
-            }
-          }
-        this.$refs.uniTable.toggleRowSelection([toggleRow], true)
+        this.showDevices.forEach((device,index)=>{
+         if( device.iemi == this.equipmentIemi){
+           this.$refs.uniTable.toggleRowSelection([index], true)
+         }
+        });
       })
     },
-    sortDevice (name, e) {
+    sortDevice(name, e) {
       // console.log(name, e)
     },
-    getCheckedDevices () {
-      let rs = this.devices.filter(device => {
-        return device.checked;
+    getCheckedDevices() {
+      let rs = this.devices.filter((device) => {
+        return device.checked
       })
-      return rs;
+      return rs
     },
-    clearSelection () {
-      this.$refs.uniTable.clearSelection();
+    clearSelection() {
+      this.$refs.uniTable.clearSelection()
     },
     // 选择发送改变
-    selectionChange (e) {
-      this.devices.forEach(device => {
-        device.checked = false;
+    selectionChange(e) {
+      this.devices.forEach((device) => {
+        device.checked = false
       })
       this.showDevices.forEach((device, index) => {
         if (e.detail.index.includes(index)) {
-          device.checked = true;
+          device.checked = true
         }
       })
     },
-    filterDeviceByGroupNames (checkedGroupName) {
-      var rsDevices = [];
+    filterDeviceByGroupNames(checkedGroupName) {
+      var rsDevices = []
       if (checkedGroupName.length === 0) {
-        rsDevices = this.devices;
+        rsDevices = this.devices
       } else {
-        checkedGroupName.forEach(name => {
-          let devices = [];
-          devices = this.devices.filter(device => { return device.category === name; });
-          rsDevices = rsDevices.concat(devices);
-        });
+        checkedGroupName.forEach((name) => {
+          let devices = []
+          devices = this.devices.filter((device) => {
+            return device.category === name
+          })
+          rsDevices = rsDevices.concat(devices)
+        })
       }
-      return rsDevices;
+      return rsDevices
     },
-    getDeviceGroups () {
+    getDeviceGroups() {
       // 获取设备分组
       this.deviceGroups = []
       const data = {}
@@ -196,7 +201,7 @@ export default {
         }
       })
     },
-    getdevices () {
+    getdevices() {
       // 查询设备列表
       this.listLoading = true
       const data = {
@@ -211,38 +216,27 @@ export default {
         method: 'post',
         data,
       }).then((res) => {
-        let entrance = this.$props.entrance
         let { data, code } = res.data
         if (code === 200) {
           this.devices = []
           data.list.forEach((element) => {
-            let { status, name, id, category, iemi } = element
             let showStatus = status === 0 ? '离线' : '在线'
             let statusColor = status == 0 ? 'deviceIsRed' : 'deviceIsGreen'
-            if (entrance == "formMenu") {
-              if (element.iemi == this.equipmentIemi) {
-                element.showStatus = showStatus
-                this.devices.push(element)
-              }
-            } else {
-              this.devices.push({
-                name: name,
-                category: category,
-                showStatus: showStatus,
-                status: status,
-                id: id,
-                iemi: iemi,
-                statusColor: statusColor,
-              })
+              element.showStatus = showStatus
+              element.statusColor = statusColor
+            if(element.iemi ==this.equipmentIemi){
+              element.showStatus = '本机'
+              element.statusColor = 'deviceIsPurple'
             }
+            this.devices.push(element)
           })
-          this.toggleRowSelection()
+        this.toggleRowSelection();
         }
       })
     },
-    clickGroup (group) {
-      this.clearSelection();
-      this.groupAll = false;
+    clickGroup(group) {
+      this.clearSelection()
+      this.groupAll = false
       if (!group.isShow) {
         this.$set(group, 'isShow', false)
       }
@@ -250,23 +244,23 @@ export default {
       if (group.isShow) {
         this.checkedGroupName.push(group.name)
       } else {
-        this.checkedGroupName = this.checkedGroupName.filter(groupName => {
+        this.checkedGroupName = this.checkedGroupName.filter((groupName) => {
           if (group.name == groupName) {
-            return false;
+            return false
           }
-          return true;
+          return true
         })
       }
       if (this.checkedGroupName.length == 0) {
-        this.groupAll = true;
+        this.groupAll = true
       }
     },
-    clickGroupAll () {
+    clickGroupAll() {
       this.groupAll = true
-      this.checkedGroupName = [];
-      this.clearSelection();
+      this.checkedGroupName = []
+      this.clearSelection()
     },
-    reLoadDevices () {
+    reLoadDevices() {
       this.groupAll = true
       this.deviceGroup.show = false
       this.deviceGroup.rotate = true

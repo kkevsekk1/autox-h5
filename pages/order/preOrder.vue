@@ -268,7 +268,7 @@ export default {
     count() {
       let sumdata = 0
       this.cartItems.forEach((item) => {
-        console.log(item.sum, item.num, item.univalence)
+        // console.log(item.sum, item.num, item.univalence)
         sumdata += Number(item.num * item.univalence)
       })
       return sumdata.toFixed(2)
@@ -276,7 +276,7 @@ export default {
     countP() {
       let sumdata = 0
       this.cartItems.forEach((item) => {
-        console.log(item.sum, item.num, item.sellingPrice)
+        // console.log(item.sum, item.num, item.sellingPrice)
         sumdata += Number(item.num * item.sellingPrice)
       })
       return sumdata.toFixed(2)

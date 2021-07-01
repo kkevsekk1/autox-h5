@@ -71,7 +71,7 @@ export default {
       if (this.stepIndex == 1) {
         if( (new Date(this.$refs.setParams.endTime).getTime())-(new Date().getTime())<0){
            this.toast('授权过期,请联系授权人员');
-           return ;
+          //  return ;
         }
         let rs = this.checkParams(this.$refs.setParams.scriptParams);
         if (rs == 0) {

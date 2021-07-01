@@ -44,8 +44,8 @@
                      @scrolltolower="reachBottom"
                      :style="{ height: `${contentLeftHeighe-30-45}px` }">
           <view class="content-right-nav"
-                v-for="(item,index) in items"
-                :key="index">
+                v-for="(item) in items"
+                :key="item.id">
             <item-single class="item-single"
                          :item="item"
                          @handleCount="addCart"
@@ -55,7 +55,7 @@
       </view>
     </view>
     <view class="footer"
-          @click="ifPopupCart">
+          @click="showOrHiddenCart">
       <view class="footer-img"
             :class="{backgroundGray:cart.items.length ==0}">
         <text class="iconfont">&#xe6ab;</text>
@@ -64,13 +64,13 @@
         <text class="footer-selling-sum"
               :class="{colorGray:cart.items.length ==0}">
           <text class="iconfont footer-icon">&#xe657;</text>
-          <text> 1345 </text>
+          <text> {{countP}} </text>
         </text>
         <text class="footer-vip-sum"
               :class="{colorGray:cart.items.length ==0}">
           <text class="iconfont  footer-icon-vip">&#xe601;</text>
           <text class="iconfont footer-icon">&#xe657;</text>
-          <text>12345</text>
+          <text>{{countH}}</text>
         </text>
       </text>
       <view class="footer-createOrder"
@@ -99,8 +99,25 @@ export default {
     contentLeftHeighe () {
       let height = document.documentElement.clientHeight - 93
       return height
-    }
+    },
+    countP() {
+      let sumdata = 0
+      this.cart.items.forEach((item) => {
+        // console.log(item.sum, item.buyNunber, item.sellingPrice,'---')
+        sumdata += Number(item.buyNunber * item.sellingPrice)
+      })
+      return sumdata.toFixed(2)
+    },
+      countH() {
+      let sumdata = 0
+      this.cart.items.forEach((item) => {
+        // console.log(item.sum, item.buyNunber, item.vipPrice)
+        sumdata += Number(item.buyNunber * item.vipPrice)
+      })
+      return sumdata.toFixed(2)
+    },
   },
+  
   watch: {
     search () {
       this.debounce(300)
@@ -114,7 +131,8 @@ export default {
         pictures: [],
       },
       cart: {
-        ifCart: false,
+        uuid:'',
+        showCart: false,
         items: [],
       },
       shopId: "-1",
@@ -277,14 +295,18 @@ export default {
         });
       }
       console.log(data)
-      // this.cart.items = this.items.filter(item => item.buyNunber !== 0)
     },
-    ifPopupCart () {
+    showOrHiddenCart () {
       if (this.cart.items.length == 0) {
+        uni.showToast({
+        title: '你还没有挑选商品',
+        icon:'none',
+        duration: 2000
+        })
         return
       }
-      this.ifCart = !this.ifCart
-      if (this.ifCart) {
+      this.showCart = !this.showCart
+      if (this.showCart) {
         this.$refs.popupCart.open()
       } else {
         this.$refs.popupCart.close()
