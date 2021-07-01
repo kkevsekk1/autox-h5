@@ -220,8 +220,8 @@ export default {
         if (code === 200) {
           this.devices = []
           data.list.forEach((element) => {
-            let showStatus = status === 0 ? '离线' : '在线'
-            let statusColor = status == 0 ? 'deviceIsRed' : 'deviceIsGreen'
+            let showStatus = element.status == 0 ? '离线' : '在线'
+            let statusColor = element.status == 0 ? 'deviceIsRed' : 'deviceIsGreen'
               element.showStatus = showStatus
               element.statusColor = statusColor
             if(element.iemi ==this.equipmentIemi){
