@@ -25,36 +25,21 @@
           <text class="iconfont priceText-icon">&#xe657;</text>
           <text class="priceText">{{item.vipPrice}}</text>
         </text>
-        <view class="subTitle-icon-gouwuche">
-          <text class="iconfont  "
-                v-show="clickbBuy=='1'"
-                @click="item.buyNunber--">&#xeb41;</text>
-          <input type="number"
-                 v-show="clickbBuy=='1'"
-                 v-model="item.buyNunber"
-                 maxlength="3">
-          <text class="iconfont "
-                :class="{subTitleTranslateY:clickbBuy=='1'}"
-                @click="item.buyNunber++">&#xe615;</text>
-        </view>
+        <input-number class="subTitle-icon-gouwuche"
+                      :num="item.buyNunber"
+                      :min="0"
+                      :max="item.surplusStock"
+                      @handleCount="handleCount" />
       </view>
     </uni-col>
   </uni-row>
 </template>
 
 <script>
+import inputNumber from './inputNumber'
 export default {
+  components: { inputNumber },
   props: ['item'],
-  data () {
-    return {
-      clickbBuy: "0"
-    }
-  },
-  watch: {
-    'item.buyNunber' () {
-      this.shopBuy()
-    }
-  },
   computed: {
     itemSurplusDays () {
       return this.surplusDays(this.item.endTime);
@@ -68,15 +53,12 @@ export default {
       let surplusTime = Math.floor(days)
       return surplusTime
     },
-    shopBuy () {
-      this.clickbBuy = '1'
-      if (this.item.buyNunber < 0) {
-        this.item.buyNunber = 0
-        return
+    handleCount (num) {
+      let data = {
+        num: num,
+        itemId: this.item.id
       }
-      if (this.item.buyNunber == 1000) {
-        this.item.buyNunber = 999
-      }
+      this.$emit('handleCount', data)
     }
   }
 }
@@ -126,27 +108,7 @@ export default {
   font-size: 22px;
   transform: translateY(3px);
 }
-.subTitle-icon-gouwuche {
-  float: right;
-  transform: translateY(5px);
-}
-.subTitle-icon-gouwuche text:nth-child(1) {
-  display: inline-block;
-  font-size: 20px;
-  transform: translateY(-2px);
-}
-.subTitle-icon-gouwuche input:nth-child(2) {
-  display: inline-block;
-  width: 25px;
-  text-align: center;
-  font-size: 14px;
-  padding: 0 5px;
-  color: #000;
-}
-.subTitle-icon-gouwuche text:nth-child(3) {
-  display: inline-block;
-  font-size: 18px;
-}
+
 .subTitleTranslateY {
   transform: translateY(-3px);
 }
@@ -157,5 +119,9 @@ export default {
 .priceText-icon {
   font-size: 12px;
   font-weight: 700;
+}
+.subTitle-icon-gouwuche {
+  float: right;
+  transform: translateY(5px);
 }
 </style>

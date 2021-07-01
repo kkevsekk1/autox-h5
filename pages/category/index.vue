@@ -48,58 +48,53 @@
                 :key="index">
             <item-single class="item-single"
                          :item="item"
+                         @handleCount="addCart"
                          @openLogo="openLogo" />
           </view>
         </scroll-view>
       </view>
     </view>
-    <view class="footer">
-      <view class="footer-img">
-        <img src="../../static/8306ade4.png"
-             alt="">
+    <view class="footer"
+          @click="ifPopupCart">
+      <view class="footer-img"
+            :class="{backgroundGray:cart.items.length ==0}">
+        <text class="iconfont">&#xe6ab;</text>
       </view>
       <text class="footer-content">
-        <text class="footer-selling-sum">
+        <text class="footer-selling-sum"
+              :class="{colorGray:cart.items.length ==0}">
           <text class="iconfont footer-icon">&#xe657;</text>
           <text> 1345 </text>
         </text>
-        <text class="footer-vip-sum">
+        <text class="footer-vip-sum"
+              :class="{colorGray:cart.items.length ==0}">
           <text class="iconfont  footer-icon-vip">&#xe601;</text>
           <text class="iconfont footer-icon">&#xe657;</text>
           <text>12345</text>
         </text>
       </text>
-      <view class="footer-createOrder">去结算</view>
+      <view class="footer-createOrder"
+            :class="{backgroundGray:cart.items.length ==0}"
+            @click.stop="">去结算</view>
     </view>
     <!-- 图片弹窗 -->
-    <uni-popup ref="popupPicture"
-               type="bottom"
-               background-color="#fff">
-      <view @click="close"
-            style="position:relative;height:40px;padding-top:5px;">
-        <view class="popupPicture-itemTitle">{{itemTitle}}</view>
-        <view class="popupPicture-itemId">商品码: {{itemId}} </view>
-        <text class="iconfont popupPicture-icon"
-              @click="close">&#xe62f;</text>
-      </view>
-      <scroll-view scroll-y="true"
-                   style="height:500px;">
-        <view v-for="(picture,index) in pictures"
-              :key="index">
-          <img class="popupPicture-img"
-               :src="picture"
-               alt="">
-        </view>
-      </scroll-view>
-    </uni-popup>
+    <popup-picture ref="popupPicture"
+                   :popupPicture="popupPicture" />
+    <!-- 购物车 -->
+    <popup-cart ref="popupCart"
+                :items="cart.items"
+                @sweepCart="sweepCart"
+                @handleCount="updateItems" />
   </view>
 </template>
 
 <script>
 import itemSingle from './itemSingle '
+import popupPicture from './popupPicture'
+import popupCart from './popupCart'
 import { request } from '../../server/request.js'
 export default {
-  components: { itemSingle },
+  components: { itemSingle, popupPicture, popupCart },
   computed: {
     contentLeftHeighe () {
       let height = document.documentElement.clientHeight - 93
@@ -113,8 +108,15 @@ export default {
   },
   data () {
     return {
-      itemId: "",
-      itemTitle: "",
+      popupPicture: {
+        itemId: "",
+        itemTitle: "",
+        pictures: [],
+      },
+      cart: {
+        ifCart: false,
+        items: [],
+      },
       shopId: "-1",
       search: "",
       priceOrderBy: "asc",
@@ -125,7 +127,6 @@ export default {
       navList: [],
       items: [],
       timer: '',
-      pictures: [],
       typeIndex: 0,
       typeOrderBys: [
         {
@@ -152,9 +153,6 @@ export default {
     }, 1000)
   },
   methods: {
-    close () {
-      this.$refs.popupPicture.close()
-    },
     reachBottom () {
       uni.showToast({ title: '到底了', iccon: 'none' })
     },
@@ -185,12 +183,21 @@ export default {
             size: size,
             count: count
           }
+
           list.forEach(item => {
             item.picture = JSON.parse(item.picture)
             if (item.picture) {
               item.commodityLogo = item.picture[0]
             }
             item.buyNunber = 0
+            if (this.cart.items.length > 0) {
+              this.cart.items.forEach(res => {
+                if (res.id === item.id) {
+                  item.buyNunber = res.buyNunber
+
+                }
+              })
+            }
             this.items.push(item)
           });
         }
@@ -215,13 +222,13 @@ export default {
       this.gatItems()
     },
     openLogo (id) {
-      this.itemId = id
-      this.pictures = []
+      this.popupPicture.itemId = id
+      this.popupPicture.pictures = []
       let item = this.items.filter(res => res.id == id)[0]
-      this.itemTitle = item.title
+      this.popupPicture.itemTitle = item.title
       if (item.picture && item.picture.length !== 0) {
         item.picture.forEach(res => {
-          this.pictures.push(res)
+          this.popupPicture.pictures.push(res)
         })
         this.$refs.popupPicture.open()
       }
@@ -240,6 +247,71 @@ export default {
       this.items = []
       this.gatItems();
     },
+    addCart (data) {
+      let { num, itemId } = data
+      let cartItems = this.cart.items
+      let tmp
+      for (let index = 0; index < cartItems.length; index++) {
+        if (cartItems[index].id === itemId) {
+          tmp = cartItems[index]
+          break
+        }
+      }
+      if (tmp) {
+        cartItems.forEach(item => {
+          if (item.id == itemId) {
+            item.buyNunber = num
+          }
+        })
+      } else {
+        this.items.forEach(item => {
+          if (item.id == itemId) {
+            item.buyNunber = num
+            cartItems.push(item)
+          }
+        })
+      }
+      if (num == 0) {
+        this.cart.items = this.cart.items.filter(item => {
+          return item.id != itemId
+        });
+      }
+      console.log(data)
+      // this.cart.items = this.items.filter(item => item.buyNunber !== 0)
+    },
+    ifPopupCart () {
+      if (this.cart.items.length == 0) {
+        return
+      }
+      this.ifCart = !this.ifCart
+      if (this.ifCart) {
+        this.$refs.popupCart.open()
+      } else {
+        this.$refs.popupCart.close()
+      }
+      console.log(this.cart.items)
+    },
+    sweepCart () {
+      this.cart.items = []
+      this.items.forEach(item => {
+        item.buyNunber = 0
+      })
+      this.$refs.popupCart.close()
+    },
+    updateItems (data) {
+      let { num, itemId } = data
+      this.items.forEach(item => {
+        if (item.id === itemId) {
+          item.buyNunber = num
+        }
+      })
+      if (num == 0) {
+        this.cart.items = this.cart.items.filter(item => {
+          return item.id != itemId
+        });
+      }
+      console.log(this.cart.items)
+    }
   }
 }
 </script>
@@ -296,32 +368,6 @@ export default {
 .content-right-nav {
   padding: 10px;
 }
-.popupPicture-icon {
-  position: absolute;
-  right: 0;
-  top: 0;
-  font-size: 30px;
-  color: #cecece;
-}
-.popupPicture-img {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 0 10px;
-  box-sizing: border-box;
-}
-.popupPicture-itemId,
-.popupPicture-itemTitle {
-  padding: 0 35px 0 10px;
-}
-.popupPicture-itemTitle {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.popupPicture-itemId {
-  font-size: 12px;
-  color: #525252;
-}
 .typeOrderBy {
   display: flex;
 }
@@ -356,6 +402,7 @@ export default {
   padding-left: 50px;
   box-sizing: border-box;
   background-color: #fff;
+  z-index: 100;
 }
 .footer-createOrder {
   position: absolute;
@@ -373,14 +420,20 @@ export default {
 }
 .footer-img {
   position: absolute;
-  top: 5px;
+  top: 2px;
   left: 10px;
   width: 40px;
   height: 40px;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 20px;
+  background-color: #9266f9;
 }
-.footer-img img {
-  width: 100%;
-  height: 100%;
+.footer-img text {
+  font-size: 20px;
+  color: #fff;
+  display: inline-block;
+  transform: translate(-1px, 2px);
 }
 .footer-content {
   padding-left: 10px;
@@ -405,5 +458,11 @@ export default {
   transform: translateY(2px);
   display: inline-block;
   font-size: 20px;
+}
+.backgroundGray {
+  background-color: #828283 !important;
+}
+.colorGray {
+  color: #828283 !important;
 }
 </style>
