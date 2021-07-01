@@ -158,6 +158,7 @@ export default {
   },
   data() {
     return {
+   
       popupPicture: {
         itemId: '',
         itemTitle: '',
@@ -168,7 +169,6 @@ export default {
         showCart: false,
         items: [],
       },
-      shopId: '-1',
       search: '',
       priceOrderBy: 'asc',
       orderBy: 'id desc',
@@ -179,6 +179,7 @@ export default {
       items: [],
       timer: '',
       typeIndex: 0,
+      fid:-1,
       typeOrderBys: [
         {
           name: '综合',
