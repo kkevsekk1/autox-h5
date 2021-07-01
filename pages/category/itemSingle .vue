@@ -42,9 +42,13 @@ export default {
   props: ['item'],
   computed: {
     itemFirstImage(){
-      let  pictures = JSON.parse(this.item.picture)
-      if (pictures) {
-         return  pictures[0]
+      try {
+        console.log(this.item.picture)
+        let  pictures = JSON.parse(this.item.picture)
+        if (pictures&& pictures.length>0) {
+           return  pictures[0];
+        }
+      } catch (error) {
       }
         return ''
     },

@@ -294,10 +294,14 @@ export default {
     showImgs(id) {
       this.popupPicture.itemId = id
       this.popupPicture.pictures = []
-      let item = this.items.filter((res) => res.id == id)[0]
+      let item = this.items.find((res) => res.id == id);
       this.popupPicture.itemTitle = item.title
-      if (item.picture && item.picture.length !== 0) {
-        item.picture.forEach((res) => {
+      try {
+        item.pictures = JSON.parse(item.picture);
+      } catch (error) {
+      }
+      if (item.pictures && item.pictures.length !== 0) {
+        item.pictures.forEach((res) => {
           this.popupPicture.pictures.push(res)
         })
         this.$refs.popupPicture.open()
