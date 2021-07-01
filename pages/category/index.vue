@@ -1,5 +1,6 @@
 <template>
   <view class="index-box">
+    <view>{{data}}</view>
     <view class="header-title">全部分类</view>
     <view class="search">
       <input type="text"
@@ -75,7 +76,7 @@
       </text>
       <view class="footer-createOrder"
             :class="{backgroundGray:cart.items.length ==0}"
-            @click.stop="">去结算</view>
+            @click.stop="createOrder">去结算</view>
     </view>
     <!-- 图片弹窗 -->
     <popup-picture ref="popupPicture"
@@ -89,6 +90,7 @@
 </template>
 
 <script>
+import Items from "../../server/Items"
 import itemSingle from './itemSingle '
 import popupPicture from './popupPicture'
 import popupCart from './popupCart'
@@ -108,6 +110,7 @@ export default {
   },
   data () {
     return {
+      data: Items.data,
       popupPicture: {
         itemId: "",
         itemTitle: "",
@@ -311,6 +314,12 @@ export default {
         });
       }
       console.log(this.cart.items)
+    },
+    createOrder () {
+      Items.createOrder = this.cart.items
+      uni.navigateTo({
+        url: "/pages/createOrder/index"
+      })
     }
   }
 }

@@ -47,6 +47,16 @@
       }
     },
     {
+      "path": "pages/createOrder/index",
+      "style": {
+        "navigationBarTitleText": "创建订单页面",
+        "enablePullDownRefresh": false,
+        "app-plus": {
+          "titleNView": false
+        }
+      }
+    },
+    {
       "path": "pages/order/orders",
       "style": {
         "navigationBarTitleText": "订单",
