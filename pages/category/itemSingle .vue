@@ -15,7 +15,7 @@
             style="padding-right:44px;">{{item.title}}</view>
       <view class="subTitle">
         <view>{{item.subTitle}}</view>
-        <view>剩余：{{item.surplusStock}} {{item.unit}}</view>
+        <view>剩余：{{item.surplusStock | formatTotal }} {{item.unit}}</view>
       </view>
       <view class="price">
         <text class="iconfont priceText-icon">&#xe657;</text>

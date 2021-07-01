@@ -1,6 +1,6 @@
 <template>
   <view >
-    <set-params style="margin-top: 20px;" :scriptId="scriptId"
+    <set-params style="padding: 10px 0px 100px 0px;" :scriptId="scriptId"
                 ref="setParams"></set-params>
                 <view style="height:80px;">&nbsp;</view>
     <view class="uni-btn" v-if="true">
