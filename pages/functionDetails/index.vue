@@ -29,7 +29,7 @@
                class="col-parameter">
         <text>试运行：</text>
         <text> {{specs.tryTime}}分钟 </text>
-        <text class="tryTime"> 如未授权,试用{{specs.tryTime}}分钟后停止</text>
+        <text class="tryTime"> 授权后,在云控中可控制多台手机</text>
       </uni-col>
     </uni-row>
     <uni-row class="area">

@@ -3,7 +3,7 @@
     <uni-col :span="8"
              class="logo">
       <view @click="$emit('imgClick',item.id)">
-        <img :src="item.commodityLogo"
+        <img :src="itemFirstImage"
              alt="">
       </view>
     </uni-col>
@@ -41,6 +41,17 @@ export default {
   components: { inputNumber },
   props: ['item'],
   computed: {
+    itemFirstImage(){
+      try {
+        console.log(this.item.picture)
+        let  pictures = JSON.parse(this.item.picture)
+        if (pictures&& pictures.length>0) {
+           return  pictures[0];
+        }
+      } catch (error) {
+      }
+        return ''
+    },
     itemSurplusDays () {
       return this.surplusDays(this.item.endTime);
     }
