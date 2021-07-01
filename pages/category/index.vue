@@ -261,10 +261,6 @@ export default {
             count: count,
           }
           list.forEach((item) => {
-            item.picture = JSON.parse(item.picture)
-            if (item.picture) {
-              item.commodityLogo = item.picture[0]
-            }
             item.buyNunber = 0
             if (this.cart.items.length > 0) {
               this.cart.items.forEach((res) => {
