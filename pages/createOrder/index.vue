@@ -53,7 +53,7 @@ export default {
       this.items.forEach(item => {
         sum += item [this.priceMap[this.userType]]*item.num;
       })
-      return sum
+      return sum.toFixed(2);
     }
   },
   created () {
