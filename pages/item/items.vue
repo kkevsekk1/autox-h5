@@ -87,7 +87,6 @@
 <script>
 import { request } from '../../server/request.js'
 import itemSingle from './itemSingle '
-import { formatTime } from '../../utils/format.js'
 import isWx from '../../utils/weixinCheck'
 import weixinService from '../../server/weixinService.js'
 export default {

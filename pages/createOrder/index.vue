@@ -8,7 +8,7 @@
       <view v-for="(item,index) in items"
             :key="index"
             class="item-single">
-        <item-single :item="item" />
+        <item-single :item="item"   />
       </view>
     </view>
     <view class="footer">
@@ -27,51 +27,75 @@
 <script>
 import userData from './userData'
 import itemSingle from './itemSingle'
-import Items from "../../server/Items"
 import { request } from "../../server/request.js"
+import shoppingCartService from '../../server/ShoppingCartService'
+import userService from '../../server/userService'
 export default {
   components: { itemSingle, userData },
   data () {
     return {
       items: [],
-      orderItems: [],
-      userData: '',
-      uuid: "",
+      userData: {name:'同城可配送',
+      address:'请添加收货'
+      },
+      uuid: "appuser",
+      userType:'普通',//
+    priceMap: {
+        普通: 'sellingPrice',
+        会员: 'vipPrice',
+        代理: 'proxyPrice',
+      },
     }
   },
   computed: {
     sum () {
       let sum = 0
       this.items.forEach(item => {
-        sum += item.sumPrice
+        sum += item [this.priceMap[this.userType]]*item.num;
       })
       return sum
     }
   },
   created () {
-    this.createdItem()
-    let { name = '', phone = '', address = '', } = this.$route.query
-    this.userData = {
-      name: name,
-      phone: phone,
-      address: address,
-    }
+    this.loadCartItems();
+    // this.loadUserInfo();
   },
   methods: {
-    createdItem () {
-      let items = Items.createOrder
-      items.forEach(item => {
-        item.sumPrice = item.buyNunber * item.sellingPrice
-        this.orderItems.push({
-          id: item.id,
-          quantity: item.buyNunber
-        })
-      })
-      this.items = items
+    loadCartItems(){
+      shoppingCartService.getSCartItems(this.uuid)
+      .then(res=>{
+        console.log(res);
+        let {code,message,data}=res.data;
+        if(code==200){
+          this.items=[]
+          data.forEach(item=>{
+              this.items.push(item);
+          });
+          uni.showToast({
+            'title':message,
+          })
+        }else{
+          uni.showToast({
+            'title':'确认失败，请重新选择商品',
+            icon:'none',
+            duration:5000,
+          })
+        }
+      });
+    },
+    loadUserInfo(){
+       userService.loadUserInfo().then(user=>{
+         console.log(user);
+         try {
+           this.userData = JSON.parse(user.adress)[0];
+         } catch (error) {
+           console.log(error);
+         }
+    
+       })
     },
     selectuser () {
-      console.log("123")
-      uni.redirectTo({
+      uni.navigateTo({
         url: '/pages/createOrder/selectuser'
       })
     },

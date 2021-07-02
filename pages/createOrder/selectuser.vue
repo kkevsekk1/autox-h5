@@ -55,6 +55,7 @@
 <script>
 import userData from './userData'
 import { request } from '../../server/request.js'
+import userService from '../../server/userService'
 export default {
   components: { userData },
   data () {
@@ -75,17 +76,9 @@ export default {
   methods: {
     getUserData () {
       this.userDatas = []
-      request({
-        url: '/auth/userInfoApp',
-        method: 'get',
+      userService.loadAdress().then(address=>{
+        this.userDatas = address
       })
-        .then(res => {
-          let { code, data: { adress } } = res.data
-          if (code == 200) {
-            this.userDatas = JSON.parse(adress)
-            console.log(this.userDatas)
-          }
-        })
     },
     async saveUser () {
       let formData = this.formData
@@ -160,9 +153,10 @@ export default {
     selectUser (userData) {
       console.log(userData)
       let { name, phone, address } = userData
-      uni.redirectTo({
-        url: "/pages/createOrder/index?name=" + name + "&phone=" + phone + "&address=" + address
-      })
+      let pages = getCurrentPages();  
+      let prevPage = pages[ pages.length - 2 ];  
+          prevPage.$vm.userData ={name,phone,address}
+       uni.navigateBack();
     }
   }
 }
