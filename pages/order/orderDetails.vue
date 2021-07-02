@@ -4,64 +4,101 @@
       <view class="allclass content-payStatus">
         <view>
           <text>支付状态：</text>
-          <text> {{items.changeStatus}} </text>
+          <text> {{items.status}} </text>
           <text class="iconfont">&#xe603;</text>
         </view>
-        <view>
-          订单超过30分钟自动取消，请在20分18秒内完成支付
+        <view v-if="items.status=='待支付'">
+          订单超过30分钟自动取消，请在
+          <text>{{countDown}}</text>
+          内完成支付
         </view>
       </view>
       <view class="allclass content-userSite">
         <text>地址</text>
         <view class="content-userSite-right">
           <view>
-            <text> {{items.name}} 账上</text>
-            <text> {{items.phone}} 13452001201</text>
+            <text> {{items.name }}</text>
+            <text> {{items.phone}} </text>
           </view>
           <view>
             {{items.address}}
-            城市情网去的法律积分了
           </view>
         </view>
       </view>
-      <view class="allclass content-orderDetail"
-            style="overflow:hidden">
-        <view class="border-bottom">
-          <uni-rwo>
+      <view class="allclass content-orderDetail">
+        <view class="border-bottom content-orderDetail-allclass">
+          <uni-row>
             <uni-col :span="12">
               <text style="color:#999">订单号</text>
             </uni-col>
             <uni-col :span="12"
                      style="text-align: right;">
-              <text>{{items.id}}</text>
+              <text class="color-50">{{items.id}}</text>
             </uni-col>
-          </uni-rwo>
+          </uni-row>
         </view>
-        <view class="content-Time">
-          <uni-rwo>
+        <view class="content-orderDetail-allclass">
+          <uni-row>
             <uni-col :span="8">
               <text style="color:#999">下单时间</text>
             </uni-col>
             <uni-col :span="16"
                      style="text-align: right;">
-              <text>{{items.createTime}}</text>
+              <text class="color-50">{{items.Time}}</text>
             </uni-col>
-          </uni-rwo>
+          </uni-row>
         </view>
-        <view class="border-bottom">
-          <uni-rwo>
-            <uni-col :span="12">
-              <text style="color:#999">下单时间</text>
+        <view class="content-orderDetail-allclass">
+          <uni-row>
+            <uni-col :span="10">
+              <uni-row>
+                <uni-col :span="8">
+                  <img style="width:100%"
+                       src="http://autoxjs.oss-cn-beijing.aliyuncs.com/tjpimg/1624877737487.png"
+                       alt="">
+                </uni-col>
+                <uni-col :span="16">
+                  <view>商品名</view>
+                  <view style="font-size:12px;color:#999">通用名</view>
+                </uni-col>
+              </uni-row>
             </uni-col>
-            <uni-col :span="6"
+            <uni-col :span="7"
                      style="text-align: right;">
-              <text>{{items.createTime}}</text>
+              <text>价格</text>
             </uni-col>
-            <uni-col :span="6"
+            <uni-col :span="7"
                      style="text-align: right;">
-              <text>{{items.createTime}}</text>
+              <text>x 数量</text>
             </uni-col>
-          </uni-rwo>
+          </uni-row>
+          <uni-row v-for="orderItem,index in items.orderItems"
+                   :key="index"
+                   style="padding:5px 0;">
+            <uni-col :span="10">
+              <uni-row>
+                <uni-col :span="8"
+                         style="height:50px;">
+                  <img style="width:100%;height:100%"
+                       :src="orderItem.picture[0]"
+                       alt="">
+                </uni-col>
+                <uni-col :span="16"
+                         style="padding-left:3px">
+                  <view>{{orderItem.title}}</view>
+                  <view style="font-size:12px;color:#999">通用名</view>
+                </uni-col>
+              </uni-row>
+            </uni-col>
+            <uni-col :span="7"
+                     style="text-align: right;">
+              <text>{{orderItem.price}}</text>
+            </uni-col>
+            <uni-col :span="7"
+                     style="text-align: right;">
+              <text>x {{orderItem.quantity}}</text>
+            </uni-col>
+          </uni-row>
         </view>
       </view>
     </view>
@@ -72,15 +109,45 @@
         <text>{{items.actualPayment}}</text>
       </view>
       <uni-row :gutter="20"
-               class="row-btn">
+               v-if="items.status=='待支付'">
         <uni-col :span="12">
-          <view class="row-btn-cancel">取消订单</view>
+          <view class="row-btn-cancel"
+                @click="cancelOrder">取消订单</view>
         </uni-col>
         <uni-col :span="12">
           <view class="row-btn-pay">去支付</view>
         </uni-col>
       </uni-row>
+      <view v-if="items.status=='待发货'"
+            class="row-btn-pay"
+            @click="service ">
+        联系客服
+      </view>
     </view>
+    <!-- 客服 -->
+    <uni-popup ref="popupService"
+               type="bottom"
+               background-color="#fff">
+      <view class="popupService">
+        <view class="popupService-title">
+          <text>客服热线：</text>
+          <text selectable="true"
+                user-select="true">13523230214</text>
+        </view>
+        <uni-row :gutter="20">
+          <uni-col :span="12">
+            <view class="row-btn-cancel"
+                  style="background-color: #999;color:#fff"
+                  @click="$refs.popupService.close()">取消</view>
+          </uni-col>
+          <uni-col :span="12">
+            <view class="row-btn-pay"
+                  @click="dialPhone">拨打</view>
+          </uni-col>
+        </uni-row>
+      </view>
+
+    </uni-popup>
   </view>
 </template>
 
@@ -91,14 +158,39 @@ export default {
   data () {
     return {
       orderId: "",
-      items: []
+      items: [],
+      countDown: "",
+      servicePhone: "18081280120",
+      statuss: {
+        0: '待支付',
+        1: '待发货',
+        2: '已完成',
+        3: '待评价',
+        4: '已过期'
+      },
     }
   },
   created () {
     this.orderId = this.$route.query.id
     this.getOrderDetails()
+    this.countDownTime()
   },
   methods: {
+    countDownTime () {
+      let thod = this
+      let clearTime = setInterval(function () {
+        let now = new Date()
+        let until = new Date(thod.items.createTime)
+        let ms = until - now
+        var m = Math.floor(ms / (1000 * 60)) % 60;
+        var s = Math.floor(ms / 1000) % 60;
+        thod.countDown = m + "分" + s + "秒"
+        if (s <= 0) {
+          clearInterval(clearTime)
+          thod.countDown = '**'
+        }
+      }, 1000)
+    },
     getOrderDetails () {
       request({
         url: "/itemOrder/getById?id=" + this.orderId,
@@ -107,11 +199,37 @@ export default {
         .then(res => {
           let { code, data } = res.data
           if (code == 200) {
-            data.createTime = formatTime(data.createdTime)
+            data.orderItems.forEach(orderItem => {
+              orderItem.picture = JSON.parse(orderItem.picture) || ''
+            })
+            data.Time = formatTime(data.createTime)
+            data.status = 2
+            data.status = this.statuss[data.status]
             this.items = data
             console.log(this.items)
           }
         })
+    },
+    cancelOrder () {
+      uni.showModal({
+        title: '温馨提示',
+        content: '是否确定取消订单',
+        confirmColor: "#9266f9",
+        success: function (res) {
+          if (res.confirm) {
+            console.log('用户点击确定');
+          }
+        }
+      });
+    },
+    service () {
+      this.$refs.popupService.open()
+    },
+    dialPhone () {
+      uni.makePhoneCall({
+        phoneNumber: this.servicePhone
+      });
+
     }
   }
 }
@@ -121,6 +239,7 @@ export default {
 page {
   background-color: #f5f5f5;
 }
+
 .allclass {
   padding: 10px;
   margin: 10px 0;
@@ -132,7 +251,7 @@ page {
   padding: 10px;
 }
 .content-payStatus view:nth-child(1) {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 800;
 }
 .content-payStatus view:nth-child(2) {
@@ -152,14 +271,21 @@ page {
 .content-userSite-right view:nth-child(1) {
   text-align: right;
 }
+.color-50 {
+  color: #505050;
+}
 .border-bottom {
-  border-bottom: 2px solid #999;
+  border-bottom: 1px solid rgb(216, 215, 215);
+}
+.content-orderDetail-allclass {
+  overflow: hidden;
+  padding: 10px 0;
 }
 .footer {
   position: fixed;
   bottom: 0;
   left: 0;
-  padding: 0 10px;
+  padding: 10px;
   width: 100%;
   box-sizing: border-box;
   background-color: #f5f5f5;
@@ -167,6 +293,7 @@ page {
 .actualPayment {
   text-align: right;
   font-size: 14px;
+  padding-bottom: 5px;
 }
 .actualPayment text:nth-child(2) {
   font-size: 14px;
@@ -174,7 +301,7 @@ page {
   color: red;
 }
 .actualPayment text:nth-child(3) {
-  font-size: 14px;
+  font-size: 18px;
   color: red;
 }
 .row-btn-cancel,
@@ -185,6 +312,7 @@ page {
   line-height: 40px;
   text-align: center;
   font-size: 16px;
+  border-radius: 10px;
 }
 .row-btn-cancel {
   color: #9266f9;
@@ -193,5 +321,14 @@ page {
 .row-btn-pay {
   background-color: #9266f9;
   color: #fff;
+}
+.popupService {
+  padding: 10px;
+}
+.popupService-title {
+  font-size: 16px;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  text-align: center;
 }
 </style>

@@ -48,8 +48,8 @@ export default {
       pages: { status: -1, index: 1, size: 10, orderby: "id desc", count: '' },
       items: [],
       statuss: {
-        0: '待付款',
-        1: '代发货',
+        0: '待支付',
+        1: '待发货',
         2: '已完成',
         3: '待评价',
         4: '已过期'
@@ -145,7 +145,7 @@ export default {
               item.orderItems.forEach(orderItem => {
                 orderItem.picture = JSON.parse(orderItem.picture) || ''
               })
-              item.status = 0
+              // item.status = 0
               let btn = this.btnStatus[item.status]
               let btns = []
               btn.forEach(element => {
@@ -169,7 +169,9 @@ export default {
       this.getOrders()
     },
     orderDetails (id) {
-      console.log(id)
+      uni.navigateTo({
+        url: "/pages/order/orderDetails?id=" + id
+      })
     },
     payment (id) {
       uni.navigateTo({

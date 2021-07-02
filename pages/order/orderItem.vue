@@ -124,7 +124,6 @@ export default {
 }
 .actualPayment text:nth-child(2) {
   font-size: 14px;
-  font-weight: 800;
 }
 .actualPayment text:nth-child(3) {
   font-size: 16px;
