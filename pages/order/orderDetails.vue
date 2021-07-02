@@ -203,7 +203,7 @@ export default {
               orderItem.picture = JSON.parse(orderItem.picture) || ''
             })
             data.Time = formatTime(data.createTime)
-            data.status = 2
+            // data.status = 2
             data.status = this.statuss[data.status]
             this.items = data
             console.log(this.items)

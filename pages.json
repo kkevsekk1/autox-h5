@@ -272,6 +272,16 @@
       }
     },
     {
+      "path": "pages/userSideMine/index",
+      "style": {
+        "navigationBarTitleText": "特价商品用户端个人主页",
+        "enablePullDownRefresh": false,
+        "app-plus": {
+          "titleNView": false
+        }
+      }
+    },
+    {
       "path": "pages/category/index",
       "style": {
         "navigationBarTitleText": "分类",

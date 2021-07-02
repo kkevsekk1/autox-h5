@@ -76,8 +76,8 @@ export default {
   methods: {
     getUserData () {
       this.userDatas = []
-      userService.loadAdress().then(address=>{
-        this.userDatas = address
+      userService.loadAdress().then(address => {
+        this.userDatas = address || []
       })
     },
     async saveUser () {
@@ -153,10 +153,10 @@ export default {
     selectUser (userData) {
       console.log(userData)
       let { name, phone, address } = userData
-      let pages = getCurrentPages();  
-      let prevPage = pages[ pages.length - 2 ];  
-          prevPage.$vm.userData ={name,phone,address}
-       uni.navigateBack();
+      let pages = getCurrentPages();
+      let prevPage = pages[pages.length - 2];
+      prevPage.$vm.userData = { name, phone, address }
+      uni.navigateBack();
     }
   }
 }
