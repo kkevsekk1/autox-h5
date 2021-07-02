@@ -1,7 +1,13 @@
 <template>
   <view class="index-box">
-    <view>{{data}}</view>
-    <view class="header-title">全部分类</view>
+    <uni-row class="header-title"  >
+      <uni-col :offset=8 :span=8 style="text-align:center;" >
+        <text  >全场特价</text>
+      </uni-col>
+       <uni-col   :span=8 style="text-align:right;">
+           <text  @click="toMy()">图标</text>
+      </uni-col>
+    </uni-row>
     <view class="search">
       <input type="text"
              placeholder-style="sont-size:14px"
@@ -134,7 +140,6 @@ export default {
   },
   data () {
     return {
-      data: Items.data,
       popupPicture: {
         itemId: '',
         itemTitle: '',
@@ -187,6 +192,12 @@ export default {
     }, 1000)
   },
   methods: {
+    toMy(){
+      console.log("333333")
+      uni.navigateTo({
+                url: '/pages/userSideMine/index',
+            });
+    },
     async loadShoppingCart () {
       if (uni.getStorageSync('token')) {
         let res = await shoppingCartService.getSCartItems(this.cart.uuid)
