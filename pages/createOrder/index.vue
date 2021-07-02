@@ -36,7 +36,7 @@ export default {
     return {
       items: [],
       userData: {name:'同城可配送',
-      address:'请添加收货'
+      address:'请添加收货地址'
       },
       uuid: "appuser",
       userType:'普通',//
