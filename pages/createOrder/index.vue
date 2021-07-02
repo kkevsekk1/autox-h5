@@ -8,7 +8,7 @@
       <view v-for="(item,index) in items"
             :key="index"
             class="item-single">
-        <item-single :item="item"   />
+        <item-single :item="item" />
       </view>
     </view>
     <view class="footer">
@@ -35,12 +35,13 @@ export default {
   data () {
     return {
       items: [],
-      userData: {name:'同城可配送',
-      address:'请添加收货地址'
+      userData: {
+        name: '同城可配送',
+        address: '请添加收货地址'
       },
       uuid: "appuser",
-      userType:'普通',//
-    priceMap: {
+      userType: '普通',//
+      priceMap: {
         普通: 'sellingPrice',
         会员: 'vipPrice',
         代理: 'proxyPrice',
@@ -51,7 +52,7 @@ export default {
     sum () {
       let sum = 0
       this.items.forEach(item => {
-        sum += item [this.priceMap[this.userType]]*item.num;
+        sum += item[this.priceMap[this.userType]] * item.num;
       })
       return sum
     }
@@ -61,38 +62,38 @@ export default {
     this.loadUserInfo();
   },
   methods: {
-    loadCartItems(){
+    loadCartItems () {
       shoppingCartService.getSCartItems(this.uuid)
-      .then(res=>{
-        console.log(res);
-        let {code,message,data}=res.data;
-        if(code==200){
-          this.items=[]
-          data.forEach(item=>{
+        .then(res => {
+          console.log(res);
+          let { code, message, data } = res.data;
+          if (code == 200) {
+            this.items = []
+            data.forEach(item => {
               this.items.push(item);
-          });
-          uni.showToast({
-            'title':message,
-          })
-        }else{
-          uni.showToast({
-            'title':'确认失败，请重新选择商品',
-            icon:'none',
-            duration:5000,
-          })
-        }
-      });
+            });
+            uni.showToast({
+              'title': message,
+            })
+          } else {
+            uni.showToast({
+              'title': '确认失败，请重新选择商品',
+              icon: 'none',
+              duration: 5000,
+            })
+          }
+        });
     },
-    loadUserInfo(){
-       userService.loadUserInfo().then(user=>{
-         console.log(user);
-         try {
-           this.userData = JSON.parse(user.adress)[0];
-         } catch (error) {
-           console.log(error);
-         }
-    
-       })
+    loadUserInfo () {
+      userService.loadUserInfo().then(user => {
+        console.log(user);
+        try {
+          this.userData = JSON.parse(user.adress)[0];
+        } catch (error) {
+          console.log(error);
+        }
+
+      })
     },
     selectuser () {
       uni.navigateTo({
@@ -121,14 +122,17 @@ export default {
         url: "/itemOrder/buyItems",
         method: "post",
         data,
-      }) .then(res => {
-          let { code, message } = res.data
-          if (code == 200) {
-            uni.showToast({
-              title: message,
-            })
-          }
-        })
+      }).then(res => {
+        let { code, message } = res.data
+        if (code == 200) {
+          uni.showToast({
+            title: message,
+          })
+          uni.navigateTo({
+            url: "/pages/order/orders"
+          })
+        }
+      })
     }
   }
 }

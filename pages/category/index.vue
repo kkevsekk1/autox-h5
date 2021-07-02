@@ -235,6 +235,7 @@ export default {
         method: 'post',
         data,
       }).then((res) => {
+        console.log(res)
         uni.hideLoading()
         let {
           code,
@@ -285,7 +286,7 @@ export default {
       } catch (error) { }
       if (item.pictures && item.pictures.length !== 0) {
         item.pictures.forEach((res) => {
-          this.popupPicture.pictures.push(res+"_x.jpg")
+          this.popupPicture.pictures.push(res + "_x.jpg")
         })
         this.$refs.popupPicture.open()
       }
