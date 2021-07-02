@@ -58,7 +58,7 @@ export default {
   },
   created () {
     this.loadCartItems();
-    // this.loadUserInfo();
+    this.loadUserInfo();
   },
   methods: {
     loadCartItems(){
@@ -121,8 +121,7 @@ export default {
         url: "/itemOrder/buyItems",
         method: "post",
         data,
-      })
-        .then(res => {
+      }) .then(res => {
           let { code, message } = res.data
           if (code == 200) {
             uni.showToast({
@@ -130,10 +129,7 @@ export default {
             })
           }
         })
-    },
-    selectUser (data) {
-      this.userData = data
-    },
+    }
   }
 }
 </script>
