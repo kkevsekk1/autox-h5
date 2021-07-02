@@ -51,7 +51,6 @@ export default {
   created () {
     this.createdItem()
     let { name = '', phone = '', address = '', } = this.$route.query
-    this.getSCartItems()
     this.userData = {
       name: name,
       phone: phone,
@@ -77,10 +76,18 @@ export default {
       })
     },
     submit () {
+      let { name, phone, address } = this.userData
+      if (!name || !phone || !address) {
+        uni.showToast({
+          title: "请选择收获地址",
+          icon: "none"
+        })
+        return
+      }
       let data = {
-        address: this.userData.address,
-        name: this.userData.name,
-        phone: this.userData.phone,
+        address: address,
+        name: name,
+        phone: phone,
         priceType: 1,
         orderType: 2,
         items: this.orderItems

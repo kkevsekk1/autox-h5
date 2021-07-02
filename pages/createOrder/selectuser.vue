@@ -87,7 +87,7 @@ export default {
           }
         })
     },
-    saveUser () {
+    async saveUser () {
       let formData = this.formData
       if (!formData.address || !formData.name || !formData.phone) {
         uni.showToast({
@@ -102,8 +102,8 @@ export default {
       if (this.formData.type == 'edit') {
         this.userDatas[this.formData.index] = formData
       }
+      await this.save()
       this.$refs.popup.close()
-      this.save()
     },
     save () {
       let address = JSON.stringify(this.userDatas)
