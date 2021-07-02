@@ -6,8 +6,9 @@
         <text class="header-time">
           下单时间：{{item.createTime}}
         </text>
-        <text class="header-status">
-          待付款
+        <text class="header-status"
+              :class="{headerred: item.status==0 || item.status==1}">
+          {{item.changeStatus}}
         </text>
       </uni-col>
       <uni-col :span="24"
@@ -41,7 +42,12 @@
       </uni-col>
       <uni-col :span="24"
                class="offter">
-        <text>订单详情</text>
+        <text v-for="btn,index in btns"
+              :key="index">
+          <text>
+            {{btn.name}}
+          </text>
+        </text>
       </uni-col>
     </uni-row>
   </view>
@@ -56,6 +62,33 @@ export default {
       return width
     },
   },
+  data () {
+    return {
+      btns: [
+        {
+          name: '订单详情',
+          type: "orderDetails"
+        },
+        {
+          name: '立即付款',
+          type: "payment"
+        },
+        {
+          name: '查看物流',
+          type: "logistics"
+        },
+        {
+          name: '确认收货',
+          type: "signFor"
+        },
+        {
+          name: '再次购买',
+          type: "buyAgain "
+        },
+
+      ]
+    }
+  }
 
 }
 </script>
@@ -73,6 +106,9 @@ export default {
 .header-status {
   float: right;
   font-size: 14px;
+  color: #999;
+}
+.headerred {
   color: red;
 }
 .scroll-view {
@@ -131,6 +167,9 @@ export default {
   border-radius: 15px;
   font-size: 14px;
   text-align: center;
+  border: 1px solid #999;
+}
+.offter text:last-child {
   border: 1px solid #9266f9;
   color: #9266f9;
 }

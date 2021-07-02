@@ -26,6 +26,13 @@ export default {
     return {
       pages: { status: -1, index: 1, size: 10, orderby: "id desc", count: '' },
       items: [],
+      statuss: {
+        0: '待付款',
+        1: '代发货',
+        2: '已完成',
+        3: '待评价',
+        4: '已过期'
+      },
       sifts: [
         {
           title: "全部",
@@ -51,6 +58,7 @@ export default {
           title: "已过期",
           status: 4
         },
+
       ],
       siftIndex: "",
     }
@@ -83,6 +91,7 @@ export default {
               item.orderItems.forEach(orderItem => {
                 orderItem.picture = JSON.parse(orderItem.picture) || ''
               })
+              item.changeStatus = this.statuss[item.status]
               item.sumNumber = item.orderItems.length
               this.items.push(item)
             });
@@ -110,6 +119,7 @@ page {
   justify-content: space-evenly;
 }
 .header .sift {
+  font-size: 16px;
   padding-bottom: 5px;
 }
 .siftClass {
