@@ -285,7 +285,7 @@ export default {
       } catch (error) { }
       if (item.pictures && item.pictures.length !== 0) {
         item.pictures.forEach((res) => {
-          this.popupPicture.pictures.push(res)
+          this.popupPicture.pictures.push(res+"_x.jpg")
         })
         this.$refs.popupPicture.open()
       }
