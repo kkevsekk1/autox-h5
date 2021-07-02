@@ -24,7 +24,7 @@
           {{ item.name }}
         </text>
       </scroll-view>
-      <view>
+      <view style="width:100%">
         <view class="typeOrderBy"
               v-if="items.length != 0">
           <text v-for="(sortType, index) in sortTypes"
