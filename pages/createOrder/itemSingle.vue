@@ -1,30 +1,56 @@
 <template>
   <view class="itemsSingle">
-    <view class="logo">
-      <img :src="itemFirstImage"
-           alt="" />
-    </view>
-    <view class="content">
-      <view class="content-details">
-        <view class="content-details-title"> {{ item.title }} </view>
-        <view class="content-details-subTitle"> {{ item.subTitle }} </view>
-        <view class="content-details-subTitle"> x{{ item.num }} {{item.unit}} </view>
-      </view>
-      <view class="content-sumPrice">
-        <text>
-          <text class="iconfont"
-                style="font-size:12px">&#xe657;</text>
-          <text> {{item.sellingPrice}} </text>
-        </text>
-        <text style="padding-left:5px;color:#fa2209">
-          <text class="iconfont "
-                style="font-size:16px">&#xe601;</text>
-          <text class="iconfont "
-                style="font-size:12px">&#xe657;</text>
-          <text>{{item.vipPrice}}</text>
-        </text>
-      </view>
-    </view>
+    <uni-row>
+      <uni-col :xs="5"
+               :sm="2">
+        <view class="logo">
+          <img :src="itemFirstImage"
+               alt="" />
+        </view>
+      </uni-col>
+      <uni-col :xs="19"
+               :sm="22">
+        <uni-row>
+          <uni-col :span="24">
+            <view class="content-details-title"> {{ item.title }} </view>
+          </uni-col>
+        </uni-row>
+        <uni-row>
+          <uni-col :span="8">
+            <view class="content-details-subTitle"
+                  style="color:#999"> {{ item.subTitle }} </view>
+          </uni-col>
+          <uni-col :span="16"
+                   style="text-align: right;">
+            <text class="iconfont color-selling"
+                  style="font-size:12px">&#xe657;</text>
+            <text class="color-selling"> {{item.sellingPrice}} </text>
+            <text class="iconfont  color-vip"
+                  style="font-size:16px;padding-left:10px">&#xe601;</text>
+            <text class="iconfont color-vip "
+                  style="font-size:12px;">&#xe657;</text>
+            <text class="color-vip">{{item.vipPrice}}</text>
+          </uni-col>
+        </uni-row>
+        <uni-row>
+          <uni-col :span="4">
+            <view class="content-details-subTitle"> x{{ item.num }} {{item.unit}} </view>
+          </uni-col>
+          <uni-col :span="20"
+                   style="text-align: right;">
+            <text style="font-size:12px;">小计: </text>
+            <text class="iconfont color-selling"
+                  style="font-size:12px;padding-left:10px">&#xe657;</text>
+            <text class="color-selling"> {{sellingPriceSum}} </text>
+            <text class="iconfont color-vip "
+                  style="font-size:16px;padding-left:10px">&#xe601;</text>
+            <text class="iconfont color-vip"
+                  style="font-size:12px;">&#xe657;</text>
+            <text class="color-vip ">{{vipPriceSum}}</text>
+          </uni-col>
+        </uni-row>
+      </uni-col>
+    </uni-row>
   </view>
 </template>
 <script>
@@ -41,13 +67,18 @@ export default {
       } catch (error) { }
       return ''
     },
+    sellingPriceSum () {
+      return this.item.num * this.item.sellingPrice
+    },
+    vipPriceSum () {
+      return this.item.num * this.item.vipPrice
+    }
   },
 }
 </script>
 
 <style>
 .itemsSingle {
-  display: flex;
   position: relative;
 }
 .logo {
@@ -59,23 +90,25 @@ export default {
   height: 100%;
 }
 .content {
-  padding-top: 3px;
   padding-left: 10px;
-}
-.content-details-title {
-  font-size: 14px;
 }
 .content-details-subTitle {
   padding-top: 3px;
-  color: #999;
   font-size: 12px;
-  font-weight: 300;
 }
 .content-sumPrice {
-  position: absolute;
-  right: 10px;
-  top: 10px;
+  width: 100%;
+  text-align: right;
+  padding-bottom: 5px;
 }
-.content-sumPrice text:nth-child(1) {
+.iconfont-vip {
+  position: absolute;
+  top: -2px;
+}
+.color-selling {
+  color: #9266f9;
+}
+.color-vip {
+  color: red;
 }
 </style>
