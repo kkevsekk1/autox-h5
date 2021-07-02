@@ -46,7 +46,7 @@ export default {
         console.log(this.item.picture)
         let  pictures = JSON.parse(this.item.picture)
         if (pictures&& pictures.length>0) {
-           return  pictures[0];
+           return  pictures[0]+'_x.jpg';
         }
       } catch (error) {
       }

@@ -27,14 +27,14 @@ export class ShoppingCartService{
       console.log(res);  
   })
 }
- //更新某个购车商品信息
+ //获取所有的购车
  getShoppingCarts(){
   return request({
       url: '/item/getShoppingCarts',
       method: 'get',
     });
  }
-
+//删除其中一个购物车
   deleteSCart(uuid){
   return request({
       url: '/item/deleteSCart?uuid='+uuid,
@@ -43,6 +43,8 @@ export class ShoppingCartService{
       console.log(res);
     });
  }
+
+ //删除某个购车商品
 deleteSCartItem(uuid,itemId){
   return request({
       url: '/item/deleteSCartItem?uuid='+uuid+'&itemId='+itemId,
@@ -51,13 +53,14 @@ deleteSCartItem(uuid,itemId){
       console.log(res);
     });
  }
+ //获取购物车所有商品
  getSCartItems(uuid){
   return request({
     url: '/item/getSCartItems?uuid='+uuid,
     method: 'get',
   });
  }
-
+ 
 }
 
 export  default  new ShoppingCartService();

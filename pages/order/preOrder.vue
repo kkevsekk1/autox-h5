@@ -64,7 +64,7 @@
                   style="background-color: #409eff"
                   type="primary"
                   size="mini"
-                  @click="$refs.popupSum.open()">
+                  @click="overAddCart()">
             完成
           </button>
         </uni-col>
@@ -178,9 +178,14 @@
         <uni-row>
           <uni-col class="popupSum-nav"
                    :offset="3"
-                   :span="21">
-            <text>{{ name }}</text>
+                   :span="10">
+            <text>客户：{{ this.cart.user.code }}</text>
           </uni-col>
+          <uni-col class="popupSum-nav"
+                   :span="11">
+            <text style="color:red" >{{ this.userType }}价 </text>
+          </uni-col>
+
           <uni-col class="popupSum-nav"
                    :offset="3"
                    :span="21">
@@ -247,12 +252,10 @@ export default {
   components: { preOrderItem },
   data () {
     return {
-      name: '张三',
       search: '',
       userType: '普通',
       index: 0,
       array: ['普通', '会员', '代理'],
-
       cart: {
         uuid: '',
         user: {
@@ -311,6 +314,16 @@ export default {
     this.initWeixin()
   },
   methods: {
+    overAddCart(){
+      if(this.cartItems.length==0){
+        uni.showToast({
+          title:"你还没有可结算的商品",
+          icon:'none'
+        })
+        return;
+      }
+      this.$refs.popupSum.open();
+    },
     cancel () {
       this.$refs.popupItems.close()
       this.search = ''
@@ -522,49 +535,61 @@ export default {
       })
       this.$refs.popupClient.close()
     },
+    cleanCart(){
+      shoppingCartService.deleteSCart(this.cart.uuid)
+      this.cartItems = []
+      this.cart = { user: { code: '' } }
+     
+    },
     createOrder () {
       if (this.cartItems.length == 0) {
         uni.showToast({
           title: "暂无商品，无法出库"
-        })
-      } else {
-        let orderItems = []
-        this.cartItems.forEach(item => {
-          orderItems.push({
-            id: item.id,
-            quantity: item.num
-          })
-        })
-        let data = {
-          address: '',
-          name: '',
-          phone: '',
-          priceType: 1,
-          orderType: 2,
-          items: orderItems
-        }
-        console.log(data)
-        request({
-          url: "/itemOrder/buyItems",
-          method: "post",
-          data,
-        })
-          .then(res => {
-            let { code, message } = res.data
-            if (code == 200) {
-              uni.showToast({
-                title: message,
-              })
-              this.cartItems = []
-              this.$refs.popupSum.close()
-            }
-          })
+        });
+        return;
       }
+      let orderItems = []
+      this.cartItems.forEach(item => {
+        orderItems.push({
+          id: item.id,
+          quantity: item.num
+        })
+      })
+      let priceTypes ={"普通":1,"会员":2,"代理":3};
+      let data = {
+        address: this.cart.user.address,
+        name: this.cart.user.code,
+        phone: this.cart.user.phone,
+        priceType: priceTypes[this.userType],
+        orderType: 1,
+        items: orderItems
+      }
+      uni.showLoading({
+        title: '加载中',
+      })
+      request({
+        url: "/itemOrder/buyItems",
+        method: "post",
+        data,
+      }).then(res => {
+          uni.hideLoading();
+          let { code, message } = res.data
+          if (code == 200) {
+            uni.showToast({
+              title: message,
+            })
+           this.cleanCart();
+           this.$refs.popupSum.close()
+          }else{
+              uni.showToast({
+              title: message,
+            })
+          }
+        })
     }
   },
 }
 </script>
-
 <style>
 page {
   background-color: #f5f5f5;

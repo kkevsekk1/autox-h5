@@ -1,27 +1,36 @@
 <template>
   <view class="itemsSingle">
     <view class="logo">
-      <img :src="item.commodityLogo"
-           alt="">
+      <img :src="itemFirstImage" alt="" />
     </view>
     <view class="content">
       <view class="content-details">
-        <view class="content-details-title"> {{item.title}} </view>
-        <view class="content-details-subTitle"> {{item.subTitle}} </view>
-        <view class="content-details-subTitle"> x{{item.buyNunber}} </view>
+        <view class="content-details-title"> {{ item.title }} </view>
+        <view class="content-details-subTitle"> {{ item.subTitle }} </view>
+        <view class="content-details-subTitle"> x{{ item.num }} {{item.unit}} </view>
       </view>
       <view class="content-sumPrice">
         <text class="iconfont">&#xe657;</text>
-        <text> {{item.sumPrice}} </text>
+        <text> {{ item.vipPrice }} 显示2个价格 </text>
       </view>
     </view>
   </view>
 </template>
-
 <script>
 export default {
   props: ['item'],
-
+  computed: {
+    itemFirstImage() {
+      try {
+        console.log(this.item.picture)
+        let pictures = JSON.parse(this.item.picture)
+        if (pictures && pictures.length > 0) {
+          return pictures[0] + '_x.jpg'
+        }
+      } catch (error) {}
+      return ''
+    },
+  },
 }
 </script>
 
