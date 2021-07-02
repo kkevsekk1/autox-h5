@@ -1,7 +1,8 @@
 <template>
   <view class="itemsSingle">
     <view class="logo">
-      <img :src="itemFirstImage" alt="" />
+      <img :src="itemFirstImage"
+           alt="" />
     </view>
     <view class="content">
       <view class="content-details">
@@ -10,8 +11,18 @@
         <view class="content-details-subTitle"> x{{ item.num }} {{item.unit}} </view>
       </view>
       <view class="content-sumPrice">
-        <text class="iconfont">&#xe657;</text>
-        <text> {{ item.vipPrice }} 显示2个价格 </text>
+        <text>
+          <text class="iconfont"
+                style="font-size:12px">&#xe657;</text>
+          <text> {{item.sellingPrice}} </text>
+        </text>
+        <text style="padding-left:5px;color:#fa2209">
+          <text class="iconfont "
+                style="font-size:16px">&#xe601;</text>
+          <text class="iconfont "
+                style="font-size:12px">&#xe657;</text>
+          <text>{{item.vipPrice}}</text>
+        </text>
       </view>
     </view>
   </view>
@@ -20,14 +31,14 @@
 export default {
   props: ['item'],
   computed: {
-    itemFirstImage() {
+    itemFirstImage () {
       try {
         console.log(this.item.picture)
         let pictures = JSON.parse(this.item.picture)
         if (pictures && pictures.length > 0) {
           return pictures[0] + '_x.jpg'
         }
-      } catch (error) {}
+      } catch (error) { }
       return ''
     },
   },
@@ -66,6 +77,5 @@ export default {
   top: 10px;
 }
 .content-sumPrice text:nth-child(1) {
-  font-size: 12px;
 }
 </style>
