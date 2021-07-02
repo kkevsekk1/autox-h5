@@ -314,7 +314,7 @@ export default {
     },
 
     toChangeCart (data) {
-      console.log('去修改购车数量')
+      // console.log('去修改购车数量')
       let { num, itemId } = data
       if (num != 0) {
         let item = this.cart.items.find((item) => {

@@ -43,7 +43,7 @@ export default {
   computed: {
     itemFirstImage(){
       try {
-        console.log(this.item.picture)
+        // console.log(this.item.picture)
         let  pictures = JSON.parse(this.item.picture)
         if (pictures&& pictures.length>0) {
            return  pictures[0]+'_x.jpg';
