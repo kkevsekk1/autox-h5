@@ -77,6 +77,16 @@
       }
     },
     {
+      "path": "pages/order/orderDetails",
+      "style": {
+        "navigationBarTitleText": "订单详情",
+        "enablePullDownRefresh": false,
+        "app-plus": {
+          "titleNView": false
+        }
+      }
+    },
+    {
       "path": "pages/order/preOrder",
       "style": {
         "navigationBarTitleText": "扫码出库",

@@ -42,11 +42,10 @@
       </uni-col>
       <uni-col :span="24"
                class="offter">
-        <text v-for="btn,index in btns"
-              :key="index">
-          <text>
-            {{btn.name}}
-          </text>
+        <text v-for="btn,index in item.btns"
+              :key="index"
+              @click="$emit(btn.type,item.id)">
+          {{btn.name}}
         </text>
       </uni-col>
     </uni-row>
@@ -55,40 +54,13 @@
 
 <script>
 export default {
-  props: ['item'],
+  props: ['item',],
   computed: {
     scrollWidth () {
       let width = document.documentElement.clientWidth
       return width
     },
   },
-  data () {
-    return {
-      btns: [
-        {
-          name: '订单详情',
-          type: "orderDetails"
-        },
-        {
-          name: '立即付款',
-          type: "payment"
-        },
-        {
-          name: '查看物流',
-          type: "logistics"
-        },
-        {
-          name: '确认收货',
-          type: "signFor"
-        },
-        {
-          name: '再次购买',
-          type: "buyAgain "
-        },
-
-      ]
-    }
-  }
 
 }
 </script>
@@ -166,6 +138,7 @@ export default {
   line-height: 26px;
   border-radius: 15px;
   font-size: 14px;
+  margin-left: 5px;
   text-align: center;
   border: 1px solid #999;
 }
