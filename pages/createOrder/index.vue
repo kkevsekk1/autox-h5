@@ -54,7 +54,7 @@ export default {
       this.items.forEach(item => {
         sum += item[this.priceMap[this.userType]] * item.num;
       })
-      return sum.toFixed(2);
+      return sum
     }
   },
   created () {
@@ -109,13 +109,20 @@ export default {
         })
         return
       }
+      let orderItems = []
+      this.items.forEach(item => {
+        orderItems.push({
+          id: item.id,
+          quantity: item.num
+        })
+      })
       let data = {
         address: address,
         name: name,
         phone: phone,
         priceType: 1,
         orderType: 2,
-        items: this.orderItems
+        items: orderItems
       }
       console.log(data)
       request({
