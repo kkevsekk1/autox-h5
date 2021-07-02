@@ -17,13 +17,13 @@
         <uni-col :span="5"
                  class="role"
                  style="padding-top: 10px">
-          <text style="float: right"> {{ mineData.role }} </text>
+          <text style="float: right"> {{ roleName }} </text>
         </uni-col>
       </uni-row>
       <uni-row class="money">
         <uni-col :span="24"
                  class="money-balance">
-          <h2 v-if="mineData.role == '特价用户'">你还不是VIP会员，升级会员全场1折起</h2>
+          <h2 v-if="roleName == '特价用户'">你还不是VIP会员，升级会员全场1折起</h2>
           <h2 v-else>欢迎您，VIP会员，全场享受VIP价</h2>
         </uni-col>
       </uni-row>
@@ -59,6 +59,7 @@ export default {
       mineData: '',
       logoImg: '../../static/portrait.png',
       then: [],
+      roleName: ""
     }
   },
   created () {
@@ -78,18 +79,19 @@ export default {
         uni.hideLoading()
         console.log(data)
         if (code == 200) {
-          let { name, code, balance, role, user, level, merchant } = data
-          if (merchant == 7) {
-            role = '代理商'
+          let { name, code, balance, role, level } = data
+          if (role == 7) {
+            this.roleName = '代理商'
           } else {
-            if (user == 2) {
+            if (role == 2) {
               if (level == 3) {
-                role = 'VIP会员'
+                this.roleName = 'VIP会员'
               } else {
-                role = "特价用户"
+                this.roleName = "特价用户"
               }
             }
           }
+          console.log(this.roleName)
           this.mineData = {
             name: name,
             code: code,
@@ -104,10 +106,10 @@ export default {
         url: '/pages/login/login?path=' + this.$route.path,
       })
     },
-    // convertContent (content) {
-    //   content = content.replace('{{code}}', this.mineData.code)
-    //   return content
-    // },
+    convertContent (content) {
+      content = content.replace('{{code}}', this.mineData.code)
+      return content
+    },
     getColumn (name) {
       request({
         url: '/program/getByName?name=' + name,
@@ -117,7 +119,7 @@ export default {
         if (code == 200) {
           data.children.forEach((element) => {
             let { type, name, content, icon1, icon2 } = element
-            // content = this.convertContent(content)
+            content = this.convertContent(content || '')
             this.then.push({
               type: type,
               imgPath: icon1 || icon2,

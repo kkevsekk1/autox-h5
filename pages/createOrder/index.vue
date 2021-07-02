@@ -12,14 +12,25 @@
       </view>
     </view>
     <view class="footer">
-      <text class="footer-left">
-        <text>合计：</text>
-        <text class="iconfont">&#xe657;</text>
-        <text>{{sum}}</text>
-      </text>
-      <text class="footer-right">
-        <text @click="submit">提交订单</text>
-      </text>
+      <view class="footer-advertising"
+            v-if="roleName =='特价用户'">
+        <text>开通
+          <text style="color:red">VIP会员</text>
+          ，可比特价还省
+          <text style="color:red">{{saveSum}}</text>
+          元</text>
+        <text class="footer-vip">立即开通</text>
+      </view>
+      <view style="height: 45px;line-height: 45px;">
+        <text class="footer-left">
+          <text>合计：</text>
+          <text class="iconfont">&#xe657;</text>
+          <text>{{sum}}</text>
+        </text>
+        <text class="footer-right">
+          <text @click="submit">提交订单</text>
+        </text>
+      </view>
     </view>
   </view>
 </template>
@@ -46,6 +57,7 @@ export default {
         会员: 'vipPrice',
         代理: 'proxyPrice',
       },
+      roleName: "",
     }
   },
   computed: {
@@ -54,7 +66,15 @@ export default {
       this.items.forEach(item => {
         sum += item[this.priceMap[this.userType]] * item.num;
       })
-      return sum
+      return sum.toFixed(2)
+    },
+    saveSum () {
+      let vipsum = 0
+      this.items.forEach(item => {
+        vipsum += item.vipPrice * item.num;
+      })
+      let saveSum = this.sum - vipsum
+      return saveSum.toFixed(2)
     }
   },
   created () {
@@ -92,7 +112,18 @@ export default {
         } catch (error) {
           console.log(error);
         }
-
+        let { role, level } = user
+        if (role == 7) {
+          this.roleName = '代理商'
+        } else {
+          if (role == 2) {
+            if (level == 3) {
+              this.roleName = 'VIP会员'
+            } else {
+              this.roleName = "特价用户"
+            }
+          }
+        }
       })
     },
     selectuser () {
@@ -151,6 +182,7 @@ page {
 }
 .index-box {
   padding: 10px;
+  padding-bottom: 91px;
 }
 .header {
   padding: 10px;
@@ -161,24 +193,26 @@ page {
   background-color: #fff;
   border-radius: 10px;
   margin-top: 10px;
-  padding-bottom: 45px;
+  padding: 10px;
 }
 .item-single {
-  padding: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgb(238, 238, 238);
+}
+.item-single:last-child {
+  border: none;
 }
 .footer {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 45px;
-  line-height: 45px;
   overflow: hidden;
   background-color: #fff;
 }
 .footer-left {
   float: left;
-  padding-left: 20px;
+  padding-left: 10px;
   font-weight: 800;
 }
 .footer-left text:nth-child(1) {
@@ -207,5 +241,20 @@ page {
   border-radius: 20px;
   color: #fff;
   background-color: #9266f9;
+}
+.footer-advertising {
+  font-size: 14px;
+  padding: 15px 10px;
+  box-sizing: border-box;
+  background-color: #fef6e1;
+}
+.footer-vip {
+  float: right;
+  background-color: red;
+  color: #fff;
+  font-weight: 800;
+  padding: 5px 10px;
+  border-radius: 15px;
+  transform: translateY(-4px);
 }
 </style>
