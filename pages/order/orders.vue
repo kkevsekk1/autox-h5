@@ -12,8 +12,29 @@
     <view class="items"
           v-for="item,index in items"
           :key="index">
-      <order-item :item="item" />
+      <order-item :item="item"
+                  @orderDetails="orderDetails"
+                  @payment="payment"
+                  @logistics="logistics"
+                  @signFor="signFor"
+                  @buyAgain="buyAgain" />
     </view>
+    <!-- 物流弹窗 -->
+    <uni-popup ref="popupLogistics"
+               type="bottom"
+               background-color="#fff"
+               class="popupLogistics">
+      <view>物流信息</view>
+      <view>【快递公司】
+        <text selectable="true"
+              user-select="true">{{waybill.name}}</text>
+      </view>
+      <view>【运单号】
+        <text selectable="true"
+              user-select="true">{{waybill.num}}</text>
+      </view>
+      <view @click="$refs.popupLogistics.close()"> 确定 </view>
+    </uni-popup>
   </view>
 </template>
 <script>
@@ -33,6 +54,35 @@ export default {
         3: '待评价',
         4: '已过期'
       },
+      btnStatus: {
+        0: ['订单详情', '立即付款'],
+        1: ['查看物流', '订单详情', '确认收货'],
+        2: ["订单详情", '再次购买'],
+        3: ['订单详情'],
+        4: ['订单详情', '再次购买'],
+      },
+      itemsBtns: [
+        {
+          name: '订单详情',
+          type: "orderDetails"
+        },
+        {
+          name: '立即付款',
+          type: "payment"
+        },
+        {
+          name: '查看物流',
+          type: "logistics"
+        },
+        {
+          name: '确认收货',
+          type: "signFor"
+        },
+        {
+          name: '再次购买',
+          type: "buyAgain "
+        },
+      ],
       sifts: [
         {
           title: "全部",
@@ -61,6 +111,10 @@ export default {
 
       ],
       siftIndex: "",
+      waybill: {
+        name: "顺丰速发",
+        num: "1313131"
+      }
     }
   },
   created () {
@@ -91,6 +145,17 @@ export default {
               item.orderItems.forEach(orderItem => {
                 orderItem.picture = JSON.parse(orderItem.picture) || ''
               })
+              item.status = 0
+              let btn = this.btnStatus[item.status]
+              let btns = []
+              btn.forEach(element => {
+                let data = []
+                data = this.itemsBtns.filter(res => {
+                  return res.name == element
+                })
+                btns.push(data[0])
+              })
+              item.btns = btns
               item.changeStatus = this.statuss[item.status]
               item.sumNumber = item.orderItems.length
               this.items.push(item)
@@ -102,7 +167,24 @@ export default {
       this.siftIndex = index
       this.pages.status = siftStatus
       this.getOrders()
-    }
+    },
+    orderDetails (id) {
+      console.log(id)
+    },
+    payment (id) {
+      uni.navigateTo({
+        url: "/pages/order/orderDetails?id=" + id
+      })
+    },
+    logistics (id) {
+      this.$refs.popupLogistics.open()
+    },
+    signFor (id) {
+      console.log(id)
+    },
+    buyAgain (id) {
+      console.log(id)
+    },
   }
 }
 </script>
@@ -131,5 +213,20 @@ page {
   background-color: #fff;
   border-radius: 10px;
   margin: 10px 0;
+}
+.popupLogistics view {
+  text-align: center;
+  font-size: 14px;
+  height: 45px;
+  line-height: 45px;
+}
+.popupLogistics view:nth-child(1),
+.popupLogistics view:nth-child(2) {
+  border-bottom: 2px solid #f5f5f5;
+}
+.popupLogistics view:nth-child(4) {
+  background-color: #9266f9;
+  color: #fff;
+  font-size: 16px;
 }
 </style>
