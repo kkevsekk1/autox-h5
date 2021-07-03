@@ -13,7 +13,7 @@
         </view>
         <scroll-view scroll-y="true"
                      style="height:500px">
-          <view class="content"
+          <view class="content" style=" border-top:2px  solid #f8f8f8;"
                 v-for="item in items"
                 :key="item.id">
             <item-single class="item-single"

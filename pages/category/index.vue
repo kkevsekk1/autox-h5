@@ -56,7 +56,8 @@
                      scroll-y="true"
                      @scrolltolower="reachBottom"
                      :style="{ height: `${contentLeftHeighe - 30 - 45}px` }">
-          <view class="content-right-nav"
+                    
+          <view class="content-right-nav" style=" border-top:2px  solid #f8f8f8;"
                 v-for="item in items"
                 :key="item.id">
             <item-single class="item-single"
