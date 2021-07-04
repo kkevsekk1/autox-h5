@@ -284,7 +284,7 @@
     {
       "path": "pages/category/index",
       "style": {
-        "navigationBarTitleText": "分类",
+        "navigationBarTitleText": "易折淘",
         "enablePullDownRefresh": true,
         "app-plus": {
           "titleNView": false
