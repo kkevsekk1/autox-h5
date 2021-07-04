@@ -22,7 +22,7 @@
               <view class="content-img"
                     v-for="(orderItem,index) in item.orderItems"
                     :key="index">
-                <img :src="orderItem.picture[0]"
+                <img :src="orderItem.picture[0]+'_z.jpg'"
                      alt="">
               </view>
             </view>

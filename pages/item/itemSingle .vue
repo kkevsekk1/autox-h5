@@ -3,7 +3,7 @@
     <uni-row>
       <uni-col :span="7">
         <view @click="modigyLogo(item.id)">
-          <img :src="item.commodityLogo"
+          <img :src="itemFirstImage"
                class="title-img"
                alt="">
         </view>
@@ -58,7 +58,18 @@ export default {
   computed: {
     itemSurplusDays () {
       return this.surplusDays(this.item.endTime);
-    }
+    },
+  itemFirstImage(){
+      try {
+        // console.log(this.item.picture)
+        let  pictures = JSON.parse(this.item.picture)
+        if (pictures&& pictures.length>0) {
+           return  pictures[0]+'_z.jpg';
+        }
+      } catch (error) {
+      }
+        return ''
+    },
   },
   methods: {
     surplusDays (date) {
