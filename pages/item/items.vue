@@ -181,10 +181,6 @@ export default {
         if (code === 200) {
           data.forEach((item) => {
             item.status = this.statuss[item.status]
-            item.picture = JSON.parse(item.picture)
-            if (item.picture) {
-              item.commodityLogo = item.picture[0]
-            }
             this.datas.push(item)
           })
         }
