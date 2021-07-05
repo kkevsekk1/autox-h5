@@ -17,11 +17,11 @@
         <text>地址</text>
         <view class="content-userSite-right">
           <view>
-            <text> {{items.name }}</text>
-            <text> {{items.phone}} </text>
+            <text> {{consignee.name }} </text>
+            <text style="padding-left:10px"> {{consignee.phone}} </text>
           </view>
           <view>
-            {{items.address}}
+            {{consignee.address}}
           </view>
         </view>
       </view>
@@ -50,24 +50,25 @@
         </view>
         <view class="content-orderDetail-allclass">
           <uni-row>
-            <uni-col :span="10">
+            <uni-col :span="14">
               <uni-row>
-                <uni-col :span="8">
+                <uni-col :span="6"
+                         style="max-width:50px;max-height:50px;">
                   <img style="width:100%"
-                       src="http://autoxjs.oss-cn-beijing.aliyuncs.com/tjpimg/1624877737487.png"
+                       :src="imgLogo"
                        alt="">
                 </uni-col>
-                <uni-col :span="16">
+                <uni-col :span="18">
                   <view>商品名</view>
                   <view style="font-size:12px;color:#999">通用名</view>
                 </uni-col>
               </uni-row>
             </uni-col>
-            <uni-col :span="7"
+            <uni-col :span="5"
                      style="text-align: right;">
               <text>价格</text>
             </uni-col>
-            <uni-col :span="7"
+            <uni-col :span="5"
                      style="text-align: right;">
               <text>x 数量</text>
             </uni-col>
@@ -75,26 +76,26 @@
           <uni-row v-for="orderItem,index in items.orderItems"
                    :key="index"
                    style="padding:5px 0;">
-            <uni-col :span="10">
+            <uni-col :span="14">
               <uni-row>
-                <uni-col :span="8"
-                         style="height:50px;">
-                  <img style="width:100%;height:100%"
-                       :src="orderItem.picture[0]"
+                <uni-col :span="6"
+                         style="max-width:50px;max-height:50px;">
+                  <img style="width:100%"
+                       :src="orderItem.picture[0]+'_z.jpg'"
                        alt="">
                 </uni-col>
-                <uni-col :span="16"
+                <uni-col :span="18"
                          style="padding-left:3px">
                   <view>{{orderItem.title}}</view>
                   <view style="font-size:12px;color:#999">通用名</view>
                 </uni-col>
               </uni-row>
             </uni-col>
-            <uni-col :span="7"
+            <uni-col :span="5"
                      style="text-align: right;">
               <text>{{orderItem.price}}</text>
             </uni-col>
-            <uni-col :span="7"
+            <uni-col :span="5"
                      style="text-align: right;">
               <text>x {{orderItem.quantity}}</text>
             </uni-col>
@@ -168,6 +169,8 @@ export default {
         3: '待评价',
         4: '已过期'
       },
+      consignee: '',
+      imgLogo: 'http://autoxjs.oss-cn-beijing.aliyuncs.com/tjpimg/1624877737487.png_z.jpg'
     }
   },
   created () {
@@ -204,9 +207,11 @@ export default {
             })
             data.Time = formatTime(data.createTime)
             // data.status = 2
+            this.consignee = JSON.parse(data.consignee)
+            data.consignee = JSON.parse(data.consignee)
             data.status = this.statuss[data.status]
             this.items = data
-            console.log(this.items)
+            console.log(this.items.consignee)
           }
         })
     },

@@ -17,9 +17,7 @@
       <uni-row>
         <uni-col :span="8"
                  :push="3">
-          <navigator url='/pages/item/items'>
-            <button>取消</button>
-          </navigator>
+          <button @click="cancel">取消</button>
         </uni-col>
         <uni-col :span="8"
                  :push="5">
@@ -144,7 +142,7 @@ export default {
         .then(res => {
           let { code, message } = res.data
           if (code == 200) {
-            uni.navigateTo({
+            uni.redirectTo({
               url: "/pages/item/items"
             })
             uni.showToast({
@@ -152,6 +150,11 @@ export default {
             })
           }
         })
+    },
+    cancel () {
+      uni.redirectTo({
+        url: "/pages/item/items"
+      })
     }
   }
 }

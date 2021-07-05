@@ -1,13 +1,15 @@
 <template>
   <uni-row class="itemSingle-box">
-    <uni-col :span="8"
+    <uni-col :xs="8"
+             :sm="4"
              class="logo">
       <view @click="$emit('imgClick',item.id)">
         <img :src="itemFirstImage"
              alt="">
       </view>
     </uni-col>
-    <uni-col :span="16"
+    <uni-col :xs="16"
+             :sm="20"
              style="padding-left:5px;"
              class="content">
       <text class="itemSurplusDays">剩{{itemSurplusDays}}天</text>
@@ -41,16 +43,16 @@ export default {
   components: { inputNumber },
   props: ['item'],
   computed: {
-    itemFirstImage(){
+    itemFirstImage () {
       try {
         // console.log(this.item.picture)
-        let  pictures = JSON.parse(this.item.picture)
-        if (pictures&& pictures.length>0) {
-           return  pictures[0]+'_x.jpg';
+        let pictures = JSON.parse(this.item.picture)
+        if (pictures && pictures.length > 0) {
+          return pictures[0] + '_x.jpg';
         }
       } catch (error) {
       }
-        return ''
+      return ''
     },
     itemSurplusDays () {
       return this.surplusDays(this.item.endTime);
