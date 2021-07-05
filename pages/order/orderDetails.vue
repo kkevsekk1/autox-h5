@@ -113,7 +113,7 @@
                v-if="items.status=='待支付'">
         <uni-col :span="12">
           <view class="row-btn-cancel"
-                @click="cancelOrder(items.id)">取消订单</view>
+                @click="cancelOrder()">取消订单</view>
         </uni-col>
         <uni-col :span="12">
           <view class="row-btn-pay">去支付</view>
@@ -184,13 +184,13 @@ export default {
       let clearTime = setInterval(function () {
         let now = new Date()
         let until = new Date(thod.items.createTime)
-        let ms = until - now
+        let ms = until - now + 1800 * 1000
         var m = Math.floor(ms / (1000 * 60)) % 60;
         var s = Math.floor(ms / 1000) % 60;
         thod.countDown = m + "分" + s + "秒"
-        if (s <= 0) {
+        if (m <= 0 && s <= 0 && thod.items.status == '待支付') {
+          thod.cancellationOfrder()
           clearInterval(clearTime)
-          thod.countDown = '**'
         }
       }, 1000)
     },
@@ -206,7 +206,6 @@ export default {
               orderItem.picture = JSON.parse(orderItem.picture) || ''
             })
             data.Time = formatTime(data.createTime)
-            data.status = 0
             this.consignee = JSON.parse(data.consignee)
             data.consignee = JSON.parse(data.consignee)
             data.status = this.statuss[data.status]
@@ -214,31 +213,37 @@ export default {
           }
         })
     },
-    cancelOrder (id) {
+    cancelOrder () {
+      const shod = this
       uni.showModal({
         title: '温馨提示',
         content: '是否确定取消订单',
         confirmColor: "#9266f9",
         success: function (res) {
           if (res.confirm) {
-            request({
-              url: "/itemOrder/cancel?id=" + id,
-              method: "get"
-            })
-              .then(res => {
-                let { code, message } = res.data
-                if (code == 200) {
-                  uni.showToast({
-                    title: message
-                  })
-                  uni.reLaunch({
-                    url: "/pages/order/orders"
-                  })
-                }
-              })
+            shod.cancellationOfrder()
           }
         }
       });
+    },
+    cancellationOfrder () {
+      let id = this.items.id
+      request({
+        url: "/itemOrder/cancel?id=" + id,
+        method: "get"
+      })
+        .then(res => {
+          let { code, message } = res.data
+          console.log(res)
+          if (code == 200) {
+            uni.showToast({
+              title: message
+            })
+            uni.reLaunch({
+              url: "/pages/order/orders"
+            })
+          }
+        })
     },
     service () {
       this.$refs.popupService.open()

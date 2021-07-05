@@ -154,7 +154,10 @@
               </uni-col>
               <uni-col v-if="popupItems.length == 0"
                        :span="24">
-                <view class="popupItems-false">没有该品种，请先入库</view>
+                <view class="popupItems-false">没有该品种，请先
+                  <text style="color:#9266f9"
+                        @click="preOrder">入库</text>
+                </view>
               </uni-col>
             </uni-row>
           </scroll-view>
@@ -320,6 +323,15 @@ export default {
   },
   mounted () {
     this.initWeixin()
+  },
+  created () {
+    let random = this.$route.query.random || ''
+    if (random && random != '') {
+      this.cartItems = uni.getStorageSync(random)
+      uni.removeStorage({
+        key: random,
+      });
+    }
   },
   methods: {
     overAddCart () {
@@ -569,7 +581,7 @@ export default {
         name: this.cart.user.code,
         phone: this.cart.user.phone,
         priceType: priceTypes[this.userType],
-        orderType: 1,
+        orderType: '1',
         items: orderItems
       }
       uni.showLoading({
@@ -593,6 +605,13 @@ export default {
             title: message,
           })
         }
+      })
+    },
+    preOrder () {
+      let random = Math.round(Math.random() * (999 - 100)) + 100
+      uni.setStorageSync(random + '', this.cartItems)
+      uni.navigateTo({
+        url: "/pages/item/setInfo?search=" + this.search + '&random=' + random
       })
     }
   },
