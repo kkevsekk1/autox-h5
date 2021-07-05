@@ -22,7 +22,7 @@
         <view>提示</view>
         <textarea v-model="functionData.path" />
         <button hover-class="none"
-                @click="closePrompt">我知道了</button>
+                @click="cancelPrompt">我知道了</button>
       </view>
     </uni-popup>
   </view>
@@ -48,7 +48,7 @@ export default {
         this.openPopup()
       }
       if (type === "提醒功能") {
-        this.openPrompt();
+        this.addPrompt();
       }
     },
     openPopup () {
@@ -58,11 +58,11 @@ export default {
     closePopup () {
       this.$refs.popup.close();
     },
-    openPrompt () {
+    addPrompt () {
       setClipboardData(this.functionData.path);
       this.$refs.prompt.open();
     },
-    closePrompt () {
+    cancelPrompt () {
       this.$refs.prompt.close();
     }
   }
