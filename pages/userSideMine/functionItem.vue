@@ -48,7 +48,7 @@ export default {
         this.openPopup()
       }
       if (type === "提醒功能") {
-        this.addPrompt();
+        this.openPrompt();
       }
     },
     openPopup () {
@@ -58,8 +58,7 @@ export default {
     closePopup () {
       this.$refs.popup.close();
     },
-    addPrompt () {
-      setClipboardData(this.functionData.path);
+    openPrompt () {
       this.$refs.prompt.open();
     },
     cancelPrompt () {
