@@ -24,6 +24,7 @@
         <button type="default"
                 @click="closeMember">我知道了</button>
       </view>
+
     </uni-popup>
   </view>
 </template>
