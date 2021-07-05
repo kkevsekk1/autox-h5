@@ -58,11 +58,10 @@ export default {
         address: '请添加收货地址'
       },
       uuid: "appuser",
-      userType: '普通',//
       priceMap: {
-        普通: 'sellingPrice',
-        会员: 'vipPrice',
-        代理: 'proxyPrice',
+        '特价用户': 'sellingPrice',
+        'VIP会员': 'vipPrice',
+        '代理商': 'proxyPrice',
       },
       roleName: "",
     }
@@ -71,7 +70,7 @@ export default {
     sum () {
       let sum = 0
       this.items.forEach(item => {
-        sum += item[this.priceMap[this.userType]] * item.num;
+        sum += item[this.priceMap[this.roleName]] * item.num;
       })
       return sum.toFixed(2)
     },
@@ -159,7 +158,7 @@ export default {
         name: name,
         phone: phone,
         priceType: 1,
-        orderType: 2,
+        orderType: '2',
         items: orderItems
       }
       console.log(data)

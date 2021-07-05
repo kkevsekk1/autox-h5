@@ -87,7 +87,7 @@
                 <uni-col :span="18"
                          style="padding-left:3px">
                   <view>{{orderItem.title}}</view>
-                  <view style="font-size:12px;color:#999">通用名</view>
+                  <view style="font-size:12px;color:#999"> {{orderItem.subTitle}} </view>
                 </uni-col>
               </uni-row>
             </uni-col>
@@ -113,7 +113,7 @@
                v-if="items.status=='待支付'">
         <uni-col :span="12">
           <view class="row-btn-cancel"
-                @click="cancelOrder">取消订单</view>
+                @click="cancelOrder(items.id)">取消订单</view>
         </uni-col>
         <uni-col :span="12">
           <view class="row-btn-pay">去支付</view>
@@ -167,7 +167,7 @@ export default {
         1: '待发货',
         2: '已完成',
         3: '待评价',
-        4: '已过期'
+        4: '已取消'
       },
       consignee: '',
       imgLogo: 'http://autoxjs.oss-cn-beijing.aliyuncs.com/tjpimg/1624877737487.png_z.jpg'
@@ -206,23 +206,36 @@ export default {
               orderItem.picture = JSON.parse(orderItem.picture) || ''
             })
             data.Time = formatTime(data.createTime)
-            // data.status = 1
+            data.status = 0
             this.consignee = JSON.parse(data.consignee)
             data.consignee = JSON.parse(data.consignee)
             data.status = this.statuss[data.status]
             this.items = data
-            console.log(this.items.consignee)
           }
         })
     },
-    cancelOrder () {
+    cancelOrder (id) {
       uni.showModal({
         title: '温馨提示',
         content: '是否确定取消订单',
         confirmColor: "#9266f9",
         success: function (res) {
           if (res.confirm) {
-            console.log('用户点击确定');
+            request({
+              url: "/itemOrder/cancel?id=" + id,
+              method: "get"
+            })
+              .then(res => {
+                let { code, message } = res.data
+                if (code == 200) {
+                  uni.showToast({
+                    title: message
+                  })
+                  uni.reLaunch({
+                    url: "/pages/order/orders"
+                  })
+                }
+              })
           }
         }
       });

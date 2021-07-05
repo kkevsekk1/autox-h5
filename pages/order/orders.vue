@@ -52,7 +52,7 @@ export default {
         1: '待发货',
         2: '已完成',
         3: '待评价',
-        4: '已过期'
+        4: '已取消'
       },
       btnStatus: {
         0: ['订单详情', '立即付款'],
@@ -105,7 +105,7 @@ export default {
           status: 3
         },
         {
-          title: "已过期",
+          title: "已取消",
           status: 4
         },
 
