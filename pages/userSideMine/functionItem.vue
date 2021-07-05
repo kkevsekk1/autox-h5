@@ -22,7 +22,7 @@
         <view>提示</view>
         <textarea v-model="functionData.path" />
         <button hover-class="none"
-                @click="closePrompt">我知道了</button hover-class>
+                @click="closePrompt">我知道了</button>
       </view>
     </uni-popup>
   </view>
