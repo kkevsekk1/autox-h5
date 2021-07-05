@@ -115,11 +115,6 @@
                type="bottom"
                background-color="#f5f5f">
       <view class="popup-items">
-        <view class="popup-item-search">
-          <uni-easyinput v-model="search"
-                         style="background-color: #fff; height: 25px; margin-bottom: 10px"
-                         placeholder="请输入搜索内容"></uni-easyinput>
-        </view>
         <view style="padding-top: 55px">
           <scroll-view class="popup-iten-conten"
                        scroll-y="true">
@@ -165,9 +160,22 @@
           </scroll-view>
         </view>
         <view class="popup-item-btn">
-          <button size="mini"
-                  style="float: right"
-                  @click="cancel">取消</button>
+          <view style=" padding: 10px;">
+            <uni-row>
+              <uni-col :xs="18"
+                       :sm="20">
+                <uni-easyinput v-model="search"
+                               style="background-color: #fff; height: 25px; margin-bottom: 10px"
+                               placeholder="请输入搜索内容"></uni-easyinput>
+              </uni-col>
+              <uni-col :xs="6"
+                       :sm="4">
+                <button size="mini"
+                        style="float: right;  transform:translateY(4px)"
+                        @click="cancel">取消</button>
+              </uni-col>
+            </uni-row>
+          </view>
         </view>
       </view>
     </uni-popup>
@@ -183,7 +191,7 @@
           </uni-col>
           <uni-col class="popupSum-nav"
                    :span="11">
-            <text style="color:red" >{{ this.userType }}价 </text>
+            <text style="color:red">{{ this.userType }}价 </text>
           </uni-col>
 
           <uni-col class="popupSum-nav"
@@ -314,11 +322,11 @@ export default {
     this.initWeixin()
   },
   methods: {
-    overAddCart(){
-      if(this.cartItems.length==0){
+    overAddCart () {
+      if (this.cartItems.length == 0) {
         uni.showToast({
-          title:"你还没有可结算的商品",
-          icon:'none'
+          title: "你还没有可结算的商品",
+          icon: 'none'
         })
         return;
       }
@@ -535,11 +543,11 @@ export default {
       })
       this.$refs.popupClient.close()
     },
-    cleanCart(){
+    cleanCart () {
       shoppingCartService.deleteSCart(this.cart.uuid)
       this.cartItems = []
       this.cart = { user: { code: '' } }
-     
+
     },
     createOrder () {
       if (this.cartItems.length == 0) {
@@ -555,7 +563,7 @@ export default {
           quantity: item.num
         })
       })
-      let priceTypes ={"普通":1,"会员":2,"代理":3};
+      let priceTypes = { "普通": 1, "会员": 2, "代理": 3 };
       let data = {
         address: this.cart.user.address,
         name: this.cart.user.code,
@@ -572,20 +580,20 @@ export default {
         method: "post",
         data,
       }).then(res => {
-          uni.hideLoading();
-          let { code, message } = res.data
-          if (code == 200) {
-            uni.showToast({
-              title: message,
-            })
-           this.cleanCart();
-           this.$refs.popupSum.close()
-          }else{
-              uni.showToast({
-              title: message,
-            })
-          }
-        })
+        uni.hideLoading();
+        let { code, message } = res.data
+        if (code == 200) {
+          uni.showToast({
+            title: message,
+          })
+          this.cleanCart();
+          this.$refs.popupSum.close()
+        } else {
+          uni.showToast({
+            title: message,
+          })
+        }
+      })
     }
   },
 }
@@ -643,6 +651,9 @@ page {
 .popup-row {
   margin-bottom: 10px;
 }
+.popup-item-img {
+  max-width: 100px;
+}
 .popup-item-img img {
   width: 100%;
 }
@@ -661,12 +672,9 @@ page {
   position: fixed;
   bottom: 0;
   right: 0;
-  height: 30px;
   width: 100%;
-  padding-right: 10px;
   background-color: #fff;
   z-index: 99;
-  padding: 10px;
 }
 .popup-items {
   height: 505px;

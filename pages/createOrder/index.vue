@@ -14,12 +14,19 @@
     <view class="footer">
       <view class="footer-advertising"
             v-if="roleName =='特价用户'">
-        <text>开通
-          <text style="color:red">VIP会员</text>
-          ，可比特价还省
-          <text style="color:red">{{saveSum}}</text>
-          元</text>
-        <text class="footer-vip">立即开通</text>
+        <uni-row>
+          <uni-col :span="18"
+                   style="padding-top:5px">
+            <text>开通
+              <text style="color:red">VIP会员</text>
+              ，可比特价还省
+              <text style="color:red">{{saveSum}}</text>
+              元</text>
+          </uni-col>
+          <uni-col :span="6">
+            <text class="footer-vip">立即开通</text>
+          </uni-col>
+        </uni-row>
       </view>
       <view style="height: 45px;line-height: 45px;">
         <text class="footer-left">
@@ -244,7 +251,7 @@ page {
 }
 .footer-advertising {
   font-size: 14px;
-  padding: 15px 10px;
+  padding: 10px;
   box-sizing: border-box;
   background-color: #fef6e1;
 }
@@ -255,6 +262,5 @@ page {
   font-weight: 800;
   padding: 5px 10px;
   border-radius: 15px;
-  transform: translateY(-4px);
 }
 </style>
