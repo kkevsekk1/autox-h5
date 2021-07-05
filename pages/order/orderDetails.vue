@@ -75,12 +75,12 @@
           </uni-row>
           <uni-row v-for="orderItem,index in items.orderItems"
                    :key="index"
-                   style="padding:5px 0;">
+                   style="padding:10px 0px 5px 0; ">
             <uni-col :span="14">
               <uni-row>
                 <uni-col :span="6"
                          style="max-width:50px;max-height:50px;">
-                  <img style="width:100%"
+                  <img style="width:100%;height: 100%;"
                        :src="orderItem.picture[0]+'_z.jpg'"
                        alt="">
                 </uni-col>
@@ -206,7 +206,7 @@ export default {
               orderItem.picture = JSON.parse(orderItem.picture) || ''
             })
             data.Time = formatTime(data.createTime)
-            // data.status = 2
+            // data.status = 1
             this.consignee = JSON.parse(data.consignee)
             data.consignee = JSON.parse(data.consignee)
             data.status = this.statuss[data.status]

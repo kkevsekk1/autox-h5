@@ -120,15 +120,33 @@ export default {
   created () {
     this.getOrders()
   },
+  onReachBottom () {
+    if (this.pages.index * this.pages.size < this.pages.count) {
+      this.pages.index++;
+      this.getOrders();
+    } else {
+      uni.showToast({ title: '没有更多了', iccon: 'none' })
+    }
+  },
+  onPullDownRefresh () {
+    this.pages.index = 1;
+    this.items = [];
+    this.getOrders();
+    setTimeout(() => {
+      uni.stopPullDownRefresh()
+    }, 1000)
+  },
   methods: {
     getOrders () {
-      this.items = []
+      console.log(this.pages)
+      uni.showLoading({ title: '加载中' })
       request({
         url: "/itemOrder/findMyOrder",
         method: "post",
         data: this.pages
       })
         .then(res => {
+          uni.hideLoading()
           console.log(res)
           let { code, data: { count, index, list, size, orderby } } = res.data
           if (code == 200) {
@@ -140,7 +158,6 @@ export default {
               count: count
             }
             list.forEach(item => {
-              let sum = 0
               item.createTime = formatTime(item.createTime)
               item.orderItems.forEach(orderItem => {
                 orderItem.picture = JSON.parse(orderItem.picture) || ''
@@ -199,12 +216,19 @@ page {
   padding: 10px;
 }
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   display: flex;
   justify-content: space-evenly;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: #f5f5f5;
+  z-index: 99;
 }
 .header .sift {
   font-size: 16px;
-  padding-bottom: 5px;
 }
 .siftClass {
   color: red;
@@ -212,6 +236,7 @@ page {
 }
 .items {
   padding: 10px;
+  padding-top: 43px;
   background-color: #fff;
   border-radius: 10px;
   margin: 10px 0;

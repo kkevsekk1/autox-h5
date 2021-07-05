@@ -1,11 +1,14 @@
 <template>
   <view class="index-box">
-    <uni-row class="header-title"  >
-      <uni-col :offset=8 :span=8 style="text-align:center;" >
-        <text  >全场特价</text>
+    <uni-row class="header-title">
+      <uni-col :offset=8
+               :span=8
+               style="text-align:center;">
+        <text>全场特价</text>
       </uni-col>
-       <uni-col   :span=8 style="text-align:right;">
-           <text  @click="toMy()">图标</text>
+      <uni-col :span=8
+               style="text-align:right;">
+        <text @click="toMy()">图标</text>
       </uni-col>
     </uni-row>
     <view class="search">
@@ -56,8 +59,8 @@
                      scroll-y="true"
                      @scrolltolower="reachBottom"
                      :style="{ height: `${contentLeftHeighe - 30 - 45}px` }">
-                    
-          <view class="content-right-nav" style=" border-top:2px  solid #f8f8f8;"
+          <view class="content-right-nav"
+                style=" border-top:2px  solid #f8f8f8;"
                 v-for="item in items"
                 :key="item.id">
             <item-single class="item-single"
@@ -193,11 +196,11 @@ export default {
     }, 1000)
   },
   methods: {
-    toMy(){
+    toMy () {
       console.log("333333")
       uni.navigateTo({
-                url: '/pages/userSideMine/index',
-            });
+        url: '/pages/userSideMine/index',
+      });
     },
     async loadShoppingCart () {
       if (uni.getStorageSync('token')) {
