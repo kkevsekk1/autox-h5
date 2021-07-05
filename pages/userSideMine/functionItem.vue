@@ -16,6 +16,15 @@
                alt=""> </view>
       </view>
     </uni-popup>
+    <uni-popup ref="member"
+               type="center">
+      <view class="list">
+        <view>提示</view>
+        <textarea v-model="functionData.path" />
+        <button type="default"
+                @click="closeMember">我知道了</button>
+      </view>
+    </uni-popup>
   </view>
 </template>
 
@@ -25,9 +34,11 @@ export default {
   props: ["functionData"],
   methods: {
     pitchOn () {
+      console.log(111, this.functionData);
       let { type, path } = this.functionData
       if (type === "内部链接") {
-        console.log(path)
+        console.log(path),
+          this.openMember();
         uni.navigateTo({
           url: path
         })
@@ -44,9 +55,17 @@ export default {
       this.$refs.popup.open();
     },
     closePopup () {
-      this.$refs.popup.close()
+      this.$refs.popup.close();
     },
+    openMember () {
+      setClipboardData(this.functionData.path);
+      this.$refs.member.open();
+    },
+    closeMember () {
+      this.$refs.member.close();
+    }
   }
+
 }
 </script>
 
