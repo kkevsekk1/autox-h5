@@ -16,13 +16,13 @@
                alt=""> </view>
       </view>
     </uni-popup>
-    <uni-popup ref="member"
+    <uni-popup ref="prompt"
                type="center">
       <view class="list">
         <view>提示</view>
         <textarea v-model="functionData.path" />
-        <button type="default"
-                @click="closeMember">我知道了</button>
+        <button hover-class="none"
+                @click="closePrompt">我知道了</button hover-class>
       </view>
     </uni-popup>
   </view>
@@ -35,19 +35,20 @@ export default {
   methods: {
     pitchOn () {
       console.log(111, this.functionData);
-      let { type, path } = this.functionData
+      let { type, path } = this.functionData;
       if (type === "内部链接") {
-        console.log(path),
-          this.openMember();
         uni.navigateTo({
           url: path
-        })
+        });
       }
       if (type === "外部链接") {
         window.location.href = path
       }
       if (type === '复制功能') {
         this.openPopup()
+      }
+      if (type === "提醒功能") {
+        this.openPrompt();
       }
     },
     openPopup () {
@@ -57,12 +58,12 @@ export default {
     closePopup () {
       this.$refs.popup.close();
     },
-    openMember () {
+    openPrompt () {
       setClipboardData(this.functionData.path);
-      this.$refs.member.open();
+      this.$refs.prompt.open();
     },
-    closeMember () {
-      this.$refs.member.close();
+    closePrompt () {
+      this.$refs.prompt.close();
     }
   }
 
