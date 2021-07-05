@@ -49,7 +49,7 @@
     {
       "path": "pages/createOrder/index",
       "style": {
-        "navigationBarTitleText": "创建订单页面",
+        "navigationBarTitleText": "二次确定页面",
         "enablePullDownRefresh": false,
         "app-plus": {
           "titleNView": false
@@ -70,7 +70,7 @@
       "path": "pages/order/orders",
       "style": {
         "navigationBarTitleText": "订单",
-        "enablePullDownRefresh": false,
+        "enablePullDownRefresh": true,
         "app-plus": {
           "titleNView": false
         }
