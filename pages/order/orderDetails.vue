@@ -4,12 +4,12 @@
       <view class="allclass content-payStatus">
         <view>
           <text>支付状态：</text>
-          <text> {{items.status}} </text>
+          <text> {{ items.status }} </text>
           <text class="iconfont">&#xe603;</text>
         </view>
-        <view v-if="items.status=='待支付'">
+        <view v-if="items.status == '待支付'">
           订单超过30分钟自动取消，请在
-          <text>{{countDown}}</text>
+          <text>{{ countDown }}</text>
           内完成支付
         </view>
       </view>
@@ -17,11 +17,11 @@
         <text>地址</text>
         <view class="content-userSite-right">
           <view>
-            <text> {{consignee.name }} </text>
-            <text style="padding-left:10px"> {{consignee.phone}} </text>
+            <text> {{ consignee.name }} </text>
+            <text style="padding-left: 10px"> {{ consignee.phone }} </text>
           </view>
           <view>
-            {{consignee.address}}
+            {{ consignee.address }}
           </view>
         </view>
       </view>
@@ -29,22 +29,22 @@
         <view class="border-bottom content-orderDetail-allclass">
           <uni-row>
             <uni-col :span="12">
-              <text style="color:#999">订单号</text>
+              <text style="color: #999">订单号</text>
             </uni-col>
             <uni-col :span="12"
-                     style="text-align: right;">
-              <text class="color-50">{{items.id}}</text>
+                     style="text-align: right">
+              <text class="color-50">{{ items.id }}</text>
             </uni-col>
           </uni-row>
         </view>
         <view class="content-orderDetail-allclass">
           <uni-row>
             <uni-col :span="8">
-              <text style="color:#999">下单时间</text>
+              <text style="color: #999">下单时间</text>
             </uni-col>
             <uni-col :span="16"
-                     style="text-align: right;">
-              <text class="color-50">{{items.Time}}</text>
+                     style="text-align: right">
+              <text class="color-50">{{ items.Time }}</text>
             </uni-col>
           </uni-row>
         </view>
@@ -53,36 +53,36 @@
             <uni-col :span="14">
               <uni-row>
                 <uni-col :span="6"
-                         style="max-width:50px;max-height:50px;">
-                  <img style="width:100%"
+                         style="max-width: 50px; max-height: 50px">
+                  <img style="width: 100%"
                        :src="imgLogo"
-                       alt="">
+                       alt="" />
                 </uni-col>
                 <uni-col :span="18">
                   <view>商品名</view>
-                  <view style="font-size:12px;color:#999">通用名</view>
+                  <view style="font-size: 12px; color: #999">通用名</view>
                 </uni-col>
               </uni-row>
             </uni-col>
             <uni-col :span="5"
-                     style="text-align: right;">
+                     style="text-align: right">
               <text>价格</text>
             </uni-col>
             <uni-col :span="5"
-                     style="text-align: right;">
+                     style="text-align: right">
               <text>x 数量</text>
             </uni-col>
           </uni-row>
-          <uni-row v-for="orderItem,index in items.orderItems"
+          <uni-row v-for="(orderItem, index) in items.orderItems"
                    :key="index"
-                   style="padding:10px 0px 5px 0; ">
+                   style="padding: 10px 0px 5px 0">
             <uni-col :span="14">
               <uni-row>
                 <uni-col :span="6"
-                         style="max-width:50px;max-height:50px;">
-                  <img style="width:100%;height: 100%;"
-                       :src="orderItem.picture[0]+'_z.jpg'"
-                       alt="">
+                         style="max-width: 50px; max-height: 50px">
+                  <img style="width: 100%; height: 100%"
+                       :src="orderItem.picture[0] + '_z.jpg'"
+                       alt="" />
                 </uni-col>
                 <uni-col :span="18"
                          style="padding-left:3px">
@@ -92,12 +92,12 @@
               </uni-row>
             </uni-col>
             <uni-col :span="5"
-                     style="text-align: right;">
-              <text>{{orderItem.price}}</text>
+                     style="text-align: right">
+              <text>{{ orderItem.price }}</text>
             </uni-col>
             <uni-col :span="5"
-                     style="text-align: right;">
-              <text>x {{orderItem.quantity}}</text>
+                     style="text-align: right">
+              <text>x {{ orderItem.quantity }}</text>
             </uni-col>
           </uni-row>
         </view>
@@ -107,21 +107,22 @@
       <view class="actualPayment">
         <text>实付金额：</text>
         <text class="iconfont">&#xe657;</text>
-        <text>{{items.actualPayment}}</text>
+        <text>{{ items.actualPayment }}</text>
       </view>
       <uni-row :gutter="20"
-               v-if="items.status=='待支付'">
+               v-if="items.status == '待支付'">
         <uni-col :span="12">
           <view class="row-btn-cancel"
                 @click="cancelOrder()">取消订单</view>
         </uni-col>
         <uni-col :span="12">
-          <view class="row-btn-pay">去支付</view>
+          <view class="row-btn-pay"
+                @click="toPay">去支付</view>
         </uni-col>
       </uni-row>
-      <view v-if="items.status=='待发货'"
+      <view v-if="items.status == '待发货'"
             class="row-btn-pay"
-            @click="service ">
+            @click="service">
         联系客服
       </view>
     </view>
@@ -138,7 +139,7 @@
         <uni-row :gutter="20">
           <uni-col :span="12">
             <view class="row-btn-cancel"
-                  style="background-color: #999;color:#fff"
+                  style="background-color: #999; color: #fff"
                   @click="$refs.popupService.close()">取消</view>
           </uni-col>
           <uni-col :span="12">
@@ -147,21 +148,20 @@
           </uni-col>
         </uni-row>
       </view>
-
     </uni-popup>
   </view>
 </template>
 
 <script>
-import { request } from "../../server/request.js"
+import { request } from '../../server/request.js'
 import { formatTime } from '../../utils/format.js'
 export default {
   data () {
     return {
-      orderId: "",
+      orderId: '',
       items: [],
-      countDown: "",
-      servicePhone: "18081280120",
+      countDown: '',
+      servicePhone: '18081280120',
       statuss: {
         0: '待支付',
         1: '待发货',
@@ -170,7 +170,8 @@ export default {
         4: '已取消'
       },
       consignee: '',
-      imgLogo: 'http://autoxjs.oss-cn-beijing.aliyuncs.com/tjpimg/1624877737487.png_z.jpg'
+      imgLogo:
+        'http://autoxjs.oss-cn-beijing.aliyuncs.com/tjpimg/1624877737487.png_z.jpg',
     }
   },
   created () {
@@ -179,6 +180,31 @@ export default {
     this.countDownTime()
   },
   methods: {
+    loadPayInfo () {
+      return request({
+        url: '/itemOrder/prePay?id=' + this.orderId,
+        method: 'get',
+      })
+    },
+    toPay () {
+      this.loadPayInfo().then((res) => {
+        let { data, code, message } = res.data;
+        console.log(data)
+        WeixinJSBridge.invoke('getBrandWCPayRequest', {
+          "appId": data.appid,     //公众号ID，由商户传入     
+          "timeStamp": data.timeStamp,         //时间戳，自1970年以来的秒数     
+          "nonceStr": data.nonceStr, //随机串     
+          "package": "prepay_id=" + data.prepayId,
+          "signType": "MD5",         //微信签名方式：     
+          "paySign": data.paySign //微信签名 
+        }, function (res) {
+          if (res.err_msg == 'get_brand_wcpay_request:ok') {
+            // 使用以上方式判断前端返回,微信团队郑重提示：
+            //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+          }
+        })
+      })
+    },
     countDownTime () {
       let thod = this
       let clearTime = setInterval(function () {
@@ -196,8 +222,22 @@ export default {
     },
     getOrderDetails () {
       request({
-        url: "/itemOrder/getById?id=" + this.orderId,
-        method: "get"
+        url: '/itemOrder/getById?id=' + this.orderId,
+        method: 'get',
+      }).then((res) => {
+        let { code, data } = res.data
+        if (code == 200) {
+          data.orderItems.forEach((orderItem) => {
+            orderItem.picture = JSON.parse(orderItem.picture) || ''
+          })
+          data.Time = formatTime(data.createTime)
+          // data.status = 1
+          this.consignee = JSON.parse(data.consignee)
+          data.consignee = JSON.parse(data.consignee)
+          data.status = this.statuss[data.status]
+          this.items = data
+          console.log(this.items.consignee)
+        }
       })
         .then(res => {
           let { code, data } = res.data
@@ -218,13 +258,13 @@ export default {
       uni.showModal({
         title: '温馨提示',
         content: '是否确定取消订单',
-        confirmColor: "#9266f9",
+        confirmColor: '#9266f9',
         success: function (res) {
           if (res.confirm) {
             shod.cancellationOfrder()
           }
-        }
-      });
+        },
+      })
     },
     cancellationOfrder () {
       let id = this.items.id
@@ -250,11 +290,10 @@ export default {
     },
     dialPhone () {
       uni.makePhoneCall({
-        phoneNumber: this.servicePhone
-      });
-
-    }
-  }
+        phoneNumber: this.servicePhone,
+      })
+    },
+  },
 }
 </script>
 
