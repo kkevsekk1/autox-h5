@@ -224,7 +224,7 @@
         </picker>
       </uni-col>
     </uni-row>
-    <uni-row>
+    <uni-row style="margin:10px 0;">
       <uni-col :span="7"
                class="title">
         <text>生产日期：</text>
@@ -298,7 +298,7 @@ export default {
       },
       timeArray: [],
       unitIndex: '',
-      unitArray: ['包', '箱', '提'],
+      unitArray: ['块', '瓶', '罐', '盒', '件', '卷', '套', '片', '箱', '张', '根', '包', '把', '个', '打',],
       allItems: [],
       allItemSpecs: [],
       itemEndDate: currentDate,
@@ -546,7 +546,7 @@ export default {
           setTimeout(function () {
             if (thod.preOrder.search) {
               uni.reLaunch({
-                url: '/pages/order/preOrder?random=' + thod.preOrder.random,
+                url: '/pages/order/preOrder?random=' + thod.preOrder.random + "&search=" + thod.preOrder.search,
               })
               return
             }
@@ -615,7 +615,7 @@ export default {
   color: #848484;
 }
 .picker {
-  height: 30px;
+  height: 36px;
   padding-left: 5px;
   border-radius: 3px;
   border: 1px solid #dddddd;
@@ -635,14 +635,14 @@ export default {
   right: -5px;
 }
 .expiration-date {
-  height: 30px;
+  height: 36px;
   padding-left: 5px;
   font-size: 14px;
   border-radius: 3px;
   border-right: 0;
 }
 .expiration-pocker {
-  height: 30px;
-  line-height: 30px;
+  height: 36px;
+  line-height: 36px;
 }
 </style>

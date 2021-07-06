@@ -325,9 +325,11 @@ export default {
     this.initWeixin()
   },
   created () {
+    let search = this.$route.query.search || ''
     let random = this.$route.query.random || ''
-    if (random && random != '') {
+    if (random != '' && search != '') {
       this.cartItems = uni.getStorageSync(random)
+      this.search = search
       uni.removeStorage({
         key: random,
       });
