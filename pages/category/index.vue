@@ -407,8 +407,6 @@ export default {
       console.log(this.cart.items)
     },
     createOrder () {
-
-      // Items.createOrder = this.cart.items
       uni.navigateTo({
         url: "/pages/createOrder/index"
       })
