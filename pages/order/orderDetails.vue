@@ -159,8 +159,6 @@ export default {
         4: '已取消'
       },
       consignee: '',
-      imgLogo:
-        'http://autoxjs.oss-cn-beijing.aliyuncs.com/tjpimg/1624877737487.png_z.jpg',
     }
   },
   created () {
