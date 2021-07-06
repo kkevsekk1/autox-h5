@@ -108,7 +108,6 @@
 </template>
 
 <script>
-import Items from "../../server/Items"
 import itemSingle from './itemSingle '
 import popupPicture from './popupPicture'
 import popupCart from './popupCart'
@@ -240,7 +239,8 @@ export default {
       uni.showLoading({ title: '加载中' })
       let data = {
         search: this.search,
-        fid: this.fid,
+        // fid: this.fid,
+        fid: '2',
         orderby: this.page.orderBy,
         index: this.page.index,
         size: this.page.size,
@@ -273,7 +273,7 @@ export default {
             }
             this.items.push(item)
           })
-          console.log(this.items)
+          console.log(this.items, 'items', res)
         }
       })
     },
@@ -374,7 +374,7 @@ export default {
       console.log(this.cart.items)
     },
     cleanCart () {
-      console.log('情况购物车')
+      console.log('清空购物车')
       shoppingCartService.deleteSCart(this.cart.uuid)
       this.cart.items = []
       this.items.forEach((item) => {
@@ -408,7 +408,7 @@ export default {
       console.log(this.cart.items)
     },
     createOrder () {
-      Items.createOrder = this.cart.items
+      // Items.createOrder = this.cart.items
       uni.navigateTo({
         url: "/pages/createOrder/index"
       })

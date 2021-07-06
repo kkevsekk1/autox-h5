@@ -179,6 +179,7 @@ export default {
           uni.showToast({
             title: message,
           })
+          shoppingCartService.deleteSCart(this.uuid)
           uni.reLaunch({
             url: "/pages/order/orderDetails?id=" + data.id
           })
