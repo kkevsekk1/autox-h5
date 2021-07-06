@@ -484,6 +484,7 @@ export default {
         this.addItemToItems(rs[0])
       } else {
         //商品不存在或没有库存，请先调整库存或入库
+        console.log("未入库")
         this.$refs.popupItems.open()
       }
     },
@@ -612,7 +613,7 @@ export default {
     preOrder () {
       let random = Math.round(Math.random() * (999 - 100)) + 100
       uni.setStorageSync(random + '', this.cartItems)
-      uni.navigateTo({
+      uni.reLaunch({
         url: "/pages/item/setInfo?search=" + this.search + '&random=' + random
       })
     }
