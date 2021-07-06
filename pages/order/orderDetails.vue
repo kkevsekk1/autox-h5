@@ -106,7 +106,7 @@
         </uni-col>
         <uni-col :span="12">
           <view class="row-btn-pay"
-                @click="toPay">去支付</view>
+                @click="toAuth">去支付</view>
         </uni-col>
       </uni-row>
       <view v-if="items.status == '待发货'"
@@ -148,6 +148,7 @@ export default {
   data () {
     return {
       orderId: '',
+      code:'',
       items: [],
       countDown: '',
       servicePhone: '18081280120',
@@ -161,20 +162,58 @@ export default {
       consignee: '',
     }
   },
+  watch: {
+    code(nv,ov) {
+     if(nv){
+       this.code2OpenId(nv);
+     }
+    },
+  },
   created () {
     this.orderId = this.$route.query.id
+    let state = this.$route.query.state;
+    if(state){
+    let orderParm=this.parseParam(decodeURI(state));
+    this.orderId=orderParm.id;
+    this.code =this.$route.query.code;
+    }
     this.getOrderDetails()
     this.countDownTime()
   },
   methods: {
-    loadPayInfo () {
-      return request({
-        url: '/itemOrder/prePay?id=' + this.orderId,
-        method: 'get',
-      })
+    parseParam(param){
+      console.log(param)
+    var para = param,arr_para = para.split('&'), i = 0, n = arr_para.length;
+    var rs={};
+    for(; i<n; i++){
+      var arr = arr_para[i].split('=');
+       rs[arr[0]] = arr[1];
+       }
+    return rs;
+  },
+    toAuth(){
+     let url= encodeURI("http://xcx.ar01.cn/pages/order/orderDetails");
+     let param=encodeURI("id="+this.orderId); 
+      location.href ="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx3f4bf3f856017bd4&redirect_uri="+
+      url+"&response_type=code&scope=snsapi_base&state="+param+"#wechat_redirect"
     },
-    toPay () {
-      this.loadPayInfo().then((res) => {
+    code2OpenId(wxcode){
+   request({
+        url: '/auth/wxCode2OpenId?code=' + wxcode,
+        method: 'get',
+      }).then((res) => {
+          let { code, data } = res.data;
+            console.log(res);
+          if (code == 200) {
+            this.toPay(data.openId);
+          }
+        })
+    },
+    toPay (openId) {
+      request({
+        url: '/itemOrder/prePay?id=' + this.orderId+"&openId="+openId,
+        method: 'get',
+      }).then((res) => {
         let { data, code, message } = res.data;
         console.log(data)
         WeixinJSBridge.invoke('getBrandWCPayRequest', {
@@ -202,7 +241,7 @@ export default {
         var s = Math.floor(ms / 1000) % 60;
         thod.countDown = m + "分" + s + "秒"
         if (m <= 0 && s <= 0 && thod.items.status == '待支付') {
-          thod.cancellationOfrder()
+          // thod.cancellationOfrder()
           clearInterval(clearTime)
         }
       }, 1000)
