@@ -9,15 +9,26 @@
         <text> {{sift.title}} </text>
       </view>
     </view>
-    <view class="items"
-          v-for="item,index in items"
-          :key="index">
-      <order-item :item="item"
-                  @orderDetails="orderDetails"
-                  @payment="payment"
-                  @logistics="logistics"
-                  @signFor="signFor"
-                  @buyAgain="buyAgain" />
+    <view style="padding-top: 43px;">
+      <view v-if="items.length>0">
+        <view class="items"
+              v-for="item,index in items"
+              :key="index">
+          <order-item :item="item"
+                      @orderDetails="orderDetails"
+                      @payment="payment"
+                      @logistics="logistics"
+                      @signFor="signFor"
+                      @buyAgain="buyAgain" />
+        </view>
+      </view>
+      <view v-if="items.length==0"
+            class="itemsHiddem">
+        <img style="width:100%"
+             src="/static/empty.png"
+             alt="">
+        <view class="itemsHiddem-title">暂无订单数据</view>
+      </view>
     </view>
     <!-- 物流弹窗 -->
     <uni-popup ref="popupLogistics"
@@ -45,14 +56,14 @@ export default {
   components: { orderItem },
   data () {
     return {
-      pages: { status: -1, index: 1, size: 10, orderby: "id desc", count: '' },
+      pages: { status: ' -1', index: 1, size: 10, orderby: "id desc", count: '' },
       items: [],
       statuss: {
-        0: '待支付',
-        1: '待发货',
-        2: '已完成',
-        3: '待评价',
-        4: '已取消'
+        '0': '待支付',
+        '1': '待发货',
+        '2': '已完成',
+        '3': '待评价',
+        '4': '已取消'
       },
       btnStatus: {
         0: ['订单详情', '立即付款'],
@@ -86,27 +97,27 @@ export default {
       sifts: [
         {
           title: "全部",
-          status: ''
+          status: '-1'
         },
         {
           title: "待付款",
-          status: 0
+          status: '0'
         },
         {
           title: "待发货",
-          status: 1
+          status: '1'
         },
         {
           title: "已完成",
-          status: 2
+          status: '2'
         },
         {
           title: "待评价",
-          status: 3
+          status: '3'
         },
         {
           title: "已取消",
-          status: 4
+          status: '4'
         },
 
       ],
@@ -147,11 +158,11 @@ export default {
       })
         .then(res => {
           uni.hideLoading()
-          console.log(res)
+          console.log(res, '返回的数据')
           let { code, data: { count, index, list, size, orderby } } = res.data
           if (code == 200) {
             this.pages = {
-              status: -1,
+              status: '-1',
               index: index,
               size: size,
               orderby: orderby,
@@ -239,7 +250,6 @@ page {
 }
 .items {
   padding: 10px;
-  padding-top: 43px;
   background-color: #fff;
   border-radius: 10px;
   margin: 10px 0;
@@ -258,5 +268,16 @@ page {
   background-color: #9266f9;
   color: #fff;
   font-size: 16px;
+}
+.itemsHiddem {
+  padding-top: 30px;
+  width: 40%;
+  margin: 0 auto;
+}
+.itemsHiddem-title {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 16px;
+  color: grey;
 }
 </style>

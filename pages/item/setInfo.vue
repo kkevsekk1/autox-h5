@@ -514,14 +514,13 @@ export default {
       let { barcode, title, subTitle, endTime, surplusStock, unit, sellingPrice,
         vipPrice, proxyPrice, jinPrice, originalPrice, remarkPrice, status } = this.item
       status = this.arrays[this.array[this.index]]
-      if (!item.surplusStock || !item.sellingPrice || !item.vipPrice || !item.proxyPrice) {
+      if (!surplusStock || !sellingPrice || !vipPrice || !proxyPrice) {
         uni.showToast({
           title: "请将库存、价格填写完毕",
           icon: "none"
         })
         return
       }
-      console.log(this.item)
       let data = {
         id: this.id,
         barcode: barcode,
@@ -539,7 +538,6 @@ export default {
         status: Number(status),
         isUpdate: this.showUpdate
       }
-      console.log(data)
       request({
         url: '/item/addOrUpdate',
         method: 'post',
@@ -558,8 +556,9 @@ export default {
               })
               return
             }
+            console.log("123")
             uni.reLaunch({
-              url: '/pages/item/items?barcode=' + item.barcode,
+              url: '/pages/item/items?barcode=' + barcode,
             })
           }, 300)
         }
