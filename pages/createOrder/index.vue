@@ -61,12 +61,10 @@ export default {
       priceMap: {
         '特价用户': 'sellingPrice',
         'VIP会员': 'vipPrice',
-        '代理商': 'proxyPrice',
       },
       priceTypes: {
         '特价用户': '1',
         'VIP会员': '2',
-        '代理商': '3',
       },
       roleName: "",
     }
@@ -117,24 +115,16 @@ export default {
     },
     loadUserInfo () {
       userService.loadUserInfo().then(user => {
-        console.log(user, 'user');
         try {
           this.userData = JSON.parse(user.adress)[0];
         } catch (error) {
           console.log(error);
         }
-        let { role, level } = user
-        role = 7
-        if (role == 7) {
-          this.roleName = '代理商'
+        let { level } = user
+        if (level == 3) {
+          this.roleName = 'VIP会员'
         } else {
-          if (role == 2) {
-            if (level == 3) {
-              this.roleName = 'VIP会员'
-            } else {
-              this.roleName = "特价用户"
-            }
-          }
+          this.roleName = "特价用户"
         }
       })
     },

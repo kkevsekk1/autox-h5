@@ -80,16 +80,10 @@ export default {
         console.log(data)
         if (code == 200) {
           let { name, code, balance, role, level } = data
-          if (role == 7) {
-            this.roleName = '代理商'
+          if (level == 3) {
+            this.roleName = 'VIP会员'
           } else {
-            if (role == 2) {
-              if (level == 3) {
-                this.roleName = 'VIP会员'
-              } else {
-                this.roleName = "特价用户"
-              }
-            }
+            this.roleName = "特价用户"
           }
           console.log(this.roleName)
           this.mineData = {
