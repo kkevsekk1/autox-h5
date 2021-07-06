@@ -26,7 +26,7 @@
                    :style="{ height: `${contentLeftHeighe - 45}px` }">
         <text class="content-left-nav"
               :class="{ selected: curIndex == -1 }"
-              @click="itemType(-1, '')">全部</text>
+              @click="itemType(-1, '-1')">全部</text>
         <text class="content-left-nav"
               v-for="(item, index) in navList"
               :key="index"
@@ -161,7 +161,7 @@ export default {
       },
       //
       search: '',
-      type: '',
+      type: '-1',
       page: { index: 1, size: 15, orderBy: 'id desc', count: 1000 },
       //
       curIndex: -1,
