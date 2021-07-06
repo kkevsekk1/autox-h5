@@ -7,8 +7,10 @@
         <text>全场特价</text>
       </uni-col>
       <uni-col :span=8
-               style="text-align:right;">
-        <text @click="toMy()">图标</text>
+               style="text-align:right; ">
+        <text @click="toMy()"
+              style="font-size: 20px;color: #9266f9;padding-right:5px;"
+              class="iconfont">&#xe622;</text>
       </uni-col>
     </uni-row>
     <view class="search">
@@ -409,6 +411,11 @@ export default {
       Items.createOrder = this.cart.items
       uni.navigateTo({
         url: "/pages/createOrder/index"
+      })
+    },
+    toMy () {
+      uni.reLaunch({
+        url: "/pages/userSideMine/index"
       })
     }
   }

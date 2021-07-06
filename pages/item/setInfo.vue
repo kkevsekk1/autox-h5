@@ -21,7 +21,6 @@
         </button>
       </uni-col>
     </uni-row>
-
     <view class="row-class">
       <uni-row>
         <uni-col :span="4"
@@ -110,10 +109,17 @@
         单位：
       </uni-col>
       <uni-col :span="5"
-               :push="1">
+               :push="1"
+               style="position: relative;">
         <uni-easyinput v-model="item.unit"
-                       style="background-color: #fff"
-                       placeholder="请输入单位"></uni-easyinput>
+                       style="background-color: #fff;padding-right:20px"
+                       placeholder="请输入"></uni-easyinput>
+        <picker @change="unitBindPickerChange"
+                :value="unitIndex"
+                :range="unitArray"
+                class="title unitPicker">
+          <text class="iconfont popup-icon">&#xe603;</text>
+        </picker>
       </uni-col>
     </uni-row>
     <uni-row class="row-class">
@@ -218,6 +224,49 @@
         </picker>
       </uni-col>
     </uni-row>
+    <uni-row style="margin:10px 0;">
+      <uni-col :span="7"
+               class="title">
+        <text>生产日期：</text>
+      </uni-col>
+      <uni-col :span="12"
+               class="title">
+        <picker mode="date"
+                :value="expiration.createItemDate"
+                @change="createBindDateChange"
+                class="picker">
+          <view class="uni-input">{{ expiration.createItemDate }}</view>
+          <text class="iconfont popup-icon">&#xe603;</text>
+        </picker>
+      </uni-col>
+    </uni-row>
+    <uni-row>
+      <uni-col :span="7"
+               class="title">
+        <text>保质期：</text>
+      </uni-col>
+      <uni-col :span="8"
+               style="border:1px solid #ddd">
+        <uni-row>
+          <uni-col :span="14">
+            <input v-model="expiration.numTime"
+                   class="expiration-date"
+                   placeholder="请输入" />
+          </uni-col>
+          <uni-col :span="10">
+            <picker @change="timeUnitChange"
+                    :value="expiration.timeIndex"
+                    :range="expiration.timeArray"
+                    style="border:0"
+                    class="picker expiration-pocker">
+              <view style="font-size: 14px">{{ expirationPicker }}</view>
+              <text class="iconfont popup-icon"
+                    style="right: 5px;">&#xe603;</text>
+            </picker>
+          </uni-col>
+        </uni-row>
+      </uni-col>
+    </uni-row>
     <view>
       <button size="mini"
               class="popup-save"
@@ -241,20 +290,39 @@ export default {
       search: '',
       id: -1,
       item: { barcode: '', endTime: currentDate },
-      index: '',
+      index: 0,
       array: ['上架', '下架'],
       arrays: {
         上架: '0',
         下架: '1',
       },
       timeArray: [],
+      unitIndex: '',
+      unitArray: ['块', '瓶', '罐', '盒', '件', '卷', '套', '片', '箱', '张', '根', '包', '把', '个', '打',],
       allItems: [],
       allItemSpecs: [],
       itemEndDate: currentDate,
       itemSurplusDays: 0,
       isUpdate: false,
       showUpdate: false,
-      allEndTimes: []
+      allEndTimes: [],
+      expiration: {
+        createItemDate: "",
+        numTime: "",
+        timeIndex: 1,
+        timeArray: ['日', '月', '年'],
+        pickerData: '',
+        unitTimes: {
+          日: 1,
+          月: 30,
+          年: 365,
+        },
+
+      },
+      preOrder: {
+        random: "",
+        search: "",
+      },
     }
   },
   watch: {
@@ -276,8 +344,20 @@ export default {
         }
       }
     },
+    'item.unit' (val) {
+      this.unitIndex = this.unitArray.indexOf(val)
+    },
+    'expiration.numTime' (val) {
+      this.deadline()
+    }
   },
   created () {
+    this.preOrder.search = this.$route.query.search || ''
+    this.preOrder.random = this.$route.query.random || ''
+    if (this.preOrder.search != '') {
+      this.item.barcode = this.preOrder.search
+      this.item.title = "临时商品"
+    }
     this.id = this.$route.query.id || -1
     if (this.id == -1) {
       this.isUpdate = false;
@@ -301,6 +381,9 @@ export default {
     endDate () {
       return this.getDate('end')
     },
+    expirationPicker () {
+      return this.expiration.timeArray[this.expiration.timeIndex]
+    }
   },
   methods: {
     allItemSpecBindPickerChange (e) {
@@ -389,7 +472,10 @@ export default {
     bindDateChange: function (e) {
       let date = e.target.value
       this.item.endTime = date + ' 00:00:00'
-      console.log(this.item.endTime)
+    },
+    createBindDateChange: function (e) {
+      this.expiration.createItemDate = e.target.value
+      this.deadline()
     },
     surplusDays (date) {
       let now = new Date()
@@ -420,7 +506,12 @@ export default {
       day = day > 9 ? day : '0' + day
       return `${year}-${month}-${day}`
     },
+    unitBindPickerChange (e) {
+      this.unitIndex = e.target.value
+      this.item.unit = this.unitArray[this.unitIndex]
+    },
     saveItem () {
+      let thod = this
       let item = this.item
       item.status = this.arrays[this.array[this.index]]
       let data = {
@@ -440,6 +531,7 @@ export default {
         status: Number(item.status),
         isUpdate: this.showUpdate
       }
+      console.log(data)
       request({
         url: '/item/addOrUpdate',
         method: 'post',
@@ -452,6 +544,12 @@ export default {
             title: message,
           })
           setTimeout(function () {
+            if (thod.preOrder.search) {
+              uni.reLaunch({
+                url: '/pages/order/preOrder?random=' + thod.preOrder.random + "&search=" + thod.preOrder.search,
+              })
+              return
+            }
             uni.reLaunch({
               url: '/pages/item/items?barcode=' + item.barcode,
             })
@@ -468,6 +566,26 @@ export default {
         + e.target.value * 24 * 3600 * 1000)
       this.item.endTime = formatTime(endDate);
     },
+    timeUnitChange (e) {
+      this.expiration.timeIndex = e.target.value
+      this.deadline()
+    },
+    deadline () {
+      let createTime = this.expiration.createItemDate
+      let numTime = this.expiration.numTime
+      let unitTime = this.expirationPicker
+      let unitTimes = this.expiration.unitTimes
+      if (createTime && numTime && unitTime) {
+        createTime = createTime + ' 00:00:00'
+        let numTimeMs = (numTime * unitTimes[unitTime] + 1) * 24 * 3600 * 1000
+        let now = new Date()
+        let created = new Date(createTime)
+        numTimeMs = numTimeMs - (now - created)
+        let endDate = new Date(new Date(formatTime(new Date()).slice(0, 10)).getTime()
+          + numTimeMs)
+        this.item.endTime = formatTime(endDate);
+      }
+    }
   },
 }
 </script>
@@ -497,7 +615,7 @@ export default {
   color: #848484;
 }
 .picker {
-  height: 30px;
+  height: 36px;
   padding-left: 5px;
   border-radius: 3px;
   border: 1px solid #dddddd;
@@ -510,5 +628,21 @@ export default {
   margin-left: 10px;
   background: #409eff;
   color: #fff;
+}
+.unitPicker {
+  position: absolute;
+  top: 0;
+  right: -5px;
+}
+.expiration-date {
+  height: 36px;
+  padding-left: 5px;
+  font-size: 14px;
+  border-radius: 3px;
+  border-right: 0;
+}
+.expiration-pocker {
+  height: 36px;
+  line-height: 36px;
 }
 </style>
