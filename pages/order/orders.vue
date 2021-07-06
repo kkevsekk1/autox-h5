@@ -80,7 +80,7 @@ export default {
         },
         {
           name: '再次购买',
-          type: "buyAgain "
+          type: "buyAgain"
         },
       ],
       sifts: [
@@ -202,7 +202,10 @@ export default {
       console.log(id)
     },
     buyAgain (id) {
-      console.log(id)
+      console.log("123")
+      uni.navigateTo({
+        url: "/pages/category/index"
+      })
     },
   }
 }

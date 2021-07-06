@@ -184,6 +184,7 @@ export default {
   },
   async created () {
     this.fid = uni.getStorageSync('fid')
+    this.fid = '2'
     this.getCategoryType('商品类型')
     await this.loadShoppingCart()
     this.loadItems()
@@ -352,6 +353,7 @@ export default {
           } else {
             return true
           }
+
         })
       }
     },

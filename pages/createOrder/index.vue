@@ -117,7 +117,7 @@ export default {
     },
     loadUserInfo () {
       userService.loadUserInfo().then(user => {
-        console.log(user);
+        console.log(user, 'user');
         try {
           this.userData = JSON.parse(user.adress)[0];
         } catch (error) {
