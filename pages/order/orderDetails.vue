@@ -51,18 +51,7 @@
         <view class="content-orderDetail-allclass">
           <uni-row>
             <uni-col :span="14">
-              <uni-row>
-                <uni-col :span="6"
-                         style="max-width: 50px; max-height: 50px">
-                  <img style="width: 100%"
-                       :src="imgLogo"
-                       alt="" />
-                </uni-col>
-                <uni-col :span="18">
-                  <view>商品名</view>
-                  <view style="font-size: 12px; color: #999">通用名</view>
-                </uni-col>
-              </uni-row>
+              <view>商品名</view>
             </uni-col>
             <uni-col :span="5"
                      style="text-align: right">
@@ -170,8 +159,6 @@ export default {
         4: '已取消'
       },
       consignee: '',
-      imgLogo:
-        'http://autoxjs.oss-cn-beijing.aliyuncs.com/tjpimg/1624877737487.png_z.jpg',
     }
   },
   created () {
@@ -224,28 +211,15 @@ export default {
       request({
         url: '/itemOrder/getById?id=' + this.orderId,
         method: 'get',
-      }).then((res) => {
-        let { code, data } = res.data
-        if (code == 200) {
-          data.orderItems.forEach((orderItem) => {
-            orderItem.picture = JSON.parse(orderItem.picture) || ''
-          })
-          data.Time = formatTime(data.createTime)
-          // data.status = 1
-          this.consignee = JSON.parse(data.consignee)
-          data.consignee = JSON.parse(data.consignee)
-          data.status = this.statuss[data.status]
-          this.items = data
-          console.log(this.items.consignee)
-        }
       })
-        .then(res => {
+        .then((res) => {
           let { code, data } = res.data
           if (code == 200) {
-            data.orderItems.forEach(orderItem => {
+            data.orderItems.forEach((orderItem) => {
               orderItem.picture = JSON.parse(orderItem.picture) || ''
             })
             data.Time = formatTime(data.createTime)
+            // data.status = 1
             this.consignee = JSON.parse(data.consignee)
             data.consignee = JSON.parse(data.consignee)
             data.status = this.statuss[data.status]
