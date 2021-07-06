@@ -239,8 +239,7 @@ export default {
       uni.showLoading({ title: '加载中' })
       let data = {
         search: this.search,
-        // fid: this.fid,
-        fid: '2',
+        fid: this.fid,
         orderby: this.page.orderBy,
         index: this.page.index,
         size: this.page.size,
@@ -408,6 +407,7 @@ export default {
       console.log(this.cart.items)
     },
     createOrder () {
+
       // Items.createOrder = this.cart.items
       uni.navigateTo({
         url: "/pages/createOrder/index"
