@@ -68,7 +68,7 @@
             <uni-col :span="14">
               <uni-row>
                 <uni-col :span="6"
-                         style="max-width: 50px; max-height: 50px">
+                         style="width: 48px; height: 48px">
                   <img style="width: 100%; height: 100%"
                        :src="orderItem.picture[0] + '_z.jpg'"
                        alt="" />
@@ -193,16 +193,15 @@ export default {
       })
     },
     countDownTime () {
-      let thod = this
-      let clearTime = setInterval(function () {
+      let clearTime = setInterval(() => {
         let now = new Date()
-        let until = new Date(thod.items.createTime)
+        let until = new Date(this.items.createTime)
         let ms = until - now + 1800 * 1000
         var m = Math.floor(ms / (1000 * 60)) % 60;
         var s = Math.floor(ms / 1000) % 60;
-        thod.countDown = m + "分" + s + "秒"
-        if (m <= 0 && s <= 0 && thod.items.status == '待支付') {
-          thod.cancellationOfrder()
+        this.countDown = m + "分" + s + "秒"
+        if (m <= 0 && s <= 0 && this.items.status == '待支付') {
+          this.cancellationOfrder()
           clearInterval(clearTime)
         }
       }, 1000)

@@ -9,8 +9,8 @@
                    :userData="userData"
                    :index="index"
                    :edit="'editUrse'"
-                   @editUrse.stop="editUrse"
-                   @deleteUrse.stop="deleteUrse"></user-data>
+                   @editUrse="editUrse"
+                   @deleteUrse="deleteUrse"></user-data>
       </view>
       <view class="add-site"
             @click.stop="adduser">
@@ -130,6 +130,7 @@ export default {
       this.$refs.popup.open()
     },
     editUrse (index) {
+      console.log("123")
       this.formData = this.userDatas[index]
       this.formData.type = "edit"
       this.formData.index = index
@@ -139,7 +140,7 @@ export default {
       let thod = this
       uni.showModal({
         title: '确认删除',
-        success: function (res) {
+        success: (res) => {
           if (res.confirm) {
             thod.userDatas.splice(index, 1)
             thod.save()

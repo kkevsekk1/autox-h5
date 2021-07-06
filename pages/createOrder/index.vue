@@ -173,13 +173,14 @@ export default {
         method: "post",
         data,
       }).then(res => {
-        let { code, message } = res.data
+        console.log(res)
+        let { code, message, data } = res.data
         if (code == 200) {
           uni.showToast({
             title: message,
           })
-          uni.navigateTo({
-            url: "/pages/order/orders"
+          uni.reLaunch({
+            url: "/pages/order/orderDetails?id=" + data.id
           })
         }
       })

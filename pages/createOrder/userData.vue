@@ -14,10 +14,10 @@
           class="iconfont user-icon">&#xe603; </text>
     <text v-show="edit=='editUrse' "
           class="iconfont user-icon user-icon-edit"
-          @click="$emit('editUrse',index)">&#xe619;</text>
+          @click.stop="$emit('editUrse',index)">&#xe619;</text>
     <text v-show="edit=='editUrse' "
           class="iconfont user-icon  user-icon-delete "
-          @click="$emit('deleteUrse',index)">&#xe60b;</text>
+          @click.stop="$emit('deleteUrse',index)">&#xe60b;</text>
   </view>
 </template>
 
