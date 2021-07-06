@@ -56,7 +56,7 @@ export default {
   components: { orderItem },
   data () {
     return {
-      pages: { status: ' -1', index: 1, size: 10, orderby: "id desc", count: '' },
+      pages: { status: -1, index: 1, size: 10, orderby: "id desc", count: '' },
       items: [],
       statuss: {
         '0': '待支付',
@@ -97,27 +97,27 @@ export default {
       sifts: [
         {
           title: "全部",
-          status: '-1'
+          status: -1
         },
         {
           title: "待付款",
-          status: '0'
+          status: 0
         },
         {
           title: "待发货",
-          status: '1'
+          status: 1
         },
         {
           title: "已完成",
-          status: '2'
+          status: 2
         },
         {
           title: "待评价",
-          status: '3'
+          status: 3
         },
         {
           title: "已取消",
-          status: '4'
+          status: 4
         },
 
       ],
@@ -149,20 +149,26 @@ export default {
   },
   methods: {
     getOrders () {
-      console.log(this.pages)
       uni.showLoading({ title: '加载中' })
+      let { status, index, size, orderby } = this.pages
+      let data = {
+        status: status,
+        index: index,
+        size: size,
+        orderby: orderby
+      }
+      console.log(data)
       request({
         url: "/itemOrder/findMyOrder",
         method: "post",
-        data: this.pages
+        data,
       })
         .then(res => {
           uni.hideLoading()
-          console.log(res, '返回的数据')
           let { code, data: { count, index, list, size, orderby } } = res.data
           if (code == 200) {
             this.pages = {
-              status: '-1',
+              status: this.pages.status,
               index: index,
               size: size,
               orderby: orderby,
@@ -194,6 +200,8 @@ export default {
     siftStatus (index, siftStatus) {
       this.siftIndex = index
       this.pages.status = siftStatus
+      this.pages.index = 1;
+      this.items = []
       this.getOrders()
     },
     orderDetails (id) {
@@ -238,13 +246,14 @@ page {
   justify-content: space-evenly;
   padding: 10px;
   box-sizing: border-box;
-  background-color: #f5f5f5;
+  background-color: #fff;
   z-index: 99;
 }
 .header .sift {
   font-size: 16px;
 }
 .siftClass {
+  padding-bottom: 5px;
   color: red;
   border-bottom: 2px solid red;
 }
