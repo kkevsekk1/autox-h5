@@ -140,6 +140,7 @@ export default {
       let thod = this
       uni.showModal({
         title: '确认删除',
+        confirmColor: '#9266f9',
         success: (res) => {
           if (res.confirm) {
             thod.userDatas.splice(index, 1)

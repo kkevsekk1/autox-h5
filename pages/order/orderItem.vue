@@ -13,32 +13,44 @@
       </uni-col>
       <uni-col :span="24"
                class="content">
-        <view>
-          <scroll-view scroll-x="true"
-                       :style="{ width: `${scrollWidth - 40-67}px` }"
-                       class="scroll-view">
-            <view class="scroll-view-img"
-                  :style="{ width: `${67*item.sumNumber}px` }">
-              <view class="content-img"
-                    v-for="(orderItem,index) in item.orderItems"
-                    :key="index">
-                <img :src="orderItem.picture[0]+'_z.jpg'"
-                     alt="">
+        <view class="slide-img">
+          <uni-row>
+            <uni-col :xs="20">
+              <scroll-view scroll-x="true"
+                           style="width:100%">
+                <view style="overflow:hidden"
+                      :style="{ width: `${(50+3)*item.sumNumber}px` }">
+                  <view class="content-img"
+                        v-for="(orderItem,index) in item.orderItems"
+                        :key="index">
+                    <img :src="orderItem.picture[0]+'_z.jpg'"
+                         alt="">
+                  </view>
+                </view>
+              </scroll-view>
+            </uni-col>
+            <uni-col :xs="4">
+              <view class="content-sumNumber">
+                <text>共 {{item.sumNumber}} 件</text>
               </view>
+            </uni-col>
+          </uni-row>
+
+        </view>
+        <uni-row style="padding-bottom:10px;">
+          <uni-col :span="12">
+            <view class="order-serial">
+              订单编号：{{item.id}}
             </view>
-          </scroll-view>
-          <view class="content-sumNumber">
-            共 {{item.sumNumber}} 件
-          </view>
-        </view>
-        <view class="order-serial">
-          订单编号：{{item.id}}
-        </view>
-        <view class="actualPayment">
-          <text>合计：</text>
-          <text class="iconfont">&#xe657;</text>
-          <text>{{item.actualPayment}}</text>
-        </view>
+          </uni-col>
+          <uni-col :span="12">
+            <view class="actualPayment">
+              <text>合计：</text>
+              <text class="iconfont">&#xe657;</text>
+              <text>{{item.actualPayment}}</text>
+            </view>
+          </uni-col>
+        </uni-row>
       </uni-col>
       <uni-col :span="24"
                class="offter">
@@ -54,14 +66,7 @@
 
 <script>
 export default {
-  props: ['item',],
-  computed: {
-    scrollWidth () {
-      let width = document.documentElement.clientWidth
-      return width
-    },
-  },
-
+  props: ['item']
 }
 </script>
 
@@ -70,6 +75,8 @@ export default {
   overflow: hidden;
   height: 40px;
   line-height: 40px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f3f3f3;
 }
 .header-time {
   font-size: 16px;
@@ -83,36 +90,36 @@ export default {
 .headerred {
   color: red;
 }
-.scroll-view {
-  display: inline-block;
+.slide-img {
+  background-color: #fbf9fa;
+  border-radius: 10px;
+  padding: 5px;
 }
-.scroll-view-img {
-  overflow: hidden;
+.content {
+  padding-top: 10px;
 }
 .content-img {
   float: left;
-  margin-right: 2px;
-  width: 65px;
-  height: 67px;
-  background-color: #f8f8f8;
+  margin-right: 3px;
 }
 .content-img img {
-  width: 100%;
-  height: 100%;
+  transform: translateY(2px);
+  width: 50px;
+  height: 50px;
 }
 .content-sumNumber {
-  float: right;
-  width: 67px;
-  height: 67px;
-  line-height: 67px;
+  width: 100%;
+  height: 54px;
+  line-height: 54px;
   font-size: 12px;
   text-align: center;
-  background-color: #f8f8f8;
+  background-color: #f8f7ff;
 }
 .order-serial {
   font-size: 12px;
   color: #999;
-  padding: 10px 0;
+  height: 40px;
+  line-height: 40px;
 }
 .actualPayment {
   text-align: right;

@@ -25,6 +25,7 @@
           </view>
         </view>
       </view>
+
       <view class="allclass content-orderDetail">
         <view class="border-bottom content-orderDetail-allclass">
           <uni-row>
@@ -37,6 +38,7 @@
             </uni-col>
           </uni-row>
         </view>
+
         <view class="content-orderDetail-allclass">
           <uni-row>
             <uni-col :span="8">
@@ -48,6 +50,7 @@
             </uni-col>
           </uni-row>
         </view>
+
         <view class="content-orderDetail-allclass">
           <uni-row>
             <uni-col :span="14">
@@ -67,13 +70,13 @@
                    style="padding: 10px 0px 5px 0">
             <uni-col :span="14">
               <uni-row>
-                <uni-col :span="6"
+                <uni-col :span="8"
                          style="width: 48px; height: 48px">
                   <img style="width: 100%; height: 100%"
                        :src="orderItem.picture[0] + '_z.jpg'"
                        alt="" />
                 </uni-col>
-                <uni-col :span="18"
+                <uni-col :span="16"
                          style="padding-left:3px">
                   <view>{{orderItem.title}}</view>
                   <view style="font-size:12px;color:#999"> {{orderItem.subTitle}} </view>
@@ -352,6 +355,9 @@ page {
 }
 .border-bottom {
   border-bottom: 1px solid rgb(216, 215, 215);
+}
+.content-orderDetail {
+  padding-bottom: 100px;
 }
 .content-orderDetail-allclass {
   overflow: hidden;
