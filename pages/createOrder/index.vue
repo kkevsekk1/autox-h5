@@ -117,7 +117,7 @@ export default {
     },
     loadUserInfo () {
       userService.loadUserInfo().then(user => {
-        console.log(user);
+        console.log(user, 'user');
         try {
           this.userData = JSON.parse(user.adress)[0];
         } catch (error) {
@@ -173,13 +173,15 @@ export default {
         method: "post",
         data,
       }).then(res => {
-        let { code, message } = res.data
+        console.log(res)
+        let { code, message, data } = res.data
         if (code == 200) {
           uni.showToast({
             title: message,
           })
-          uni.navigateTo({
-            url: "/pages/order/orders"
+          shoppingCartService.deleteSCart(this.uuid)
+          uni.reLaunch({
+            url: "/pages/order/orderDetails?id=" + data.id
           })
         }
       })

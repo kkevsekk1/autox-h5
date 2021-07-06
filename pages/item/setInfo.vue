@@ -298,7 +298,7 @@ export default {
       },
       timeArray: [],
       unitIndex: '',
-      unitArray: ['块', '瓶', '罐', '盒', '件', '卷', '套', '片', '箱', '张', '根', '包', '把', '个', '打',],
+      unitArray: ['瓶', '袋', '罐', '盒', '件', '套', '箱', '根', '包', '把', '个', '提'],
       allItems: [],
       allItemSpecs: [],
       itemEndDate: currentDate,
@@ -511,24 +511,32 @@ export default {
       this.item.unit = this.unitArray[this.unitIndex]
     },
     saveItem () {
-      let thod = this
-      let item = this.item
-      item.status = this.arrays[this.array[this.index]]
+      let { barcode, title, subTitle, endTime, surplusStock, unit, sellingPrice,
+        vipPrice, proxyPrice, jinPrice, originalPrice, remarkPrice, status } = this.item
+      status = this.arrays[this.array[this.index]]
+      if (!item.surplusStock || !item.sellingPrice || !item.vipPrice || !item.proxyPrice) {
+        uni.showToast({
+          title: "请将库存、价格填写完毕",
+          icon: "none"
+        })
+        return
+      }
+      console.log(this.item)
       let data = {
         id: this.id,
-        barcode: item.barcode,
-        title: item.title,
-        subTitle: item.subTitle,
-        endTime: item.endTime,
-        totalStock: Number(item.surplusStock),
-        unit: item.unit,
-        sellingPrice: Number(item.sellingPrice),
-        vipPrice: Number(item.vipPrice),
-        proxyPrice: Number(item.proxyPrice),
-        jinPrice: Number(item.jinPrice),
-        originalPrice: Number(item.originalPrice),
-        remarkPrice: Number(item.remarkPrice),
-        status: Number(item.status),
+        barcode: barcode,
+        title: title,
+        subTitle: subTitle,
+        endTime: endTime,
+        totalStock: Number(surplusStock),
+        unit: unit,
+        sellingPrice: Number(sellingPrice),
+        vipPrice: Number(vipPrice),
+        proxyPrice: Number(proxyPrice),
+        jinPrice: Number(jinPrice),
+        originalPrice: Number(originalPrice),
+        remarkPrice: Number(remarkPrice),
+        status: Number(status),
         isUpdate: this.showUpdate
       }
       console.log(data)
@@ -543,10 +551,10 @@ export default {
           uni.showToast({
             title: message,
           })
-          setTimeout(function () {
-            if (thod.preOrder.search) {
+          setTimeout(() => {
+            if (this.preOrder.search) {
               uni.reLaunch({
-                url: '/pages/order/preOrder?random=' + thod.preOrder.random + "&search=" + thod.preOrder.search,
+                url: '/pages/order/preOrder?random=' + this.preOrder.random + "&search=" + this.preOrder.search,
               })
               return
             }
