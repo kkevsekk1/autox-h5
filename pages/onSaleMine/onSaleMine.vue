@@ -55,6 +55,7 @@ export default {
   },
   data () {
     return {
+      type: "特价品",
       mineData: '',
       logoImg: '../../static/portrait.png',
       then: [],
@@ -71,7 +72,7 @@ export default {
   },
   created () {
     this.getMineData()
-    this.getColumn('特价品')
+    this.getColumn(this.type)
   },
   methods: {
     getMineData () {
@@ -115,6 +116,9 @@ export default {
           data.children.forEach((element) => {
             let { type, name, content, icon1, icon2 } = element
             content = this.convertContent(content)
+            if (name == '帮助中心') {
+              content = content + '?type=' + this.type + '帮助中心'
+            }
             this.then.push({
               type: type,
               imgPath: icon1 || icon2,

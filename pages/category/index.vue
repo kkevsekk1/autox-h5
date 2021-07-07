@@ -198,7 +198,6 @@ export default {
   },
   methods: {
     toMy () {
-      console.log("333333")
       uni.navigateTo({
         url: '/pages/userSideMine/index',
       });
@@ -213,11 +212,11 @@ export default {
             this.cart.items.push(item)
           })
         }
-        // console.log(res, '加载购车')
+        console.log(res, '加载购车')
       }
     },
     reachBottom () {
-      console.log(this.page.index * this.page.size, this.page.count, '-----')
+      // console.log(this.page.index * this.page.size, this.page.count, '-----')
       if (this.page.index * this.page.size < this.page.count) {
         this.page.index++;
         this.loadItems();
@@ -245,13 +244,11 @@ export default {
         size: this.page.size,
         type: this.type,
       }
-      console.log(data)
       request({
         url: '/item/items',
         method: 'post',
         data,
       }).then((res) => {
-        console.log(res)
         uni.hideLoading()
         let {
           code,
@@ -272,7 +269,6 @@ export default {
             }
             this.items.push(item)
           })
-          console.log(this.items, 'items', res)
         }
       })
     },
@@ -371,10 +367,10 @@ export default {
       } else {
         this.$refs.popupCart.close()
       }
-      console.log(this.cart.items)
+      // console.log(this.cart.items)
     },
     cleanCart () {
-      console.log('清空购物车')
+      // console.log('清空购物车')
       shoppingCartService.deleteSCart(this.cart.uuid)
       this.cart.items = []
       this.items.forEach((item) => {
@@ -384,7 +380,7 @@ export default {
     },
     toChangeItemsNumber (data) {
       let { num, itemId } = data
-      console.log('去修改items的数量', this.cart.items, num, Number(num) != 0)
+      // console.log('去修改items的数量', this.cart.items, num, Number(num) != 0)
       if (num != 0) {
         //添加或修改
         for (let index = 0; index < this.items.length; index++) {
@@ -398,14 +394,13 @@ export default {
       } else {
         this.cart.items = this.cart.items.filter((item) => {
           if (item.id == itemId) {
-            console.log(item, itemId, '--------')
+            // console.log(item, itemId, '--------')
             shoppingCartService.deleteSCartItem(this.cart.uuid, itemId)
             return false
           }
           return true
         })
       }
-      console.log(this.cart.items)
     },
     createOrder () {
       uni.navigateTo({
@@ -416,7 +411,7 @@ export default {
       uni.reLaunch({
         url: "/pages/userSideMine/index"
       })
-    }
+    },
   }
 }
 </script>
