@@ -1,5 +1,7 @@
 <template>
   <view class="preOrder-box">
+    <uni-row>
+      <uni-col :xs=24 :sm=18 :md=12 >
     <view v-if="cart.user.code"
           class="bead">
       <uni-row :gutter="20">
@@ -80,6 +82,11 @@
         </uni-col>
       </uni-row>
     </view>
+    </uni-col>
+    <uni-col :xs=24 :sm=12 :md=6  >
+        
+    </uni-col>
+  </uni-row>
     <!-- 弹窗会员码 -->
     <uni-popup ref="popup"
                type="center">
@@ -248,6 +255,7 @@
         </uni-col>
       </uni-row>
     </uni-popup>
+ 
   </view>
 </template>
 
