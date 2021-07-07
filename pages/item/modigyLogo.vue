@@ -161,6 +161,9 @@ export default {
 </script>
 
 <style>
+page {
+  background-color: #fff;
+}
 .modigyLogo-box {
   padding: 10px;
 }

@@ -7,7 +7,6 @@
            class="input"
            v-show="showHidden"
            v-model="localityNum"
-           maxlength="3"
            @blur="loseFocus">
     <text class="iconfont iconfont-add "
           @click=" addNum ">&#xe615;</text>
@@ -16,7 +15,17 @@
 
 <script>
 export default {
-  props: ['num', 'max', 'min'],
+  props: {
+    num: {
+      num: 0
+    },
+    max: {
+      default: 999,
+    },
+    min: {
+      default: 0,
+    },
+  },
   data () {
     return {
       localityNum: '',
@@ -24,24 +33,20 @@ export default {
   },
   computed: {
     showHidden () {
-      // console.log(this.localityNum, typeof (this.localityNum))
-      if (this.localityNum > 0 || typeof (this.localityNum) == "string") {
-        console.log(this.localityNum)
+      if (this.localityNum > (this.min) || typeof (this.localityNum) == "string") {
         return true
       }
-      if (this.localityNum <= 0) {
+      if (this.localityNum <= (this.min)) {
         return false
       }
     }
   },
   watch: {
     num (val, oldval) {
-      this.localityNum = val
-      // console.log(val, "watch")
+      this.localityNum = Number(val)
     },
     localityNum (val, oldval) {
-      this.handleCount(val)
-
+      this.handleCount(Number(val))
     }
   },
   created () {
@@ -53,8 +58,9 @@ export default {
         this.localityNum = this.min
         return
       }
-      if (val >= this.max) {
+      if (val > this.max) {
         this.localityNum = this.max
+        this.$emit('maximum')
         return
       }
       this.$emit("handleCount", val)
@@ -63,6 +69,7 @@ export default {
       if (Number(this.localityNum) == 0) {
         this.localityNum = 0
       }
+      console.log(this.localityNum)
     },
     addNum () {
       this.localityNum = Number(this.localityNum) + 1

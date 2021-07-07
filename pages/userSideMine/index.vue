@@ -33,6 +33,7 @@
         <uni-col :xs="8"
                  :sm="6"
                  :md="4"
+                 :lg="2"
                  v-for="(functionData, index) in then"
                  :key="index">
           <functionItem :functionData="functionData"

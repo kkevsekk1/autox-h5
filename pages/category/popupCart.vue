@@ -12,8 +12,9 @@
           </text>
         </view>
         <scroll-view scroll-y="true"
-                     style="height:500px">
-          <view class="content" style=" border-top:2px  solid #f8f8f8;"
+                     :style="{ height: `${contentLeftHeighe - 200}px` }">
+          <view class="content"
+                style=" border-top:2px  solid #f8f8f8;"
                 v-for="item in items"
                 :key="item.id">
             <item-single class="item-single"
@@ -43,6 +44,12 @@ export default {
         btnRight: "清空"
       }
     }
+  },
+  computed: {
+    contentLeftHeighe () {
+      let height = document.documentElement.clientHeight - 93
+      return height
+    },
   },
   methods: {
     open () {

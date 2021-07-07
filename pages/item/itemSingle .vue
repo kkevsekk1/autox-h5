@@ -1,14 +1,20 @@
 <template>
   <view>
     <uni-row>
-      <uni-col :span="7">
+      <uni-col :xs="7"
+               :sm='4'
+               :md="3"
+               :lg="2">
         <view @click="modigyLogo(item.id)">
           <img :src="itemFirstImage"
                class="title-img"
                alt="">
         </view>
       </uni-col>
-      <uni-col :span="17">
+      <uni-col :xs="17"
+               :sm='20'
+               :md="21"
+               :lg="22">
         <view>
           <text class="title">{{item.title}}</text>
           <text style="font-size:10px;color:orange;padding-left:3px;">剩{{itemSurplusDays}}天</text>
@@ -23,28 +29,40 @@
             <view style="font-size: 10px;">条码：{{item.barcode}}</view>
           </uni-col>
           <uni-col :span="8">
-            <button size='mini'
-                    class="btn-set"
-                    style="float:right"
-                    @click="setItem(item.id)">设置</button>
-            <button size='mini'
-                    class="btn-repertory"
-                    style="float:right;margin-top:3px;"
-                    @click="popupRepertory(item)">库存</button>
+            <uni-row>
+              <uni-col :span="24">
+                <button size='mini'
+                        class="btn-set"
+                        style="float:right"
+                        @click="setItem(item.id)">设置</button>
+              </uni-col>
+              <uni-col :span="24">
+                <button size='mini'
+                        class="btn-repertory"
+                        style="float:right;margin-top:3px;"
+                        @click="popupRepertory(item)">库存</button>
+              </uni-col>
+            </uni-row>
           </uni-col>
         </uni-row>
       </uni-col>
     </uni-row>
     <uni-row style="margin-top:10px;font-size:14px;">
-      <uni-col :span="8">
+      <uni-col :xs="8"
+               :sm='6'
+               :lg="4">
         <view>普通价：{{item.sellingPrice}} </view>
         <view>会员价：{{item.vipPrice}}</view>
       </uni-col>
-      <uni-col :span="8">
+      <uni-col :xs="8"
+               :sm='6'
+               :lg="4">
         <view>代理价：{{item.proxyPrice}}</view>
         <view>进货价：*** </view>
       </uni-col>
-      <uni-col :span="8">
+      <uni-col :xs="8"
+               :sm='6'
+               :lg="4">
         <view>正价：{{item.originalPrice}}</view>
         <view>备用价：{{item.remarkPrice}}</view>
       </uni-col>
@@ -59,16 +77,16 @@ export default {
     itemSurplusDays () {
       return this.surplusDays(this.item.endTime);
     },
-  itemFirstImage(){
+    itemFirstImage () {
       try {
         // console.log(this.item.picture)
-        let  pictures = JSON.parse(this.item.picture)
-        if (pictures&& pictures.length>0) {
-           return  pictures[0]+'_z.jpg';
+        let pictures = JSON.parse(this.item.picture)
+        if (pictures && pictures.length > 0) {
+          return pictures[0] + '_z.jpg';
         }
       } catch (error) {
       }
-        return ''
+      return ''
     },
   },
   methods: {

@@ -297,6 +297,7 @@ page {
   padding-top: 30px;
   width: 40%;
   margin: 0 auto;
+  max-width: 200px;
 }
 .itemsHiddem-title {
   text-align: center;
