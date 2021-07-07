@@ -223,22 +223,23 @@ export default {
       console.log(id)
     },
     buyAgain (id) {
-      // request({
-      //   url: '/itemOrder/getById?id=' + id,
-      //   method: 'get',
-      // })
-      //   .then(res => {
-      //     let { code, data: { consignee, orderItems } } = res.data
-      //     if (code == 200) {
-      //       orderItems.forEach(item => {
-      //         let { id: itemId, quantity: num } = item
-      //         shoppingCartService.updateSCartItems(this.uuid, itemId, num)
-      //       })
-      //     }
-      //   })
-      // uni.navigateTo({
-      //   url: "/pages/category/index"
-      // })
+      request({
+        url: '/itemOrder/getById?id=' + id,
+        method: 'get',
+      })
+        .then(res => {
+          let { code, data: { consignee, orderItems } } = res.data
+          if (code == 200) {
+            shoppingCartService.deleteSCart(this.uuid)
+            orderItems.forEach(item => {
+              let { itemId, quantity: num } = item
+              shoppingCartService.updateSCartItems(this.uuid, itemId, num)
+            })
+          }
+        })
+      uni.navigateTo({
+        url: "/pages/category/index"
+      })
     },
   }
 }
