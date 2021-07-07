@@ -4,7 +4,7 @@
       <uni-col :span="24"
                class="header">
         <text class="header-time">
-          下单时间：{{item.createTime}}
+          {{item.createTime}}
         </text>
         <text class="header-status"
               :class="{headerred: item.status==0 || item.status==1}">
@@ -15,7 +15,8 @@
                class="content">
         <view class="slide-img">
           <uni-row>
-            <uni-col :xs="20">
+            <uni-col :xs="20"
+                     :sm="22">
               <scroll-view scroll-x="true"
                            style="width:100%">
                 <view style="overflow:hidden"
@@ -29,7 +30,8 @@
                 </view>
               </scroll-view>
             </uni-col>
-            <uni-col :xs="4">
+            <uni-col :xs="4"
+                     :sm="2">
               <view class="content-sumNumber">
                 <text>共 {{item.sumNumber}} 件</text>
               </view>
@@ -80,7 +82,6 @@ export default {
 }
 .header-time {
   font-size: 16px;
-  font-weight: 700;
 }
 .header-status {
   float: right;

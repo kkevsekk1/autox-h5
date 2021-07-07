@@ -52,6 +52,7 @@
 import orderItem from "./orderItem.vue"
 import { request } from "../../server/request.js"
 import { formatTime } from '../../utils/format.js'
+import shoppingCartService from '../../server/ShoppingCartService'
 export default {
   components: { orderItem },
   data () {
@@ -125,7 +126,8 @@ export default {
       waybill: {
         name: "顺丰速发",
         num: "1313131"
-      }
+      },
+      uuid: 'appuser',
     }
   },
   created () {
@@ -221,7 +223,20 @@ export default {
       console.log(id)
     },
     buyAgain (id) {
-      console.log("123")
+      request({
+        url: '/itemOrder/getById?id=' + id,
+        method: 'get',
+      })
+        .then(res => {
+          let { code, data: { consignee, orderItems } } = res.data
+          if (code == 200) {
+            shoppingCartService.deleteSCart(this.uuid)
+            orderItems.forEach(item => {
+              let { itemId, quantity: num } = item
+              shoppingCartService.updateSCartItems(this.uuid, itemId, num)
+            })
+          }
+        })
       uni.navigateTo({
         url: "/pages/category/index"
       })

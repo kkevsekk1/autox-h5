@@ -17,9 +17,11 @@ export default {
   data () {
     return {
       helpCenterDataList: '',
+      type: "",
     }
   },
   created () {
+    this.type = this.$route.query.type
     this.getHelpCenterData()
   },
   methods: {
@@ -28,7 +30,7 @@ export default {
         title: '加载中'
       });
       request({
-        url: "/doc/getByType?type=帮助",
+        url: "/doc/getByType?type=" + this.type,
         method: "get"
       })
         .then(res => {

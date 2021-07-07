@@ -55,6 +55,7 @@ export default {
   },
   data () {
     return {
+      type: "特价品",
       mineData: '',
       logoImg: '../../static/portrait.png',
       then: [],
@@ -71,7 +72,7 @@ export default {
   },
   created () {
     this.getMineData()
-    this.getColumn('特价品')
+    this.getColumn(this.type)
   },
   methods: {
     getMineData () {
