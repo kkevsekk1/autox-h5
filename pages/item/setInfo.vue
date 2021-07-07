@@ -254,11 +254,15 @@
       </uni-col>
     </uni-row>
     <uni-row style="margin:10px 0;">
-      <uni-col :span="7"
+      <uni-col :xs="7"
+               :sm="4"
+               :lg="2"
                class="title">
         <text>生产日期：</text>
       </uni-col>
-      <uni-col :span="12"
+      <uni-col :xs="12"
+               :sm="6"
+               :lg="4"
                class="title">
         <picker mode="date"
                 :value="expiration.createItemDate"
@@ -270,11 +274,15 @@
       </uni-col>
     </uni-row>
     <uni-row>
-      <uni-col :span="7"
+      <uni-col :xs="7"
+               :sm="4"
+               :lg="2"
                class="title">
         <text>保质期：</text>
       </uni-col>
-      <uni-col :span="8"
+      <uni-col :xs="8"
+               :sm="6"
+               :lg="4"
                style="border:1px solid #ddd">
         <uni-row>
           <uni-col :span="14">
