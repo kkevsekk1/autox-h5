@@ -130,11 +130,17 @@
                     </uni-row>
                   </view>
                 </uni-col>
-                <uni-col v-if="popupItems.length == 0"
+                <uni-col v-if="popupItems.length == 0 && search "
                          :span="24">
                   <view class="popupItems-false">没有该品种，请先
                     <text style="color:#9266f9"
-                          @click="preOrder">入库</text>
+                          @click="toAdd">入库</text>
+                  </view>
+                </uni-col>
+                <uni-col v-if="popupItems.length == 0 && !search "
+                         :span="24">
+                  <view class="popupItems-false">
+                    请扫码添加商品
                   </view>
                 </uni-col>
               </uni-row>
@@ -241,7 +247,7 @@
                            :span="24">
                     <view class="popupItems-false">没有该品种，请先
                       <text style="color:#9266f9"
-                            @click="preOrder">入库</text>
+                            @click="toAdd">入库</text>
                     </view>
                   </uni-col>
                 </uni-row>
@@ -703,11 +709,9 @@ export default {
         }
       })
     },
-    preOrder () {
-      let random = Math.round(Math.random() * (999 - 100)) + 100
-      uni.setStorageSync(random + '', this.cartItems)
-      uni.reLaunch({
-        url: "/pages/item/setInfo?search=" + this.search + '&random=' + random
+    toAdd () {
+      uni.navigateTo({
+        url: "/pages/item/setInfo?search=" + this.search
       })
     }
   },
