@@ -186,7 +186,7 @@ page {
 }
 .index-box {
   padding: 10px;
-  padding-bottom: 91px;
+  padding-bottom: 150px;
 }
 .header {
   padding: 10px;

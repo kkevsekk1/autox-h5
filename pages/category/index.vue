@@ -15,7 +15,7 @@
     </uni-row>
     <view class="search">
       <input type="text"
-             placeholder-style="sont-size:14px"
+             placeholder-style="font-size:14px;background-color:#f5f5f5;padding-left: 40px;"
              placeholder="搜索商品"
              v-model="search" />
       <text class="iconfont search-iconfon">&#xe617;</text>
@@ -24,18 +24,20 @@
       <scroll-view class="content-left"
                    scroll-y="true"
                    :style="{ height: `${contentLeftHeighe - 45}px` }">
-        <text class="content-left-nav"
-              :class="{ selected: curIndex == -1 }"
-              @click="itemType(-1, '-1')">全部</text>
-        <text class="content-left-nav"
-              v-for="(item, index) in navList"
-              :key="index"
-              :class="{ selected: curIndex == index }"
-              @click="itemType(index, item.contentVal)">
-          {{ item.name }}
-        </text>
+        <view style="padding-bottom:80px">
+          <text class="content-left-nav"
+                :class="{ selected: curIndex == -1 }"
+                @click="itemType(-1, '-1')">全部</text>
+          <text class="content-left-nav"
+                v-for="(item, index) in navList"
+                :key="index"
+                :class="{ selected: curIndex == index }"
+                @click="itemType(index, item.contentVal)">
+            {{ item.name }}
+          </text>
+        </view>
       </scroll-view>
-      <view style="width:100%">
+      <view style="width:100%;background-color: #fff;">
         <view class="typeOrderBy"
               v-if="items.length != 0">
           <text v-for="(sortType, index) in sortTypes"
@@ -61,14 +63,16 @@
                      scroll-y="true"
                      @scrolltolower="reachBottom"
                      :style="{ height: `${contentLeftHeighe - 30 - 45}px` }">
-          <view class="content-right-nav"
-                style=" border-top:2px  solid #f8f8f8;"
-                v-for="item in items"
-                :key="item.id">
-            <item-single class="item-single"
-                         :item="item"
-                         @handleCount="toChangeCart"
-                         @imgClick="showImgs" />
+          <view style="padding-bottom:80px;">
+            <view class="content-right-nav"
+                  style=" border-bottom:2px  solid #f8f8f8;"
+                  v-for="item in items"
+                  :key="item.id">
+              <item-single class="item-single"
+                           :item="item"
+                           @handleCount="toChangeCart"
+                           @imgClick="showImgs" />
+            </view>
           </view>
         </scroll-view>
       </view>
@@ -417,6 +421,9 @@ export default {
 </script>
 
 <style>
+page {
+  background-color: #f5f5f5;
+}
 .index-box {
   font-size: 14px;
 }
@@ -426,19 +433,19 @@ export default {
   line-height: 44px;
   font-size: 16px;
   font-weight: 700;
+  background-color: #fff;
 }
 .search {
   position: relative;
   padding: 6px;
+  background-color: #fff;
 }
 .search input {
-  padding-left: 40px;
   font-size: 14px;
   height: 32px;
   line-height: 32px;
   border-radius: 16px;
   color: #6d6d6d;
-  background-color: #f7f7f7;
 }
 .search-iconfon {
   position: absolute;
@@ -450,6 +457,7 @@ export default {
 .content {
   display: flex;
   padding-top: 5px;
+  background-color: #fff;
 }
 .content-left {
   width: 100px;

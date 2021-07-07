@@ -222,7 +222,7 @@ export default {
     signFor (id) {
       console.log(id)
     },
-    buyAgain (id) {
+    async buyAgain (id) {
       request({
         url: '/itemOrder/getById?id=' + id,
         method: 'get',
@@ -231,10 +231,10 @@ export default {
           let { code, data: { consignee, orderItems } } = res.data
           if (code == 200) {
             shoppingCartService.deleteSCart(this.uuid)
-            orderItems.forEach(item => {
+            for (const item of orderItems) {
               let { itemId, quantity: num } = item
               shoppingCartService.updateSCartItems(this.uuid, itemId, num)
-            })
+            }
           }
         })
       uni.navigateTo({
@@ -297,6 +297,7 @@ page {
   padding-top: 30px;
   width: 40%;
   margin: 0 auto;
+  max-width: 200px;
 }
 .itemsHiddem-title {
   text-align: center;

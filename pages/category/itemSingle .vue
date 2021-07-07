@@ -2,6 +2,8 @@
   <uni-row class="itemSingle-box">
     <uni-col :xs="8"
              :sm="4"
+             :lg="2"
+             :xl="1"
              class="logo">
       <view @click="$emit('imgClick',item.id)">
         <img :src="itemFirstImage"
@@ -10,6 +12,8 @@
     </uni-col>
     <uni-col :xs="16"
              :sm="20"
+             :lg="22"
+             :xl="23"
              style="padding-left:5px;"
              class="content">
       <text class="itemSurplusDays">剩{{itemSurplusDays}}天</text>
@@ -31,6 +35,7 @@
                       :num="item.buyNunber"
                       :min="0"
                       :max="item.surplusStock"
+                      @maximum='maximum(item.surplusStock)'
                       @handleCount="handleCount" />
       </view>
     </uni-col>
@@ -72,6 +77,12 @@ export default {
         itemId: this.item.id
       }
       this.$emit('handleCount', data)
+    },
+    maximum (surplusStock) {
+      uni.showToast({
+        title: "已达到库存" + surplusStock + "最大值",
+        icon: "none"
+      })
     }
   }
 }
@@ -79,8 +90,8 @@ export default {
 
 <style>
 .logo img {
-  width: 184rpx;
-  height: 184rpx;
+  width: 100%;
+  height: 92px;
 }
 .content {
   position: relative;

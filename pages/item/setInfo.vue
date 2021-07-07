@@ -1,7 +1,9 @@
 <template>
   <view style="padding: 8px">
     <uni-row class="row-class">
-      <uni-col :span="4"
+      <uni-col :xs="4"
+               :sm="2"
+               :lg="1"
                class="title"> 条码： </uni-col>
       <uni-col :span="12">
         <view>
@@ -23,7 +25,9 @@
     </uni-row>
     <view class="row-class">
       <uni-row>
-        <uni-col :span="4"
+        <uni-col :xs="4"
+                 :sm="2"
+                 :lg="1"
                  class="title"> 品名： </uni-col>
         <uni-col :span="12">
           <uni-easyinput v-model="item.title"
@@ -44,7 +48,9 @@
       </uni-row>
     </view>
     <uni-row>
-      <uni-col :span="4"
+      <uni-col :xs="4"
+               :sm="2"
+               :lg="1"
                class="title"> 规格： </uni-col>
       <uni-col :span="12">
         <uni-easyinput v-model="item.subTitle"
@@ -65,7 +71,9 @@
       </uni-col>
     </uni-row>
     <uni-row class="row-class">
-      <uni-col :span="4"
+      <uni-col :xs="4"
+               :sm="2"
+               :lg="1"
                class="title"> 效期： </uni-col>
       <uni-col :span="10"
                class="title">
@@ -79,7 +87,9 @@
           <text class="iconfont popup-icon">&#xe603;</text>
         </picker>
       </uni-col>
-      <uni-col :span="4"
+      <uni-col :xs="4"
+               :sm="2"
+               :lg="1"
                class="title"
                :push="1">
         剩余：
@@ -96,14 +106,18 @@
       </uni-col>
     </uni-row>
     <uni-row class="row-class">
-      <uni-col :span="4"
+      <uni-col :xs="4"
+               :sm="2"
+               :lg="1"
                class="title"> 库存： </uni-col>
       <uni-col :span="10">
         <uni-easyinput v-model="item.surplusStock"
                        style="background-color: #fff"
                        placeholder="请输入库存"></uni-easyinput>
       </uni-col>
-      <uni-col :span="4"
+      <uni-col :xs="4"
+               :sm="2"
+               :lg="1"
                :push="1"
                class="title">
         单位：
@@ -123,16 +137,20 @@
       </uni-col>
     </uni-row>
     <uni-row class="row-class">
-      <uni-col :span="4"
+      <uni-col :xs="4"
+               :sm="2"
+               :lg="1"
                class="title"> 价格： </uni-col>
       <uni-col :span="20">
         <uni-row>
           <uni-col :span="12"
                    style="margin-bottom: 10px">
             <uni-row>
-              <uni-col :span="8"
+              <uni-col :xs="8"
+                       :sm="4"
+                       :lg="2"
                        class="title"> 普通 </uni-col>
-              <uni-col :span="16">
+              <uni-col :span="15">
                 <uni-easyinput v-model="item.sellingPrice"
                                style="background-color: #fff"
                                placeholder="请输入价格"></uni-easyinput>
@@ -142,12 +160,13 @@
           <uni-col :span="12"
                    style="margin-bottom: 10px">
             <uni-row>
-              <uni-col :span="8"
-                       class="title"
-                       style="padding: 3px">
+              <uni-col :xs="8"
+                       :sm="4"
+                       :lg="2"
+                       class="title">
                 会员
               </uni-col>
-              <uni-col :span="16">
+              <uni-col :span="15">
                 <uni-easyinput v-model="item.vipPrice"
                                style="background-color: #fff"
                                placeholder="请输入价格"></uni-easyinput>
@@ -157,9 +176,11 @@
           <uni-col :span="12"
                    style="margin-bottom: 10px">
             <uni-row>
-              <uni-col :span="8"
+              <uni-col :xs="8"
+                       :sm="4"
+                       :lg="2"
                        class="title"> 代理 </uni-col>
-              <uni-col :span="16">
+              <uni-col :span="15">
                 <uni-easyinput v-model="item.proxyPrice"
                                style="background-color: #fff"
                                placeholder="请输入价格"></uni-easyinput>
@@ -169,12 +190,13 @@
           <uni-col :span="12"
                    style="margin-bottom: 10px">
             <uni-row>
-              <uni-col :span="8"
-                       class="title"
-                       style="padding: 3px">
+              <uni-col :xs="8"
+                       :sm="4"
+                       :lg="2"
+                       class="title">
                 进货
               </uni-col>
-              <uni-col :span="16">
+              <uni-col :span="15">
                 <uni-easyinput v-model="item.jinPrice"
                                style="background-color: #fff"
                                placeholder="请输入价格"></uni-easyinput>
@@ -184,9 +206,11 @@
           <uni-col :span="12"
                    style="margin-bottom: 10px">
             <uni-row>
-              <uni-col :span="8"
+              <uni-col :xs="8"
+                       :sm="4"
+                       :lg="2"
                        class="title"> 正价 </uni-col>
-              <uni-col :span="16">
+              <uni-col :span="15">
                 <uni-easyinput v-model="item.originalPrice"
                                style="background-color: #fff"
                                placeholder="请输入价格"></uni-easyinput>
@@ -196,12 +220,13 @@
           <uni-col :span="12"
                    style="margin-bottom: 10px">
             <uni-row>
-              <uni-col :span="8"
-                       class="title"
-                       style="padding: 3px">
+              <uni-col :xs="8"
+                       :sm="4"
+                       :lg="2"
+                       class="title">
                 备用
               </uni-col>
-              <uni-col :span="16">
+              <uni-col :span="15">
                 <uni-easyinput v-model="item.remarkPrice"
                                style="background-color: #fff"
                                placeholder="请输入价格"></uni-easyinput>
@@ -212,9 +237,13 @@
       </uni-col>
     </uni-row>
     <uni-row class="row-class">
-      <uni-col :span="4"
+      <uni-col :xs="4"
+               :sm="2"
+               :lg="1"
                class="title"> 状态： </uni-col>
-      <uni-col :span="12">
+      <uni-col :xs="12"
+               :sm="6"
+               :lg="4">
         <picker @change="bindPickerChange"
                 :value="index"
                 :range="array"
@@ -598,6 +627,9 @@ export default {
 </script>
 
 <style>
+page {
+  background-color: #fff;
+}
 .row-class {
   margin: 10px 0;
 }
@@ -615,7 +647,7 @@ export default {
 }
 .popup-icon-surplus {
   position: absolute;
-  left: 30px;
+  left: 45px;
   top: 0px;
   transform: rotate(90deg);
   font-size: 12px;

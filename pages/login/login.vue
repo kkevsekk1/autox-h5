@@ -48,6 +48,16 @@
     <button @click="loginCheck"
             type="primary"
             class="register">登录</button>
+    <view class="detail">
+      <view class="detail-title">登录方法</view>
+      <view class="detail-nav">
+        <view>1.输入您的手机号</view>
+        <view>2.第一次登录点击获取【验证码】</view>
+        <view>3.收到系统的【短信验证码】即可首次登录</view>
+        <view>4.进入系统后可以修改密码，下次可输入密码登录</view>
+        <view>5.推荐用户可以永久获得佣金</view>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -70,7 +80,7 @@ export default {
   },
   created () {
     uni.removeStorageSync('token')
-    
+
     this.getStorageSyncData()
   },
   onLoad (option) {
@@ -113,9 +123,9 @@ export default {
       }
     },
     getStorageSyncData () {
-      if(uni.getStorageSync("inviteCode")){
+      if (uni.getStorageSync("inviteCode")) {
         console.log(uni.getStorageSync("inviteCode"));
-        this.user.inviteCode =uni.getStorageSync("inviteCode");
+        this.user.inviteCode = uni.getStorageSync("inviteCode");
       }
       if (uni.getStorageSync("userData")) {
         let userList = JSON.parse(uni.getStorageSync("userData"))
@@ -249,5 +259,20 @@ page {
 .login-box .border-red {
   border: 1px solid red;
   box-sizing: border-box;
+}
+.detail {
+  padding-top: 25px;
+}
+.detail-title {
+  font-size: 14px;
+  color: rgb(97, 97, 97);
+}
+.detail-nav {
+  padding-top: 5px;
+  font-size: 12px;
+  color: #999;
+}
+.detail-nav view {
+  padding: 5px 0;
 }
 </style>

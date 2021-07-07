@@ -3,14 +3,18 @@
     <view class="head">
       <uni-row class="demo-uni-row"
                :gutter="20">
-        <uni-col :span="18">
+        <uni-col :xs="18"
+                 :sm="21"
+                 :md='22'>
           <view>
             <uni-easyinput v-model="search"
                            style="background-color: #fff"
                            placeholder="请输入内容"></uni-easyinput>
           </view>
         </uni-col>
-        <uni-col :span="6"
+        <uni-col :xs="6"
+                 :sm="3"
+                 :md='2'
                  style="text-align: left">
           <button class="mini-btn"
                   style="background-color: #409eff; float: right; margin-top: 5px"
