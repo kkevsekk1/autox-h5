@@ -316,7 +316,6 @@ export default {
 page {
   background-color: #f5f5f5;
 }
-
 .allclass {
   padding: 10px;
   margin: 10px 0;
@@ -326,6 +325,7 @@ page {
 }
 .orderDaeails {
   padding: 10px;
+  padding-bottom: 150px;
 }
 .content-payStatus view:nth-child(1) {
   font-size: 18px;
@@ -353,9 +353,6 @@ page {
 }
 .border-bottom {
   border-bottom: 1px solid rgb(216, 215, 215);
-}
-.content-orderDetail {
-  padding-bottom: 100px;
 }
 .content-orderDetail-allclass {
   overflow: hidden;

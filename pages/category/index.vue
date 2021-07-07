@@ -24,16 +24,18 @@
       <scroll-view class="content-left"
                    scroll-y="true"
                    :style="{ height: `${contentLeftHeighe - 45}px` }">
-        <text class="content-left-nav"
-              :class="{ selected: curIndex == -1 }"
-              @click="itemType(-1, '-1')">全部</text>
-        <text class="content-left-nav"
-              v-for="(item, index) in navList"
-              :key="index"
-              :class="{ selected: curIndex == index }"
-              @click="itemType(index, item.contentVal)">
-          {{ item.name }}
-        </text>
+        <view style="padding-bottom:80px">
+          <text class="content-left-nav"
+                :class="{ selected: curIndex == -1 }"
+                @click="itemType(-1, '-1')">全部</text>
+          <text class="content-left-nav"
+                v-for="(item, index) in navList"
+                :key="index"
+                :class="{ selected: curIndex == index }"
+                @click="itemType(index, item.contentVal)">
+            {{ item.name }}
+          </text>
+        </view>
       </scroll-view>
       <view style="width:100%">
         <view class="typeOrderBy"
@@ -61,14 +63,16 @@
                      scroll-y="true"
                      @scrolltolower="reachBottom"
                      :style="{ height: `${contentLeftHeighe - 30 - 45}px` }">
-          <view class="content-right-nav"
-                style=" border-top:2px  solid #f8f8f8;"
-                v-for="item in items"
-                :key="item.id">
-            <item-single class="item-single"
-                         :item="item"
-                         @handleCount="toChangeCart"
-                         @imgClick="showImgs" />
+          <view style="padding-bottom:80px;">
+            <view class="content-right-nav"
+                  style=" border-top:2px  solid #f8f8f8;"
+                  v-for="item in items"
+                  :key="item.id">
+              <item-single class="item-single"
+                           :item="item"
+                           @handleCount="toChangeCart"
+                           @imgClick="showImgs" />
+            </view>
           </view>
         </scroll-view>
       </view>

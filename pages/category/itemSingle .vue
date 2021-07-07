@@ -29,7 +29,7 @@
         </text>
         <input-number class="subTitle-icon-gouwuche"
                       :num="item.buyNunber"
-                      :min="0"
+                      :min="10"
                       :max="item.surplusStock"
                       @handleCount="handleCount" />
       </view>
@@ -72,7 +72,7 @@ export default {
         itemId: this.item.id
       }
       this.$emit('handleCount', data)
-    }
+    },
   }
 }
 </script>
