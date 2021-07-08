@@ -175,7 +175,6 @@ export default {
         0: '待支付',
         1: '待发货',
         2: '已完成',
-        3: '待评价',
         4: '已取消'
       },
       consignee: '',
@@ -278,7 +277,7 @@ export default {
               orderItem.picture = JSON.parse(orderItem.picture) || ''
             })
             data.Time = formatTime(data.createTime)
-            // data.status = 1
+            // data.status = 0
             this.consignee = JSON.parse(data.consignee)
             data.consignee = JSON.parse(data.consignee)
             data.status = this.statuss[data.status]
