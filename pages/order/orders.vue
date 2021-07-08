@@ -222,7 +222,7 @@ export default {
     signFor (id) {
       console.log(id)
     },
-    async buyAgain (id) {
+    buyAgain (id) {
       request({
         url: '/itemOrder/getById?id=' + id,
         method: 'get',
@@ -237,9 +237,12 @@ export default {
             }
           }
         })
-      uni.navigateTo({
-        url: "/pages/category/index"
-      })
+      setTimeout(() => {
+        console.log('123')
+        uni.navigateTo({
+          url: "/pages/category/index"
+        })
+      }, 500)
     },
   }
 }

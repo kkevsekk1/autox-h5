@@ -27,6 +27,7 @@
                        :key="index">
                 <uni-col>
                   <pre-order-item :item="item"
+                                  :userType='userType'
                                   @itemNumChange="itemNumChange"
                                   @deleteItem="removeItem"></pre-order-item>
                 </uni-col>
@@ -43,14 +44,21 @@
               <view @click="openHistory()"
                     style="font-size: 14px">历史</view>
             </uni-col>
-
-            <uni-col :span="10">
+            <uni-col :span="10"
+                     v-show="userType != '代理'">
               <text style="font-size: 10px">普通价：</text>
               <text style="color: red; font-size: 14px"> ￥{{ countP }}</text>
             </uni-col>
-            <uni-col :span="10">
+            <uni-col :span="10"
+                     v-show="userType != '代理'">
               <text style="font-size: 10px">会员价：</text>
               <text style="color: red; font-size: 14px"> ￥{{ countH }}</text>
+            </uni-col>
+            <uni-col :span="20"
+                     v-show="userType == '代理'"
+                     class="col-class">
+              <text style="font: 10px sans-serif">代理价：</text>
+              <text style="color: red;font-size: 14px">￥{{ countProxy }}</text>
             </uni-col>
           </uni-row>
           <uni-row>
@@ -106,7 +114,7 @@
                     <uni-row :gutter="20">
                       <uni-col :span="6"
                                class="popup-item-img">
-                        <img src="../../static/logo.png"
+                        <img :src="item.itemFirstImage"
                              alt="" />
                       </uni-col>
                       <uni-col :span="18"
@@ -219,7 +227,7 @@
                       <uni-row :gutter="20">
                         <uni-col :span="6"
                                  class="popup-item-img">
-                          <img src="../../static/logo.png"
+                          <img :src="item.itemFirstImage"
                                alt="" />
                         </uni-col>
                         <uni-col :span="18"
@@ -407,6 +415,13 @@ export default {
       })
       return sumdata.toFixed(2)
     },
+    countProxy () {
+      let sumdata = 0
+      this.cartItems.forEach((item) => {
+        sumdata += Number(item.num * item.proxyPrice)
+      })
+      return sumdata.toFixed(2)
+    },
     sumTo () {
       let numTodata = 0
       this.cartItems.forEach((item) => {
@@ -422,17 +437,6 @@ export default {
   },
   mounted () {
     this.initWeixin()
-  },
-  created () {
-    let search = this.$route.query.search || ''
-    let random = this.$route.query.random || ''
-    if (random != '' && search != '') {
-      this.cartItems = uni.getStorageSync(random)
-      this.search = search
-      uni.removeStorage({
-        key: random,
-      });
-    }
   },
   methods: {
     overAddCart () {
@@ -573,6 +577,14 @@ export default {
         item.surplusDays = this.surplusDays(item.endTime)
         item.univalence = item[this.univalences[this.userType]]
         item.num = Number(item.num || -1)
+        try {
+          let pictures = JSON.parse(item.picture)
+          if (pictures && pictures.length > 0) {
+            item.itemFirstImage = pictures[0] + '_z.jpg';
+          } else {
+            item.itemFirstImage = ''
+          }
+        } catch (error) { }
       })
       this.popupItems = rs
       //如果扫码查询结果 大于1 提供选择界面
@@ -768,9 +780,11 @@ page {
 }
 .popup-item-img {
   max-width: 100px;
+  height: 88px;
 }
 .popup-item-img img {
   width: 100%;
+  height: 100%;
 }
 .popup-item-nav {
   margin-bottom: 10px;
