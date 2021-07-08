@@ -63,14 +63,13 @@ export default {
         '0': '待支付',
         '1': '待发货',
         '2': '已完成',
-        '3': '待评价',
         '4': '已取消'
       },
       btnStatus: {
         0: ['订单详情', '立即付款'],
         1: ['查看物流', '订单详情', '确认收货'],
         2: ["订单详情", '再次购买'],
-        3: ['订单详情'],
+        3: ["订单详情"],
         4: ['订单详情', '再次购买'],
       },
       itemsBtns: [
@@ -111,10 +110,6 @@ export default {
         {
           title: "已完成",
           status: 2
-        },
-        {
-          title: "待评价",
-          status: 3
         },
         {
           title: "已取消",
@@ -222,7 +217,7 @@ export default {
     signFor (id) {
       console.log(id)
     },
-    async buyAgain (id) {
+    buyAgain (id) {
       request({
         url: '/itemOrder/getById?id=' + id,
         method: 'get',
@@ -231,15 +226,17 @@ export default {
           let { code, data: { consignee, orderItems } } = res.data
           if (code == 200) {
             shoppingCartService.deleteSCart(this.uuid)
-            for (const item of orderItems) {
+            orderItems.forEach(item => {
               let { itemId, quantity: num } = item
               shoppingCartService.updateSCartItems(this.uuid, itemId, num)
-            }
+            })
           }
         })
-      uni.navigateTo({
-        url: "/pages/category/index"
-      })
+      setTimeout(() => {
+        uni.navigateTo({
+          url: "/pages/category/index"
+        })
+      }, 500)
     },
   }
 }

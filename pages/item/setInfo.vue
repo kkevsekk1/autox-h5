@@ -8,6 +8,7 @@
       <uni-col :span="12">
         <view>
           <uni-easyinput v-model="item.barcode"
+                         focus
                          style="background-color: #fff"
                          placeholder="请输入内容"></uni-easyinput>
         </view>

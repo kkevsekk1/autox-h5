@@ -101,22 +101,38 @@
         <text class="iconfont">&#xe657;</text>
         <text>{{ items.actualPayment }}</text>
       </view>
-      <uni-row :gutter="20"
-               v-if="items.status == '待支付'">
-        <uni-col :span="12">
-          <view class="row-btn-cancel"
-                @click="cancelOrder()">取消订单</view>
+      <uni-row>
+        <uni-col :xs="0"
+                 :sm="6"
+                 :md="14">
+          <text class="iconfont"
+                style="color:#f5f5f5">&#xe62c;</text>
         </uni-col>
-        <uni-col :span="12">
-          <view class="row-btn-pay"
-                @click="toAuth">去支付</view>
+        <uni-col :xs="24"
+                 :sm="18"
+                 :md="10">
+          <uni-row :gutter="20"
+                   v-if="items.status == '待支付'">
+            <uni-col :span="12">
+              <view class="row-btn-cancel"
+                    @click="cancelOrder()">取消订单</view>
+            </uni-col>
+            <uni-col :span="12">
+              <view class="row-btn-pay"
+                    @click="toAuth">去支付</view>
+            </uni-col>
+          </uni-row>
+        </uni-col>
+        <uni-col :xs="24"
+                 :sm="18"
+                 :md="10">
+          <view v-if="items.status == '待发货'"
+                class="row-btn-pay"
+                @click="service">
+            联系客服
+          </view>
         </uni-col>
       </uni-row>
-      <view v-if="items.status == '待发货'"
-            class="row-btn-pay"
-            @click="service">
-        联系客服
-      </view>
     </view>
     <!-- 客服 -->
     <uni-popup ref="popupService"
@@ -159,7 +175,6 @@ export default {
         0: '待支付',
         1: '待发货',
         2: '已完成',
-        3: '待评价',
         4: '已取消'
       },
       consignee: '',
@@ -228,10 +243,10 @@ export default {
           "paySign": data.paySign //微信签名 
         }, function (res) {
           if (res.err_msg == 'get_brand_wcpay_request:ok') {
-              uni.showToast({
-                title:"付款成功"
-              })
-              uni.reLaunch({url:'/pages/order/orders'});
+            uni.showToast({
+              title: "付款成功"
+            })
+            uni.reLaunch({ url: '/pages/order/orders' });
           }
         })
       })
@@ -262,7 +277,7 @@ export default {
               orderItem.picture = JSON.parse(orderItem.picture) || ''
             })
             data.Time = formatTime(data.createTime)
-            // data.status = 1
+            // data.status = 0
             this.consignee = JSON.parse(data.consignee)
             data.consignee = JSON.parse(data.consignee)
             data.status = this.statuss[data.status]

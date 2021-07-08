@@ -8,6 +8,7 @@
                  :md='22'>
           <view>
             <uni-easyinput v-model="search"
+                           focus
                            style="background-color: #fff"
                            placeholder="请输入内容"></uni-easyinput>
           </view>
