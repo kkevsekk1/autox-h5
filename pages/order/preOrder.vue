@@ -81,10 +81,11 @@
                       type="primary"
                       size="mini"
                       @click="overAddCart()">
-                完成
+                结算
               </button>
             </uni-col>
             <uni-col :span="5"
+                     :sm="0"
                      style="text-align: left">
               <button class="mini-btn"
                       style="background-color: #409eff"
@@ -93,6 +94,18 @@
                       @click="scanBarcode">
                 扫码
               </button>
+            </uni-col>
+            <uni-col :xs="0"
+                     :sm="5"
+                     style="text-align: left">
+              <navigator url="/pages/order/orders">
+                <button class="mini-btn"
+                        style="background-color: #409eff"
+                        type="primary"
+                        size="mini">
+                  订单列表
+                </button>
+              </navigator>
             </uni-col>
           </uni-row>
         </view>
@@ -373,6 +386,7 @@ export default {
         uuid: '',
         user: {
           code: '',
+          setCode: "",
         },
       },
       cartItems: [],
@@ -383,6 +397,7 @@ export default {
         会员: 'vipPrice',
         代理: 'proxyPrice',
       },
+      funData: ""
     }
   },
   computed: {
@@ -410,7 +425,6 @@ export default {
     countH () {
       let sumdata = 0
       this.cartItems.forEach((item) => {
-        console.log(item.sum, item.num, item.vipPrice)
         sumdata += Number(item.num * item.vipPrice)
       })
       return sumdata.toFixed(2)
@@ -434,15 +448,32 @@ export default {
     search: function () {
       this.debounce(300, this.loadInfoByBarcode)
     },
+    'cart.user.code' () {
+      shoppingCartService.initShoppingCart(
+        this.cart.uuid,
+        this.cart.user.code,
+        this.cart.user.code,
+      )
+    }
   },
   mounted () {
     this.initWeixin()
+  },
+  created () {
+    this.initShoppingCart()
   },
   methods: {
     overAddCart () {
       if (this.cartItems.length == 0) {
         uni.showToast({
           title: "你还没有可结算的商品",
+          icon: 'none'
+        })
+        return;
+      }
+      if (!this.cart.user.code) {
+        uni.showToast({
+          title: "请输入客户代码或者会员号",
           icon: 'none'
         })
         return;
@@ -457,11 +488,14 @@ export default {
       this.$refs.popupClient.open()
       shoppingCartService.getShoppingCarts().then((res) => {
         let data = res.data.data
-        console.log(data)
         if (data) {
           this.histroyCarts = []
           data.forEach((item) => {
-            this.histroyCarts.push(item)
+            if (item.code == '') {
+              shoppingCartService.deleteSCart(item.uuid)
+            } else {
+              this.histroyCarts.push(item)
+            }
           })
         }
       })
@@ -470,7 +504,6 @@ export default {
       let jssdk = weixinService.setWxJsdk(
         encodeURIComponent(location.href.split('#')[0])
       )
-      console.log(jssdk)
     },
     async scanBarcode () {
       if (!this.cart.user.code) {
@@ -508,6 +541,7 @@ export default {
       }, wait)
     },
     addItemToItems (item) {
+
       //添加商品到商品列表
       //如果列表中存在 者增加数量
       let index = this.cartItems.findIndex((tmpItem) => tmpItem.id == item.id)
@@ -538,8 +572,17 @@ export default {
     itemNumChange (item) {
       shoppingCartService.updateSCartItems(this.cart.uuid, item.id, item.num)
     },
+    initShoppingCart () {
+      this.cart.uuid = UUID()
+      //初始化购物车
+      shoppingCartService.initShoppingCart(
+        this.cart.uuid,
+        this.cart.user.code,
+        this.cart.user.code,
+      )
+    },
     callBackSetting () {
-      //确定设置
+      // 确定设置
       if (this.cart.user.code == '' || !this.cart.user.code) {
         uni.showToast({
           title: '请将内容填写完毕',
@@ -547,16 +590,8 @@ export default {
         })
         return
       }
-      this.cart.uuid = UUID()
-      console.log(this.cart.uuid)
       this.$refs.popup.close()
-      //初始化购物车
-      shoppingCartService.initShoppingCart(
-        this.cart.uuid,
-        this.cart.user.code,
-        this.cart.user.code
-      )
-      //继续扫码
+      // 继续扫码
       this.scanBarcode()
     },
     async loadInfoByBarcode () {
@@ -635,6 +670,7 @@ export default {
       this.cart = { user: { code: '' } }
       console.log(this.cart, "this.cart")
       this.$forceUpdate()
+      this.initShoppingCart()
       this.$refs.popupSum.close()
       uni.showToast({
         title: '暂存成功',
@@ -713,9 +749,7 @@ export default {
             title: message,
           })
           this.cleanCart();
-          // uni.reLaunch({
-          //   url: "/pages/order/orderDetails?id=" + data.id
-          // })
+          this.initShoppingCart()
           this.$refs.popupSum.close()
         } else {
           uni.showToast({
