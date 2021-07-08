@@ -326,7 +326,7 @@ export default {
       surplusTime: '',
       search: '',
       id: -1,
-      item: { barcode: '', endTime: currentDate },
+      item: { barcode: '', endTime: currentDate, unit: '', subTitle: '', title: "" },
       index: 0,
       array: ['上架', '下架'],
       arrays: {
@@ -399,6 +399,7 @@ export default {
     if (this.id == -1) {
       this.isUpdate = false;
       this.showUpdate = false;
+      this.addbaseInfo()
     } else {
       this.isUpdate = true;
       this.showUpdate = true;
@@ -465,7 +466,11 @@ export default {
         this.allEndTimes = [];
         const { message, code, data } = res.data
         if (code === 200) {
-
+          console.log(data, 'data')
+          if (data.length == 0) {
+            this.addbaseInfo()
+            return
+          }
           data.forEach((item) => {
             this.allItems.push(item)
             let spec = '效期：' + this.dateFormatStr(new Date(item.endTime)) +
@@ -588,8 +593,14 @@ export default {
           })
           setTimeout(() => {
             if (this.preOrder.search) {
-              uni.reLaunch({
-                url: '/pages/order/preOrder?random=' + this.preOrder.random + "&search=" + this.preOrder.search,
+              let pages = getCurrentPages();
+              let prevPage = pages[pages.length - 2];
+              prevPage.$vm.search = ''
+              setTimeout(() => {
+                prevPage.$vm.search = this.item.barcode
+              }, 500)
+              uni.navigateBack({
+                delta: 1
               })
               return
             }
@@ -629,6 +640,22 @@ export default {
           + numTimeMs)
         this.item.endTime = formatTime(endDate);
       }
+    },
+    addbaseInfo () {
+      request({
+        url: "/item/baseInfo?barcode=" + this.item.barcode,
+        method: "get"
+      })
+        .then(res => {
+          let { code, data } = res.data
+          if (code == 200) {
+            let { name, spec, unit, pictur, barcode } = data
+            this.item.title = name
+            this.item.subTitle = spec
+            this.item.unit = unit
+            console.log(this.item)
+          }
+        })
     }
   },
 }
