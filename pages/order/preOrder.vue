@@ -81,7 +81,7 @@
                       type="primary"
                       size="mini"
                       @click="overAddCart()">
-                完成
+                结算
               </button>
             </uni-col>
             <uni-col :span="5"
@@ -373,6 +373,7 @@ export default {
         uuid: '',
         user: {
           code: '',
+          setCode: "",
         },
       },
       cartItems: [],
@@ -383,6 +384,7 @@ export default {
         会员: 'vipPrice',
         代理: 'proxyPrice',
       },
+      funData: ""
     }
   },
   computed: {
@@ -410,7 +412,6 @@ export default {
     countH () {
       let sumdata = 0
       this.cartItems.forEach((item) => {
-        console.log(item.sum, item.num, item.vipPrice)
         sumdata += Number(item.num * item.vipPrice)
       })
       return sumdata.toFixed(2)
@@ -434,6 +435,11 @@ export default {
     search: function () {
       this.debounce(300, this.loadInfoByBarcode)
     },
+    'cart.user.code' () {
+      if (this.cart.uuid) {
+        this.debounce(300, this.callBackSetting)
+      }
+    }
   },
   mounted () {
     this.initWeixin()
@@ -447,6 +453,13 @@ export default {
         })
         return;
       }
+      if (!this.cart.uuid) {
+        uni.showToast({
+          title: "请点击  扫码  绑定客户代码或者会员号",
+          icon: 'none'
+        })
+        return
+      }
       this.$refs.popupSum.open();
     },
     cancel () {
@@ -457,7 +470,6 @@ export default {
       this.$refs.popupClient.open()
       shoppingCartService.getShoppingCarts().then((res) => {
         let data = res.data.data
-        console.log(data)
         if (data) {
           this.histroyCarts = []
           data.forEach((item) => {
@@ -470,10 +482,9 @@ export default {
       let jssdk = weixinService.setWxJsdk(
         encodeURIComponent(location.href.split('#')[0])
       )
-      console.log(jssdk)
     },
     async scanBarcode () {
-      if (!this.cart.user.code) {
+      if (!this.cart.uuid) {
         this.$refs.popup.open()
         return
       }
@@ -508,6 +519,7 @@ export default {
       }, wait)
     },
     addItemToItems (item) {
+
       //添加商品到商品列表
       //如果列表中存在 者增加数量
       let index = this.cartItems.findIndex((tmpItem) => tmpItem.id == item.id)
@@ -539,7 +551,7 @@ export default {
       shoppingCartService.updateSCartItems(this.cart.uuid, item.id, item.num)
     },
     callBackSetting () {
-      //确定设置
+      // 确定设置
       if (this.cart.user.code == '' || !this.cart.user.code) {
         uni.showToast({
           title: '请将内容填写完毕',
@@ -547,16 +559,18 @@ export default {
         })
         return
       }
-      this.cart.uuid = UUID()
-      console.log(this.cart.uuid)
+      if (!this.cart.uuid) {
+        this.cart.uuid = UUID()
+        this.cart.user.setCode = this.cart.user.code
+      }
       this.$refs.popup.close()
       //初始化购物车
       shoppingCartService.initShoppingCart(
         this.cart.uuid,
         this.cart.user.code,
-        this.cart.user.code
+        this.cart.user.setCode,
       )
-      //继续扫码
+      // 继续扫码
       this.scanBarcode()
     },
     async loadInfoByBarcode () {
