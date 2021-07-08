@@ -85,6 +85,7 @@
               </button>
             </uni-col>
             <uni-col :span="5"
+                     :sm="0"
                      style="text-align: left">
               <button class="mini-btn"
                       style="background-color: #409eff"
@@ -93,6 +94,18 @@
                       @click="scanBarcode">
                 扫码
               </button>
+            </uni-col>
+            <uni-col :xs="0"
+                     :sm="5"
+                     style="text-align: left">
+              <navigator url="/pages/order/orders">
+                <button class="mini-btn"
+                        style="background-color: #409eff"
+                        type="primary"
+                        size="mini">
+                  订单列表
+                </button>
+              </navigator>
             </uni-col>
           </uni-row>
         </view>
@@ -436,13 +449,18 @@ export default {
       this.debounce(300, this.loadInfoByBarcode)
     },
     'cart.user.code' () {
-      if (this.cart.uuid) {
-        this.debounce(300, this.callBackSetting)
-      }
+      shoppingCartService.initShoppingCart(
+        this.cart.uuid,
+        this.cart.user.code,
+        this.cart.user.code,
+      )
     }
   },
   mounted () {
     this.initWeixin()
+  },
+  created () {
+    this.initShoppingCart()
   },
   methods: {
     overAddCart () {
@@ -453,12 +471,12 @@ export default {
         })
         return;
       }
-      if (!this.cart.uuid) {
+      if (!this.cart.user.code) {
         uni.showToast({
-          title: "请点击  扫码  绑定客户代码或者会员号",
+          title: "请输入客户代码或者会员号",
           icon: 'none'
         })
-        return
+        return;
       }
       this.$refs.popupSum.open();
     },
@@ -473,7 +491,11 @@ export default {
         if (data) {
           this.histroyCarts = []
           data.forEach((item) => {
-            this.histroyCarts.push(item)
+            if (item.code == '') {
+              shoppingCartService.deleteSCart(item.uuid)
+            } else {
+              this.histroyCarts.push(item)
+            }
           })
         }
       })
@@ -484,7 +506,7 @@ export default {
       )
     },
     async scanBarcode () {
-      if (!this.cart.uuid) {
+      if (!this.cart.user.code) {
         this.$refs.popup.open()
         return
       }
@@ -550,6 +572,15 @@ export default {
     itemNumChange (item) {
       shoppingCartService.updateSCartItems(this.cart.uuid, item.id, item.num)
     },
+    initShoppingCart () {
+      this.cart.uuid = UUID()
+      //初始化购物车
+      shoppingCartService.initShoppingCart(
+        this.cart.uuid,
+        this.cart.user.code,
+        this.cart.user.code,
+      )
+    },
     callBackSetting () {
       // 确定设置
       if (this.cart.user.code == '' || !this.cart.user.code) {
@@ -559,17 +590,7 @@ export default {
         })
         return
       }
-      if (!this.cart.uuid) {
-        this.cart.uuid = UUID()
-        this.cart.user.setCode = this.cart.user.code
-      }
       this.$refs.popup.close()
-      //初始化购物车
-      shoppingCartService.initShoppingCart(
-        this.cart.uuid,
-        this.cart.user.code,
-        this.cart.user.setCode,
-      )
       // 继续扫码
       this.scanBarcode()
     },
@@ -649,6 +670,7 @@ export default {
       this.cart = { user: { code: '' } }
       console.log(this.cart, "this.cart")
       this.$forceUpdate()
+      this.initShoppingCart()
       this.$refs.popupSum.close()
       uni.showToast({
         title: '暂存成功',
@@ -727,9 +749,7 @@ export default {
             title: message,
           })
           this.cleanCart();
-          // uni.reLaunch({
-          //   url: "/pages/order/orderDetails?id=" + data.id
-          // })
+          this.initShoppingCart()
           this.$refs.popupSum.close()
         } else {
           uni.showToast({
