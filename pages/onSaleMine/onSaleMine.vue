@@ -17,7 +17,7 @@
         <uni-col :span="5"
                  class="role"
                  style="padding-top: 10px">
-          <text style="float: right"> {{ mineData.role }} </text>
+          <text style="float: right"> 代理商 </text>
         </uni-col>
       </uni-row>
       <uni-row class="money">
@@ -60,15 +60,15 @@ export default {
       mineData: '',
       logoImg: '../../static/portrait.png',
       then: [],
-      roles: {
-        1: '管理员',
-        2: '普通用户',
-        3: '服务商',
-        4: '代理1',
-        5: '代理2',
-        6: '代理3',
-        7: '商户',
-      }
+      // roles: {
+      //   1: '管理员',
+      //   2: '普通用户',
+      //   3: '服务商',
+      //   4: '代理1',
+      //   5: '代理2',
+      //   6: '代理3',
+      //   7: '商户',
+      // }
     }
   },
   created () {
@@ -88,7 +88,7 @@ export default {
         uni.hideLoading()
         if (code == 200) {
           let { name, code, balance, role } = data
-          role = this.roles[role]
+          // role = this.roles[role]
           this.mineData = {
             name: name,
             code: code,

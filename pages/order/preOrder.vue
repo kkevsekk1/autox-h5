@@ -707,12 +707,15 @@ export default {
         data,
       }).then(res => {
         uni.hideLoading();
-        let { code, message } = res.data
+        let { code, data, message } = res.data
         if (code == 200) {
           uni.showToast({
             title: message,
           })
           this.cleanCart();
+          // uni.reLaunch({
+          //   url: "/pages/order/orderDetails?id=" + data.id
+          // })
           this.$refs.popupSum.close()
         } else {
           uni.showToast({

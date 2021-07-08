@@ -231,14 +231,13 @@ export default {
           let { code, data: { consignee, orderItems } } = res.data
           if (code == 200) {
             shoppingCartService.deleteSCart(this.uuid)
-            for (const item of orderItems) {
+            orderItems.forEach(item => {
               let { itemId, quantity: num } = item
               shoppingCartService.updateSCartItems(this.uuid, itemId, num)
-            }
+            })
           }
         })
       setTimeout(() => {
-        console.log('123')
         uni.navigateTo({
           url: "/pages/category/index"
         })
