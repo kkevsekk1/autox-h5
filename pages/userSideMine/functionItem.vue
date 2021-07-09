@@ -8,15 +8,19 @@
       <view> {{functionData.functionName}} </view>
     </view>
     <uni-popup ref="popup"
+               :mask-click="false"
                type="center">
       <view class="list">
         <view>内容已复制</view>
         <textarea v-model="functionData.path" />
-        <view @click="closePopup"> <img src="../../static/btn_skip.png"
-               alt=""> </view>
+        <view @click="closePopup">
+          <img src="../../static/btn_skip.png"
+               alt="">
+        </view>
       </view>
     </uni-popup>
     <uni-popup ref="prompt"
+               :mask-click="false"
                type="center">
       <view class="list">
         <view>提示</view>

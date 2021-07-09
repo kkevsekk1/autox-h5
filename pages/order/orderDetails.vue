@@ -179,7 +179,7 @@ export default {
         4: '已取消'
       },
       consignee: '',
-      openId:null
+      openId: null
     }
   },
   watch: {
@@ -189,7 +189,7 @@ export default {
       }
     },
   },
-  created () {
+  async created () {
     this.orderId = this.$route.query.id
     let state = this.$route.query.state;
     if (state) {
@@ -197,14 +197,13 @@ export default {
       this.orderId = orderParm.id;
       this.code = this.$route.query.code;
     }
-    this.getOrderDetails()
-    this.countDownTime();
-    this. loadUserOpenId();
+    await this.getOrderDetails()
+    this.countDownTime()
   },
   methods: {
-    loadUserOpenId(){
-      userService.loadUserInfo().then(user=>{
-        this.openId =user.openId;
+    loadUserOpenId () {
+      userService.loadUserInfo().then(user => {
+        this.openId = user.openId;
       });
     },
     parseParam (param) {
@@ -218,7 +217,7 @@ export default {
       return rs;
     },
     toAuthOrPay () {
-      if(this.openId){
+      if (this.openId) {
         this.toPay(this.openId);
       }
       let url = encodeURI("http://xcx.ar01.cn/pages/order/orderDetails");
@@ -276,7 +275,7 @@ export default {
         }
       }, 1000)
     },
-    getOrderDetails () {
+    async getOrderDetails () {
       request({
         url: '/itemOrder/getById?id=' + this.orderId,
         method: 'get',

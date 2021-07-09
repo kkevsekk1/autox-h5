@@ -24,7 +24,9 @@
               元</text>
           </uni-col>
           <uni-col :span="6">
-            <text class="footer-vip">立即开通</text>
+            <navigator url="/pages/buyVip/index">
+              <text class="footer-vip">立即开通</text>
+            </navigator>
           </uni-col>
         </uni-row>
       </view>
