@@ -290,6 +290,16 @@
           "titleNView": false
         }
       }
+    },
+    {
+      "path": "pages/buyVip/index",
+      "style": {
+        "navigationBarTitleText": "升级会员",
+        "enablePullDownRefresh": true,
+        "app-plus": {
+          "titleNView": false
+        }
+      }
     }
   ],
   "globalStyle": {

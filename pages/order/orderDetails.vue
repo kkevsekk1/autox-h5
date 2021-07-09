@@ -187,7 +187,7 @@ export default {
       }
     },
   },
-  created () {
+  async created () {
     this.orderId = this.$route.query.id
     let state = this.$route.query.state;
     if (state) {
@@ -195,7 +195,7 @@ export default {
       this.orderId = orderParm.id;
       this.code = this.$route.query.code;
     }
-    this.getOrderDetails()
+    await this.getOrderDetails()
     this.countDownTime()
   },
   methods: {
@@ -265,7 +265,7 @@ export default {
         }
       }, 1000)
     },
-    getOrderDetails () {
+    async getOrderDetails () {
       request({
         url: '/itemOrder/getById?id=' + this.orderId,
         method: 'get',
