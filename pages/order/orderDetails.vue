@@ -119,7 +119,7 @@
             </uni-col>
             <uni-col :span="12">
               <view class="row-btn-pay"
-                    @click="toAuth">去支付</view>
+                    @click="toAuthOrPay">去支付</view>
             </uni-col>
           </uni-row>
         </uni-col>
@@ -162,6 +162,7 @@
 
 <script>
 import { request } from '../../server/request.js'
+import userService from '../../server/userService.js'
 import { formatTime } from '../../utils/format.js'
 export default {
   data () {
@@ -178,6 +179,7 @@ export default {
         4: '已取消'
       },
       consignee: '',
+      openId: null
     }
   },
   watch: {
@@ -199,6 +201,11 @@ export default {
     this.countDownTime()
   },
   methods: {
+    loadUserOpenId () {
+      userService.loadUserInfo().then(user => {
+        this.openId = user.openId;
+      });
+    },
     parseParam (param) {
       console.log(param)
       var para = param, arr_para = para.split('&'), i = 0, n = arr_para.length;
@@ -209,7 +216,10 @@ export default {
       }
       return rs;
     },
-    toAuth () {
+    toAuthOrPay () {
+      if (this.openId) {
+        this.toPay(this.openId);
+      }
       let url = encodeURI("http://xcx.ar01.cn/pages/order/orderDetails");
       let param = encodeURI("id=" + this.orderId);
       location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx3f4bf3f856017bd4&redirect_uri=" +
