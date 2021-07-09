@@ -247,6 +247,7 @@ export default {
         index: this.page.index,
         size: this.page.size,
         type: this.type,
+        status:0
       }
       request({
         url: '/item/items',
