@@ -198,13 +198,26 @@ export default {
       this.code = this.$route.query.code;
     }
     await this.getOrderDetails()
-    this.countDownTime()
+    this.countDownTime();
+    this.loadUserOpenId();
   },
   methods: {
     loadUserOpenId () {
       userService.loadUserInfo().then(user => {
         this.openId = user.openId;
       });
+    },
+   code2OpenId (wxcode) {
+      request({
+        url: '/auth/wxCode2OpenId?code=' + wxcode,
+        method: 'get',
+      }).then((res) => {
+        let { code, data } = res.data;
+        console.log(res);
+        if (code == 200) {
+          this.toPay(data.openId);
+        }
+      })
     },
     parseParam (param) {
       console.log(param)
@@ -219,6 +232,7 @@ export default {
     toAuthOrPay () {
       if (this.openId) {
         this.toPay(this.openId);
+         return;
       }
       let url = encodeURI("http://xcx.ar01.cn/pages/order/orderDetails");
       let param = encodeURI("id=" + this.orderId);

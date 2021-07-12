@@ -30,11 +30,11 @@
                      class="header-buy">
               <view v-if="!ifVip">
                 <text class="header-buy-buyVip"
-                      @click="buyVip">立即开通</text>
+                      @click="toAuthOrBuy">立即开通</text>
               </view>
               <view v-if="ifVip">
                 <text class="header-buy-daoqi">{{userData.emdTime}}到期</text>
-                <text @click="buyVip"> 续费</text>
+                <text @click="toAuthOrBuy"> 续费</text>
               </view>
             </uni-col>
           </uni-row>
@@ -120,14 +120,46 @@ export default {
       code: '',
       swipers: [],
       amount: '99',
+      openId:null,
     }
   },
-
+  watch: {
+    code (nv, ov) {
+      if (nv) {
+        if(nv){
+          this.code2OpenId(nv);
+        }
+      }
+    },
+  },
   created () {
     this.getUserData()
     this.addSwipers()
+     this.code = this.$route.query.code;
   },
   methods: {
+  code2OpenId (wxcode) {
+      request({
+        url: '/auth/wxCode2OpenId?code=' + wxcode,
+        method: 'get',
+      }).then((res) => {
+        let { code, data } = res.data;
+        console.log(res);
+        if (code == 200) {
+          this.buyVip();
+        }
+      })
+    },
+    toAuthOrBuy () {
+      if (this.openId) {
+        this.buyVip();
+        return;
+      }
+      let url = encodeURI("http://xcx.ar01.cn/pages/buyVip/index");
+      let param = encodeURI("id=122");
+      location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx3f4bf3f856017bd4&redirect_uri=" +
+        url + "&response_type=code&scope=snsapi_base&state=" + param + "#wechat_redirect"
+    },
     getUserData () {
       userService.loadUserInfo().then(user => {
         let { level, vipExpirationTime } = user
@@ -135,6 +167,7 @@ export default {
           this.ifVip = true
           vipExpirationTime = formatTime(vipExpirationTime).slice(0, 10).replaceAll('-', '.')
         }
+        this.openId =user.openId;
         this.userData = {
           emdTime: vipExpirationTime || '0000.00.00',
           saveSum: "1231"
@@ -204,7 +237,6 @@ export default {
               uni.showToast({
                 title: "付款成功"
               })
-              uni.reLaunch({ url: '/pages/order/orders' });
             }
           })
         })
