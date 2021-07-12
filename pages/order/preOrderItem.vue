@@ -11,6 +11,7 @@
                 @click="deleteItem">&#xe62f;</view>
         </view>
       </uni-col>
+
     </uni-row>
     <uni-row :gutter="0"
              class="content">
