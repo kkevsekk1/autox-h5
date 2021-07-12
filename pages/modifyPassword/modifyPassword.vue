@@ -55,9 +55,12 @@ export default {
         })
           .then((loadresult) => {
             uni.showToast({
-              title: "密码修改成功",
+              title: "密码修改成功,1秒后将跳回主页面",
               icon: "none"
             })
+            setTimeout(() => {
+              uni.navigateBack()
+            }, 1000)
           })
       }).catch(err => { })
     },
