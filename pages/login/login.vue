@@ -33,6 +33,7 @@
                   class="update-verification"
                   style="padding:0">
             重新获取({{user.timeSeconds}}S)
+
           </button>
         </uni-col>
       </uni-row>
@@ -183,9 +184,11 @@ export default {
               if (this.path && this.path != "pages/login/login") {
                 uni.reLaunch({ url: this.path })
               } else {
-                uni.reLaunch({ url: "/pages/index/index" })
+                uni.reLaunch({ url: "/pages/userSideMine/index" })
               }
             }, 2000)
+
+
           }
         })
     }

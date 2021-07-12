@@ -18,6 +18,7 @@
                  class="role"
                  style="padding-top: 10px">
           <text style="float: right"> 代理商 </text>
+
         </uni-col>
       </uni-row>
       <uni-row class="money">
