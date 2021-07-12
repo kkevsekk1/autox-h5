@@ -49,7 +49,6 @@ export default {
       payWayType: "",
     }
   },
-
   methods: {
     sumBuyNumber (data) {
       this.buyNumber = data.index
