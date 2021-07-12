@@ -172,12 +172,7 @@ export default {
       items: [],
       countDown: '',
       servicePhone: '18081280120',
-      statuss: {
-        0: '待支付',
-        1: '待发货',
-        2: '已完成',
-        4: '已取消'
-      },
+      statuses: { 0: '待支付', 1: '待发货', 2: '已完成', 4: '已取消' },
       consignee: '',
       openId: null
     }
@@ -207,7 +202,7 @@ export default {
         this.openId = user.openId;
       });
     },
-   code2OpenId (wxcode) {
+    code2OpenId (wxcode) {
       request({
         url: '/auth/wxCode2OpenId?code=' + wxcode,
         method: 'get',
@@ -232,7 +227,7 @@ export default {
     toAuthOrPay () {
       if (this.openId) {
         this.toPay(this.openId);
-         return;
+        return;
       }
       let url = encodeURI("http://xcx.ar01.cn/pages/order/orderDetails");
       let param = encodeURI("id=" + this.orderId);
@@ -304,7 +299,7 @@ export default {
             // data.status = 0
             this.consignee = JSON.parse(data.consignee)
             data.consignee = JSON.parse(data.consignee)
-            data.status = this.statuss[data.status]
+            data.status = this.statuses[data.status]
             this.items = data
           }
         })

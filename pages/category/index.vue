@@ -15,7 +15,8 @@
     </uni-row>
     <view class="search">
       <input type="text"
-             placeholder-style="font-size:14px;background-color:#f5f5f5;padding-left: 40px;"
+             style="padding-left: 40px;background-color:#f5f5f5;"
+             placeholder-style="font-size:14px;"
              placeholder="搜索商品"
              v-model="search" />
       <text class="iconfont search-iconfon">&#xe617;</text>
@@ -63,7 +64,8 @@
                      scroll-y="true"
                      @scrolltolower="reachBottom"
                      :style="{ height: `${contentLeftHeighe - 30 - 45}px` }">
-          <view style="padding-bottom:80px;">
+          <view style="padding-bottom:80px;"
+                v-if="items.length>0">
             <view class="content-right-nav"
                   style=" border-bottom:2px  solid #f8f8f8;"
                   v-for="item in items"
@@ -73,6 +75,16 @@
                            @handleCount="toChangeCart"
                            @imgClick="showImgs" />
             </view>
+          </view>
+          <view v-if="items.length==0"
+                class="itemsHiddem">
+            <img style="width:100%"
+                 src="/static/empty.png"
+                 alt="">
+            <view v-if="items.length==0 && !search "
+                  class="itemsHiddem-title">暂无商品</view>
+            <view v-if="items.length==0 && search"
+                  class="itemsHiddem-title">暂无此商品信息</view>
           </view>
         </scroll-view>
       </view>
@@ -574,5 +586,17 @@ page {
 }
 .colorGray {
   color: #828283 !important;
+}
+.itemsHiddem {
+  padding-top: 30px;
+  width: 40%;
+  margin: 0 auto;
+  max-width: 200px;
+}
+.itemsHiddem-title {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 16px;
+  color: grey;
 }
 </style>

@@ -178,7 +178,7 @@ page {
   background-color: #fff;
 }
 .add-site {
-  padding: 10px;
+  padding: 15px 10px;
 }
 .user-icon {
   float: right;

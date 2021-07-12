@@ -31,6 +31,7 @@ export default {
 .user-box {
   position: relative;
   padding: 10px 0;
+  padding-right: 25px;
   font-size: 16px;
 }
 .user-icon {
