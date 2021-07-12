@@ -198,7 +198,8 @@ export default {
       this.code = this.$route.query.code;
     }
     await this.getOrderDetails()
-    this.countDownTime()
+    this.countDownTime();
+    this.loadUserOpenId();
   },
   methods: {
     loadUserOpenId () {
