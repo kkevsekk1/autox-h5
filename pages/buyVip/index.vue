@@ -15,7 +15,7 @@
                 <view class="header-money-leiji">会员惊喜价(365天)</view>
                 <text>
                   <text class="iconfont">&#xe657;</text>
-                  <text>99</text>
+                  <text> {{amount}} </text>
                 </text>
               </view>
               <view v-if="ifVip">
@@ -30,11 +30,11 @@
                      class="header-buy">
               <view v-if="!ifVip">
                 <text class="header-buy-buyVip"
-                      @click="toAuth">立即开通</text>
+                      @click="buyVip">立即开通</text>
               </view>
               <view v-if="ifVip">
                 <text class="header-buy-daoqi">{{userData.emdTime}}到期</text>
-                <text @click="toAuth"> 续费</text>
+                <text @click="buyVip"> 续费</text>
               </view>
             </uni-col>
           </uni-row>
@@ -87,6 +87,7 @@
 
 <script>
 import { formatTime } from '../../utils/format.js'
+import { request } from '../../server/request.js'
 import userService from '../../server/userService'
 export default {
   data () {
@@ -118,6 +119,7 @@ export default {
       orderId: '',
       code: '',
       swipers: [],
+      amount: '99',
     }
   },
 
@@ -146,7 +148,7 @@ export default {
         '137', '138', '139', '150', '151', '152', '157', '158', '159', '182', '183', '188', '187', '133', '153', '180', '181', '189',]
       for (; index < maxIndex; index++) {
         let random = Math.round(Math.random() * 100)
-        let phone = (phones[Math.round(Math.random() * (phones.length - 1))]) + (Math.round(Math.random() * (81541238 - 34585217)) + 34585217)
+        let phone = (phones[Math.round(Math.random() * (phones.length - 1))]) + '∗∗∗∗' + (Math.round(Math.random() * (8238 - 2217)) + 2217)
         if (random < 20) {
           let content = '恭喜' + phone + '开通了VIP会员，尽享全场超低折扣'
           this.swipers.push({
@@ -159,7 +161,54 @@ export default {
           })
         }
       }
-    }
+    },
+    buyVip () {
+      let data = {
+        amount: this.amount,
+        accountType: '-1',
+        payType: "0",
+        type: '-1',
+        title: '购买会员',
+        subTitle: '-1',
+        status: '-1'
+      }
+      request({
+        url: "/bill/generate",
+        method: "post",
+        data,
+      })
+        .then(res => {
+          let { code, data: { id } } = res.data
+          if (code == 200) {
+            this.toPay(id)
+          }
+        })
+    },
+    toPay (id) {
+      request({
+        url: '/bill/prePay?id=' + Number(id),
+        method: 'get'
+      })
+        .then((res) => {
+          let { data, code, message } = res.data;
+          console.log(data, '123')
+          WeixinJSBridge.invoke('getBrandWCPayRequest', {
+            "appId": data.appid,     //公众号ID，由商户传入     
+            "timeStamp": data.timeStamp,         //时间戳，自1970年以来的秒数     
+            "nonceStr": data.nonceStr, //随机串     
+            "package": "prepay_id=" + data.prepayId,
+            "signType": "MD5",         //微信签名方式：     
+            "paySign": data.paySign //微信签名 
+          }, function (res) {
+            if (res.err_msg == 'get_brand_wcpay_request:ok') {
+              uni.showToast({
+                title: "付款成功"
+              })
+              uni.reLaunch({ url: '/pages/order/orders' });
+            }
+          })
+        })
+    },
   }
 }
 </script>

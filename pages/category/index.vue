@@ -247,13 +247,14 @@ export default {
         index: this.page.index,
         size: this.page.size,
         type: this.type,
-        status:0
+        status: '0'
       }
       request({
         url: '/item/items',
         method: 'post',
         data,
       }).then((res) => {
+        console.log(res)
         uni.hideLoading()
         let {
           code,
