@@ -21,32 +21,34 @@
     <uni-popup ref="popup"
                type="center">
       <view class="popup">
-        <uni-forms :modelValue="formData"
-                   validate-trigger="bind"
-                   ref="form">
-          <uni-forms-item label="姓名："
-                          name="name">
-            <uni-easyinput type="text"
-                           v-model="formData.name"
-                           placeholder="请输入姓名" />
-          </uni-forms-item>
-          <uni-forms-item label="电话："
-                          name="phone">
-            <uni-easyinput type="text"
-                           v-model="formData.phone"
-                           placeholder="请输入电话" />
-          </uni-forms-item>
-          <uni-forms-item label="地址："
-                          name="address">
-            <uni-easyinput type="text"
-                           v-model="formData.address"
-                           placeholder="请输入收货地址" />
-          </uni-forms-item>
-          <view class="popup-btn-submit">
-            <button @click="saveUser"
-                    size="mini">保存</button>
+        <view class="popup-row">
+          <view class="popup-row-title">姓名：</view>
+          <view class="popup-row-input">
+            <input type="text"
+                   v-model="formData.name"
+                   placeholder="请输入姓名">
           </view>
-        </uni-forms>
+        </view>
+        <view class="popup-row">
+          <view class="popup-row-title">电话：</view>
+          <view class="popup-row-input">
+            <input type="text"
+                   v-model="formData.phone"
+                   placeholder="请输入电话">
+          </view>
+        </view>
+        <view class="popup-row">
+          <view class="popup-row-title">地址：</view>
+          <view class="popup-row-input">
+            <input type="text"
+                   v-model="formData.address"
+                   placeholder="请输入地址">
+          </view>
+        </view>
+        <view class="popup-btn-submit">
+          <button @click="saveUser"
+                  size="mini">保存</button>
+        </view>
       </view>
     </uni-popup>
   </view>
@@ -190,6 +192,7 @@ page {
   border-radius: 10px;
 }
 .popup-btn-submit {
+  padding-top: 40px;
   text-align: right;
 }
 .popup-btn-submit button {
@@ -198,5 +201,21 @@ page {
 }
 .user-data {
   padding: 10px;
+}
+.popup-row {
+  display: flex;
+  height: 36px;
+  line-height: 36px;
+  padding-top: 10px;
+  font-size: 14px;
+}
+.popup-row-input input {
+  width: 200px;
+  font-size: 14px;
+  height: 36px;
+  line-height: 36px;
+  padding-left: 10px;
+  border-radius: 3px;
+  border: 1px solid #e5e5e5;
 }
 </style>
