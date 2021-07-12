@@ -1,12 +1,5 @@
 {
   "pages": [{
-      "path": "pages/index/index",
-      "style": {
-        "navigationBarTitleText": "二维码记录",
-        "enablePullDownRefresh": true
-      }
-    },
-    {
       "path": "pages/login/login",
       "style": {
         "navigationBarTitleText": "登陆",
@@ -87,134 +80,9 @@
       }
     },
     {
-      "path": "pages/order/preOrder",
-      "style": {
-        "navigationBarTitleText": "扫码出库",
-        "enablePullDownRefresh": false,
-        "app-plus": {
-          "titleNView": false
-        }
-      }
-    },
-    {
-      "path": "pages/codeRecords/codeRecords",
-      "style": {
-        "navigationBarTitleText": "扫码记录",
-        "enablePullDownRefresh": true
-      }
-    },
-    {
-      "path": "pages/word/words",
-      "style": {
-        "navigationBarTitleText": "查看口令",
-        "enablePullDownRefresh": true
-      }
-    },
-    {
-      "path": "pages/mine/mine",
-      "style": {
-        "navigationBarTitleText": "个人中心",
-        "enablePullDownRefresh": true
-      }
-    },
-    {
-      "path": "pages/addShop/addShop",
-      "style": {
-        "navigationBarTitleText": "添加商家",
-        "enablePullDownRefresh": true
-      }
-    },
-    {
       "path": "pages/modifyPassword/modifyPassword",
       "style": {
         "navigationBarTitleText": "修改密码",
-        "enablePullDownRefresh": false,
-        "app-plus": {
-          "titleNView": false
-        }
-      }
-    },
-    {
-      "path": "pages/bindShop/bindShop",
-      "style": {
-        "navigationBarTitleText": "绑定商家",
-        "enablePullDownRefresh": true
-      }
-    },
-    {
-      "path": "pages/ykapp/choiseFeature",
-      "style": {
-        "navigationBarTitleText": "功能选择",
-        "enablePullDownRefresh": true,
-        "app-plus": {
-          "titleNView": false
-        }
-      }
-    },
-    {
-      "path": "pages/ykapp/running",
-      "style": {
-        "navigationBarTitleText": "运行",
-        "enablePullDownRefresh": false,
-        "app-plus": {
-          "titleNView": false
-        }
-      }
-    },
-    {
-      "path": "pages/feature/index",
-      "style": {
-        "navigationBarTitleText": "应用商店",
-        "enablePullDownRefresh": true,
-        "app-plus": {
-          "titleNView": false
-        }
-      }
-    },
-    {
-      "path": "pages/feature/running",
-      "style": {
-        "navigationBarTitleText": "试运行",
-        "enablePullDownRefresh": true,
-        "app-plus": {
-          "titleNView": false
-        }
-      }
-    },
-    {
-      "path": "pages/functionDetails/index",
-      "style": {
-        "navigationBarTitleText": "功能详情",
-        "enablePullDownRefresh": true,
-        "app-plus": {
-          "titleNView": false
-        }
-      }
-    },
-    {
-      "path": "pages/material/index",
-      "style": {
-        "navigationBarTitleText": "素材库",
-        "enablePullDownRefresh": true,
-        "app-plus": {
-          "titleNView": false
-        }
-      }
-    },
-    {
-      "path": "pages/material/modifyMaterial",
-      "style": {
-        "navigationBarTitleText": "修改素材",
-        "enablePullDownRefresh": false,
-        "app-plus": {
-          "titleNView": false
-        }
-      }
-    },
-    {
-      "path": "pages/controlMine/controlMine",
-      "style": {
-        "navigationBarTitleText": "云控个人主页",
         "enablePullDownRefresh": false,
         "app-plus": {
           "titleNView": false
@@ -235,26 +103,6 @@
       "path": "pages/helpCenter/particular",
       "style": {
         "navigationBarTitleText": "帮助中心详情页",
-        "enablePullDownRefresh": false,
-        "app-plus": {
-          "titleNView": false
-        }
-      }
-    },
-    {
-      "path": "pages/Abi/buyAbi",
-      "style": {
-        "navigationBarTitleText": "购买A币",
-        "enablePullDownRefresh": false,
-        "app-plus": {
-          "titleNView": false
-        }
-      }
-    },
-    {
-      "path": "pages/Abi/sellAbi",
-      "style": {
-        "navigationBarTitleText": "退款A币",
         "enablePullDownRefresh": false,
         "app-plus": {
           "titleNView": false

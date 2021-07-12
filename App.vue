@@ -3,19 +3,19 @@ export default {
   onLaunch: function () {
     try {
       let code = this._router.history.current.query.code
-      if(code){
-        uni.setStorageSync("inviteCode",code)
+      if (code) {
+        uni.setStorageSync("inviteCode", code)
       }
     } catch (error) {
-        console.log('获取邀请码失败',error)      
+      console.log('获取邀请码失败', error)
     }
     try {
-         let fid = this._router.history.current.query.f
-      if(fid){
-        uni.setStorageSync("fid",fid)
+      let fid = this._router.history.current.query.f
+      if (fid) {
+        uni.setStorageSync("fid", fid)
       }
     } catch (error) {
-   
+
     }
 
     // if (!(uni.getStorageSync('token'))) {
