@@ -206,6 +206,18 @@ export default {
         this.openId = user.openId;
       });
     },
+   code2OpenId (wxcode) {
+      request({
+        url: '/auth/wxCode2OpenId?code=' + wxcode,
+        method: 'get',
+      }).then((res) => {
+        let { code, data } = res.data;
+        console.log(res);
+        if (code == 200) {
+          this.toPay(data.openId);
+        }
+      })
+    },
     parseParam (param) {
       console.log(param)
       var para = param, arr_para = para.split('&'), i = 0, n = arr_para.length;
@@ -219,6 +231,7 @@ export default {
     toAuthOrPay () {
       if (this.openId) {
         this.toPay(this.openId);
+         return;
       }
       let url = encodeURI("http://xcx.ar01.cn/pages/order/orderDetails");
       let param = encodeURI("id=" + this.orderId);
