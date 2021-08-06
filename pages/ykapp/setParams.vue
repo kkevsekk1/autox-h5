@@ -271,7 +271,6 @@ getLeftTime(endTime){
         if (rememberParams && rememberParams[param.key]!=undefined) {
           param.defaultValue = rememberParams[param.key]
         }
-
         if (param.type == 2) {
           //普通选择
           //checkValue 数组，checkedValue选中的显示值，defaultValue 放置参数值
