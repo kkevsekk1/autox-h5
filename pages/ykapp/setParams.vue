@@ -268,7 +268,7 @@ getLeftTime(endTime){
     },
     convertParams (rememberParams) {
       this.scriptParams.forEach((param) => {
-        if (rememberParams && rememberParams[param.key] && rememberParams[param.key] != '') {
+        if (rememberParams && rememberParams[param.key]!=undefined) {
           param.defaultValue = rememberParams[param.key]
         }
 
@@ -301,10 +301,11 @@ getLeftTime(endTime){
           }
         }
         if (param.type === 3) {
-          if (param.defaultValue == 'true' || param.defaultValue == 1) {
+          console.log(param)
+          if (param.defaultValue == 1) {
             param.defaultValue = true
           }
-          if (param.defaultValue == 'false' || param.defaultValue == 0) {
+          if ( param.defaultValue == 0) {
             param.defaultValue = false
           }
         }
