@@ -157,6 +157,7 @@ export default {
       }
     },
     submitForm () {
+		 uni.showLoading({ title: '正在登陆中，请稍等' });
       let { phone, verifyCode, inviteCode } = this.user
       let res = { phone: phone, verifyCode: verifyCode, proxyCode: inviteCode, verifyType: '1' }
       console.log(res)
@@ -166,6 +167,7 @@ export default {
         data: res
       })
         .then((loadresult) => {
+			 uni.hideLoading()
           let { code, message, data } = loadresult.data
           console.log(message)
           if (message == "邀请码错误") {
