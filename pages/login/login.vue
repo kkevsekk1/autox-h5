@@ -33,6 +33,7 @@
                   class="update-verification"
                   style="padding:0">
             重新获取({{user.timeSeconds}}S)
+
           </button>
         </uni-col>
       </uni-row>
@@ -156,6 +157,7 @@ export default {
       }
     },
     submitForm () {
+		 uni.showLoading({ title: '正在登陆中，请稍等' });
       let { phone, verifyCode, inviteCode } = this.user
       let res = { phone: phone, verifyCode: verifyCode, proxyCode: inviteCode, verifyType: '1' }
       console.log(res)
@@ -165,6 +167,7 @@ export default {
         data: res
       })
         .then((loadresult) => {
+			 uni.hideLoading()
           let { code, message, data } = loadresult.data
           console.log(message)
           if (message == "邀请码错误") {
@@ -183,9 +186,11 @@ export default {
               if (this.path && this.path != "pages/login/login") {
                 uni.reLaunch({ url: this.path })
               } else {
-                uni.reLaunch({ url: "/pages/index/index" })
+                uni.reLaunch({ url: "/pages/userSideMine/index" })
               }
             }, 2000)
+
+
           }
         })
     }

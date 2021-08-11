@@ -12,7 +12,7 @@
             <uni-col :span="12"
                      class="header-money">
               <view v-if="!ifVip">
-                <view class="header-money-leiji">会员惊喜价(365天)</view>
+                <view class="header-money-leiji">会员惊喜价({{time}}天)</view>
                 <text>
                   <text class="iconfont">&#xe657;</text>
                   <text> {{amount}} </text>
@@ -120,13 +120,14 @@ export default {
       code: '',
       swipers: [],
       amount: '99',
-      openId:null,
+      openId: null,
+      time: "365"
     }
   },
   watch: {
     code (nv, ov) {
       if (nv) {
-        if(nv){
+        if (nv) {
           this.code2OpenId(nv);
         }
       }
@@ -135,10 +136,10 @@ export default {
   created () {
     this.getUserData()
     this.addSwipers()
-     this.code = this.$route.query.code;
+    this.code = this.$route.query.code;
   },
   methods: {
-  code2OpenId (wxcode) {
+    code2OpenId (wxcode) {
       request({
         url: '/auth/wxCode2OpenId?code=' + wxcode,
         method: 'get',
@@ -167,7 +168,7 @@ export default {
           this.ifVip = true
           vipExpirationTime = formatTime(vipExpirationTime).slice(0, 10).replaceAll('-', '.')
         }
-        this.openId =user.openId;
+        this.openId = user.openId;
         this.userData = {
           emdTime: vipExpirationTime || '0000.00.00',
           saveSum: "1231"

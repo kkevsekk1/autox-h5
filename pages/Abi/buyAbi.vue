@@ -3,6 +3,7 @@
     <sum @inputNumber="sumBuyNumber"
          :title="'购买A币'"></sum>
     <view class="payWay">
+
       <view class="payWay-zfb"
             @click="payWayTypeZFB">
         <text class="iconfont  payWay-iconfont-left"
