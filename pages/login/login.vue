@@ -157,7 +157,7 @@ export default {
       }
     },
     submitForm () {
-		 uni.showLoading({ title: '正在登陆中，请稍等' });
+		 uni.showLoading({ title: '登录中...' });
       let { phone, verifyCode, inviteCode } = this.user
       let res = { phone: phone, verifyCode: verifyCode, proxyCode: inviteCode, verifyType: '1' }
       console.log(res)
@@ -173,8 +173,11 @@ export default {
           if (message == "邀请码错误") {
             this.error.inviteCode = "true"
           }
-          uni.showToast({ title: message, icon: 'none' })
+		  if(code !== 200){
+		  			  uni.showToast({ title: message, icon: 'none' })
+		  }
           if (code === 200) {
+          uni.showToast({ title: '登录成功', icon: 'none' })
             let user = JSON.stringify(res)
             uni.setStorageSync("userData", user)
             uni.setStorageSync('token', data.token)
